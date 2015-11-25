@@ -1,0 +1,6 @@
+
+extern fn puts |s: ^i8| -> ()
+
+fn main || -> () {
+	puts c"Hello, world!"
+}

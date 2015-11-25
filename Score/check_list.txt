@@ -1,0 +1,32 @@
+﻿  = Note done
+! = In Progress
+* = Almost done
+? = Maybe done, double check
+x = Done
+
+GENERAL:
+	[?] Detail Logger
+	[ ] Detail Message Formatter
+
+LEXER:
+	[x] Identifiers
+	[!] Keywords
+	[*] Numbers
+	[x] Line Comments
+	[x] Block Comments
+	[x] Nested Block Comments
+	[?] Strings
+	[!] Characters
+	[ ] Unicode Escapes
+	[x] Symbol Literals (Can be keywords, so that's nice)
+	[x] Operators
+	[!] Special Operator Chars
+	[x] Delimiters
+	[!] Other tokens
+
+PARSER:
+	[ ] I DON'T KNOW YET
+
+// C# uses UTF-16, so chars are 16-bit things.
+// I very well could also do that, though I would much prefer a dynamic char size and do UTF-8...
+// Ideas are welcome, I'll go with an integer representation internally anyway

@@ -1,0 +1,94 @@
+
+/# a result type
+data Res t e = ok t | err e
+
+/# a maybe type
+data Maybe t = some t | none
+
+/# the main entry point. this one prints the args.
+fn main |args: [str]| -> void {
+	/# each loop, iterates over things
+	/# each can still be used as an identifier,
+	/# like other keywords, as a literal.
+	/#   list .'each function
+	/# will call the 'each' method on the list
+	/# passing the given function.
+	each arg : args {
+		println arg
+	}
+	/# That's basically the same as this (hopefully, eventually)
+	arg .'each println
+}
+
+struct vec2 |x: float = 0, y: float = x| {
+	fn + |that: vec2| -> vec2 {
+		vec2 x + that.x y + that.y
+	}
+}
+
+fn parse_i32 |in: str| -> Res i32 str {
+	let result: i32 /# this is undefined, and is not allowed to be used until assigned to
+	/# do parsing stuff, probably assign to 'result'
+	if /* we failed somwhere, there'll be a few of these */ {
+		err v"some kind of failure"
+	}
+	ok result
+}
+
+/# a function that repeats a str count times.
+/# this can be called as such:
+/#   rep "hello" 10
+/# or
+/#   "hello" `rep 10
+fn rep |val: str, count: u32| -> str {
+	let res: str mut = val
+	for i: u32 = 1; i < count; i++ {
+		res:: = val
+	}
+	res
+}
+
+fn get_tokens -> Res (vec token) str {
+	let res: vec token mut = _
+	let state: LexerState = _
+
+	loop {
+		/# state .get_token -> Res (Maybe token) bool
+		match state .get_token {
+			ok (some tok): res << tok
+			err true: err "failed to lex"
+			_: break
+		}
+	}
+
+	ok res
+}
+
+fn main |args: [str]| -> void {
+	/# functions can contain data in the main scope
+	/# as if they were namespaces
+	struct 'data {
+		args: [str]
+	}
+	if true {
+		let d = 'data args
+		handle_things d
+	}
+}
+
+fn handle_things |d: main .'data| -> void {
+
+}
+
+/# Not else blocks? (cont maybe?) Executed if the else WASN'T executed.
+
+struct plr {
+	pos: (float,)
+	vel: (float,)
+}
+
+type cmd = || -> void : plr
+
+fn jump || -> void : plr {
+	this.vel.0- = 10
+}

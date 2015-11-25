@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A5A9B1C8-8BDE-41B5-B771-5EB837D0E621}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Score</RootNamespace>
+    <AssemblyName>Score</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="LLVMSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LLVMSharp.3.7.0\lib\net40\LLVMSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Back\LLVM\FnCompiler.cs" />
+    <Compile Include="Back\LLVM\GlobalStateManager.cs" />
+    <Compile Include="Back\LLVM\ModCompiler.cs" />
+    <Compile Include="Back\LLVM\KitCompiler.cs" />
+    <Compile Include="Back\LLVM\ScoreCompiler.cs" />
+    <Compile Include="Back\LLVM\Values\ScoreValue.cs" />
+    <Compile Include="Middle\FnAnalyzer.cs" />
+    <Compile Include="Middle\ModAnalyzer.cs" />
+    <Compile Include="Middle\KitAnalyzer.cs" />
+    <Compile Include="Middle\SemanticAnalyzer.cs" />
+    <Compile Include="Middle\Symbols\Symbol.cs" />
+    <Compile Include="Middle\Symbols\SymbolTable.cs" />
+    <Compile Include="Back\Types\ScoreType.cs" />
+    <Compile Include="Debug\AstPrinter.cs" />
+    <Compile Include="DetailLogger.cs" />
+    <Compile Include="Entry.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Front\Lex\Lexer.cs" />
+    <Compile Include="Front\Lex\Token.cs" />
+    <Compile Include="Front\Lex\TokenList.cs" />
+    <Compile Include="Front\Location.cs" />
+    <Compile Include="Front\Parse\IAstVisitor.cs" />
+    <Compile Include="Front\Parse\IdentPath.cs" />
+    <Compile Include="Front\Parse\Mods.cs" />
+    <Compile Include="Front\Parse\ParamInfo.cs" />
+    <Compile Include="Front\Parse\Parser.cs" />
+    <Compile Include="Front\Parse\Patterns\BasePattern.cs" />
+    <Compile Include="Front\Parse\Patterns\Pattern.cs" />
+    <Compile Include="Front\Parse\Patterns\TuplePattern.cs" />
+    <Compile Include="Front\Parse\Patterns\TypePattern.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\Ast.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\Node.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\NodeExpr.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\NodeFn.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\NodeFnDecl.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\NodeIndex.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\NodeInfix.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\NodeIdent.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\NodeInt.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\NodeInvoke.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\NodeLet.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\NodeStr.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\NodeSuffix.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\NodeTuple.cs" />
+    <Compile Include="Front\Parse\Types\ArrayTypeInfo.cs" />
+    <Compile Include="Front\Parse\Types\PathTypeInfo.cs" />
+    <Compile Include="Front\Parse\Types\ReferenceType.cs" />
+    <Compile Include="Front\Parse\Types\PointerType.cs" />
+    <Compile Include="Front\Parse\Types\TupleTypeInfo.cs" />
+    <Compile Include="Front\Parse\Types\TypeInfo.cs" />
+    <Compile Include="Front\Span.cs" />
+    <Compile Include="HashHelper.cs" />
+    <Compile Include="Middle\Symbols\SymbolTableWalker.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="check_list.txt" />
+    <Content Include="x64\libLLVM.dll" />
+    <Content Include="x64\libLLVM.pdb" />
+    <Content Include="x86\libLLVM.dll" />
+    <Content Include="x86\libLLVM.pdb" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\LLVMSharp.3.7.0\build\LLVMSharp.targets" Condition="Exists('..\packages\LLVMSharp.3.7.0\build\LLVMSharp.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\LLVMSharp.3.7.0\build\LLVMSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\LLVMSharp.3.7.0\build\LLVMSharp.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
