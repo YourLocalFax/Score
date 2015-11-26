@@ -186,3 +186,71 @@ impl laye_obj on Int(value) {
 		}
 	}
 }
+
+
+
+
+
+
+
+
+/# core_os.sr
+
+
+/#[conf = os "android" | (os "linux" & (arch "aarch64" | arch "arm"))]
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_char = u8
+
+/#[conf = !(os "android" | (os "linux" & (arch "aarch64" | arch "arm")))]
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_char = i8
+
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_schar = i8
+
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_uchar = u8
+
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_short = i16
+
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_ushort = u16
+
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_int = i32
+
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_uint = u32
+
+/#[conf = pointer_width "32" | windows]
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_long = i32
+
+/#[conf = pointer_width "32" | windows]
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_ulong = u32
+
+/#[conf = pointer_width "64" & !windows]
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_long = i64
+
+/#[conf = pointer_width "64" & !windows]
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_ulong = u64
+
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_longlong = i64
+
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_ulonglong = u64
+
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_float = f32
+
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_double = f64
+
+/#[stable (feature "core_os", since "1.0.0")]
+pub type c_void = u8
+
