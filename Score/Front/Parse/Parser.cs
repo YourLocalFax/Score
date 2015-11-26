@@ -453,7 +453,7 @@ namespace Score.Front.Parse
                 Span subSpan;
                 var type = ParseType(out subSpan);
                 span = start + subSpan.End;
-                return new PointerType(type, isMut);
+                return new PointerTypeInfo(type, isMut);
             }
 
 
@@ -469,7 +469,7 @@ namespace Score.Front.Parse
                 Span subSpan;
                 var type = ParseType(out subSpan);
                 span = start + subSpan.End;
-                return new PointerType(type, isMut);
+                return new PointerTypeInfo(type, isMut);
             }
 
             switch (Current.type)

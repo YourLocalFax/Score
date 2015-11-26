@@ -13,6 +13,8 @@ namespace Score.Middle.Symbols
         public readonly SymbolTable symbols;
 
         private Scope current;
+        public Scope Current => current;
+
         private Stack<int> indices = new Stack<int>();
 
         public SymbolTableWalker(SymbolTable symbols)

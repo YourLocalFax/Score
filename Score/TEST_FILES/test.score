@@ -6,7 +6,7 @@ data Res t e = ok t | err e
 data Maybe t = some t | none
 
 /# the main entry point. this one prints the args.
-fn main |args: [str]| -> void {
+fn main |args: [str]| -> () {
 	/# each loop, iterates over things
 	/# each can still be used as an identifier,
 	/# like other keywords, as a literal.
@@ -64,7 +64,7 @@ fn get_tokens -> Res (vec token) str {
 	ok res
 }
 
-fn main |args: [str]| -> void {
+fn main |args: [str]| -> () {
 	/# functions can contain data in the main scope
 	/# as if they were namespaces
 	struct 'data {
@@ -76,19 +76,113 @@ fn main |args: [str]| -> void {
 	}
 }
 
-fn handle_things |d: main .'data| -> void {
+fn handle_things |d: main.'data| -> () {
 
 }
 
-/# Not else blocks? (cont maybe?) Executed if the else WASN'T executed.
+/# Not-else blocks? (cont maybe?) Executed if the else WASN'T executed.
 
-struct plr {
-	pos: (float,)
-	vel: (float,)
+/# this stuff would be defined somewhere
+struct entity {
+	pos mut: (f32,),
 }
 
-type cmd = || -> void : plr
+type cmd = || (entity) -> ()
+type action = (cmd,)
 
-fn jump || -> void : plr {
-	this.vel.0- = 10
+impl action {
+	fn do || (plr) { this.0 : plr () }
+	fn undo || (plr) { this.1 : plr () }
+}
+
+fn make_move_to |pos: (f32,)| -> (cmd,) = {
+	let last mut = pos
+	(|| (e) {
+		last = e.pos
+		e.pos = pos
+	}, || (e) { e.pos = last })
+}
+
+/# and these would be used for actual things
+let plr = entity (10f, 5f)
+let to_orig = make_move_to (0f, 0f)
+
+/# The player starts at (10,5)
+to_orig.do : plr ()
+/# Here, the player is now at (0,0)
+to_orig.undo : plr ()
+/# And here, the player is back at (10,5)
+
+
+type observer = || (entity) -> ()
+
+event on_fall: observer
+/# or
+let on_fall: event observer
+
+let handle = on_fall :: || (e: entity) {
+	/# logic for when an entity falls.
+}
+
+handle!!
+
+
+
+
+
+
+
+/# Define the 'number' data type
+data number = Int(i32) | Float(f32)
+
+/# Declare a method that each type should implement.
+impl number {
+	fn + |that: number| -> number
+}
+
+/# Implement that method on Int
+impl number.Int(value) {
+	fn + |that: number| -> number {
+		match that {
+			Int(right): Int(value + right),
+			Float(right): Float(value + right),
+		}
+	}
+}
+
+/# Implement that method on Float
+impl number.Float(value) {
+	fn + |that: number| -> number {
+		match that {
+			Int(right): Float(value + right),
+			Float(right): Float(value + right),
+		}
+	}
+}
+
+
+
+data laye_obj = Int(i32) | Float(f32) | String(str)
+
+impl laye_obj
+{
+	fn + |that: laye_obj| -> laye_obj {
+		match this {
+			Int(value): match that {
+				Int(value2): Int(value + value2)
+				/#
+			}
+			Float(value): /#
+			String(value): /#
+		}
+	}
+}
+
+impl laye_obj on Int(value) {
+	fn + |that: laye_obj| -> laye_obj {
+		match that {
+			Int(value2): Int(value + value2)
+			/#
+		}
+	}
 }

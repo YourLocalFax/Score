@@ -21,24 +21,18 @@ namespace Score.Back.LLVM
         private readonly GlobalStateManager manager;
         private LLVMContextRef Context => manager.context;
         private readonly LLVMModuleRef module;
-        private readonly LLVMBuilderRef builder;
+        internal readonly LLVMBuilderRef builder;
 
         // FIXME(kai): wrap these in our own type, to keep score type information.
         private readonly Stack<LLVMValueRef> stack = new Stack<LLVMValueRef>();
 
-        public FnCompiler(GlobalStateManager manager, LLVMModuleRef module)
+        public FnCompiler(GlobalStateManager manager, LLVMModuleRef module, LLVMValueRef self)
         {
             this.manager = manager;
             this.module = module;
+
             builder = CreateBuilderInContext(Context);
-        }
-
-        public void Begin()
-        {
-        }
-
-        public void End()
-        {
+            PositionBuilderAtEnd(builder, AppendBasicBlockInContext(Context, self, ".entry"));
         }
 
         private LLVMValueRef[] PopCount(int count)
@@ -47,7 +41,7 @@ namespace Score.Back.LLVM
                 throw new ArgumentException(string.Format("Cannot pop {0} values from the stack, only {1} values are present.",
                     count, stack.Count), "count");
             var result = new LLVMValueRef[count];
-            for (int i = count; i-- >= 0;)
+            for (int i = count; i-- > 0;)
                 result[i] = stack.Pop();
             return result;
         }
@@ -71,6 +65,8 @@ namespace Score.Back.LLVM
             // puts c"Hello, world!"
 
             // look up puts
+            // TODO(kai): THIS IS BAD PLS STOP
+            var fn = GetNamedFunction(module, (invoke.target as NodeId).token.image);
             // load c"Hello, world!"
             invoke.args.ForEach(arg => arg.Accept(this));
             // retrieve the values from the stack
@@ -78,6 +74,7 @@ namespace Score.Back.LLVM
             // check that there is indeed one arg
             // check that the c-str is ^i8 (it is) because puts takes a ^i8
             // create the invocation
+            BuildCall(builder, fn, argValues, "");
         }
 
         public void Visit(NodeInt i)

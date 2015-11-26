@@ -135,11 +135,6 @@
     <Compile Include="Front\Parse\SyntaxTree\NodeStr.cs" />
     <Compile Include="Front\Parse\SyntaxTree\NodeSuffix.cs" />
     <Compile Include="Front\Parse\SyntaxTree\NodeTuple.cs" />
-    <Compile Include="Front\Parse\Types\ArrayTypeInfo.cs" />
-    <Compile Include="Front\Parse\Types\PathTypeInfo.cs" />
-    <Compile Include="Front\Parse\Types\ReferenceType.cs" />
-    <Compile Include="Front\Parse\Types\PointerType.cs" />
-    <Compile Include="Front\Parse\Types\TupleTypeInfo.cs" />
     <Compile Include="Front\Parse\Types\TypeInfo.cs" />
     <Compile Include="Front\Span.cs" />
     <Compile Include="HashHelper.cs" />

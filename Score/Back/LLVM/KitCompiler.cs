@@ -4,69 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using LLVMSharp;
+
+using static LLVMSharp.LLVM;
+
 namespace Score.Back.LLVM
 {
     using Front.Parse;
     using Front.Parse.SyntaxTree;
 
+    using Middle.Symbols;
+
     /// <summary>
     /// Compiles entire programs.
     /// </summary>
-    internal sealed class KitCompiler : IAstVisitor
+    internal sealed class KitCompiler : ModCompiler
     {
-        public void Visit(NodeFnDecl fnDecl)
+        public KitCompiler(DetailLogger log, GlobalStateManager manager, LLVMModuleRef module, SymbolTableWalker walker)
+            : base(log, manager, module, walker)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(NodeFn fn)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(NodeInt i)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(NodeStr s)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(NodeTuple tuple)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(NodeInvoke invoke)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(NodeSuffix suffix)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(NodeInfix infix)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(NodeIndex index)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(NodeId id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(Ast node)
-        {
-            throw new NotImplementedException();
         }
     }
 }

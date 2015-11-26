@@ -12,6 +12,8 @@ namespace Score
     using Debug;
     using Middle;
     using Middle.Symbols;
+    using Back;
+    using Back.LLVM;
 
     public static class Entry
     {
@@ -58,10 +60,20 @@ namespace Score
                 return;
             }
 
+            Console.WriteLine();
             Console.WriteLine(symbols);
 
-            //Console.WriteLine();
-            //Console.WriteLine();
+            var compiler = new ScoreCompiler(log, symbols);
+            compiler.Compile(ast);
+
+            if (log.HasErrors)
+            {
+                Fail(log);
+                return;
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
             Console.WriteLine("Compilation successful!");
             Console.ReadLine();
         }
