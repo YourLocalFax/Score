@@ -27,5 +27,10 @@
         {
             this.voidSpan = voidSpan;
         }
+
+        public override string ToString()
+        {
+            return IsVoid ? "()" : nameWithTyArgs.ToString();
+        }
     }
 }

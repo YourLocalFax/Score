@@ -25,5 +25,7 @@
         {
             this.op = op;
         }
+
+        public override string ToString() => Image;
     }
 }

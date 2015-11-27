@@ -1,4 +1,6 @@
-﻿namespace Score.Front.Parse.Ty
+﻿using System.Text;
+
+namespace Score.Front.Parse.Ty
 {
     internal abstract class TyRef
     {
@@ -20,6 +22,11 @@
         {
             this.ty = ty;
         }
+
+        public override string ToString()
+        {
+            return ty.ToString();
+        }
     }
 
     internal sealed class PointerTyRef : TyRef
@@ -31,6 +38,11 @@
         {
             this.ty = ty;
             this.isMut = isMut;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("^{0}{1}", isMut ? "mut " : "", ty.ToString());
         }
     }
 
@@ -44,6 +56,11 @@
             this.ty = ty;
             this.isMut = isMut;
         }
+
+        public override string ToString()
+        {
+            return string.Format("&{0}{1}", isMut ? "mut " : "", ty.ToString());
+        }
     }
 
     internal sealed class ArrayTyRef : TyRef
@@ -56,6 +73,11 @@
             this.inner = inner;
             this.depth = depth;
         }
+
+        public override string ToString()
+        {
+            return string.Format("[{0}{1}]", inner.ToString(), ",".Repeat((int)depth - 1));
+        }
     }
 
     internal sealed class TupleTyRef : TyRef
@@ -65,6 +87,21 @@
         public TupleTyRef(params TyRef[] inner)
         {
             this.inner = inner;
+        }
+
+        public override string ToString()
+        {
+            var builder = new StringBuilder().Append('(');
+
+            // TODO(kai): probably a better way to do this, never thought about it.
+            for (int i = 0; i < inner.Length; i++)
+            {
+                if (i > 0)
+                    builder.Append(", ");
+                builder.Append(inner[i]);
+            }
+
+            return builder.Append(')').ToString();
         }
     }
 }
