@@ -46,11 +46,7 @@ namespace Score.Back.LLVM
             return result;
         }
 
-        public void Visit(NodeFnDecl fnDecl)
-        {
-        }
-
-        public void Visit(NodeFn fn)
+        public void Visit(NodeFunctionDeclaration fn)
         {
             throw new NotImplementedException();
         }

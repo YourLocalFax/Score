@@ -4,7 +4,7 @@ using System.Text;
 namespace Score.Middle.Symbols
 {
     using Back.Types;
-    using Front.Parse;
+    using Front.Parse.Data;
 
     internal sealed class SymbolTable
     {
@@ -32,7 +32,7 @@ namespace Score.Middle.Symbols
             /// <param name="kind"></param>
             /// <param name="type"></param>
             /// <returns></returns>
-            public bool Insert(string name, Symbol.Kind kind, ScoreType type, Mods mods)
+            public bool Insert(string name, Symbol.Kind kind, ScoreType type, Modifiers mods)
             {
                 // TODO(kai): has it been defined?
                 symbols[name] = new Symbol(name, kind, type, mods);
@@ -80,7 +80,7 @@ namespace Score.Middle.Symbols
             set { currentBacking = value; }
         }
 
-        public void Insert(string name, Symbol.Kind kind, ScoreType type, Mods mods) => Current.Insert(name, kind, type, mods);
+        public void Insert(string name, Symbol.Kind kind, ScoreType type, Modifiers mods) => Current.Insert(name, kind, type, mods);
         public Symbol Lookup(string name) => Current.Lookup(name);
 
         public void NewScope() => Current.AddChild(Current = new Scope(global));

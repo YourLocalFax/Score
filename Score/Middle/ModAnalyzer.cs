@@ -27,19 +27,17 @@ namespace Score.Middle
             node.children.ForEach(child => child.Accept(this));
         }
 
-        public void Visit(NodeFnDecl fnDecl)
+        public void Visit(NodeFunctionDeclaration fn)
         {
             // FIXME(kai): type information, please <3
-            symbols.Insert(fnDecl.name, Symbol.Kind.FN, null, fnDecl.mods);
-        }
-
-        public void Visit(NodeFn fn)
-        {
-            fn.decl.Accept(this);
-            symbols.NewScope();
-            var analyzer = new FnAnalyzer(log, symbols);
-            fn.body.ForEach(node => node.Accept(analyzer));
-            symbols.ExitScope();
+            symbols.Insert(fn.Name, Symbol.Kind.FN, null, fn.header.modifiers);
+            if (fn.body != null)
+            {
+                symbols.NewScope();
+                var analyzer = new FnAnalyzer(log, symbols);
+                fn.body.body.ForEach(node => node.Accept(analyzer));
+                symbols.ExitScope();
+            }
         }
 
         public void Visit(NodeId id)

@@ -10,25 +10,26 @@ using static LLVMSharp.LLVM;
 
 namespace Score.Back.Types
 {
-    using Front;
-    using Front.Parse;
-    using Front.Parse.Types;
-    using Types;
+    using Front.Lex;
+    using Front.Parse.Ty;
 
     internal abstract class ScoreType
     {
-        public static ScoreType TempGetType(DetailLogger log, TypeInfo typeInfo)
+        public static ScoreType TempGetType(DetailLogger log, TyRef type)
         {
-            if (typeInfo == TypeInfo.VOID)
+            if (type.IsVoid)
                 return new ScoreTupleType();
-            if (typeInfo is PointerTypeInfo)
+            if (type is PointerTyRef)
             {
-                return new ScorePointerType(TempGetType(log, (typeInfo as PointerTypeInfo).type),
-                    (typeInfo as PointerTypeInfo).isMut);
+                return new ScorePointerType(TempGetType(log, (type as PointerTyRef).ty),
+                    (type as PointerTyRef).isMut);
             }
-            else if (typeInfo is PathTypeInfo)
+            else if (type is BaseTyRef)
             {
-                switch ((typeInfo as PathTypeInfo).path.path.Single())
+                var baseTy = type as BaseTyRef;
+                if (!baseTy.ty.IsBuiltinTy)
+                    return null; // TODO(kai): remember, we need types eventually. this is debug, but still.
+                switch ((baseTy.ty.name.name.names[0].id.token as TokenBuiltin).image)
                 {
                     case "i8": return new ScoreIntType(8, false);
                     case "i32": return new ScoreIntType(32, false);
@@ -72,6 +73,7 @@ namespace Score.Back.Types
 
         public ScorePointerType(ScoreType type, bool isMut)
         {
+            Console.WriteLine(type);
             this.type = type;
             this.isMut = isMut;
         }

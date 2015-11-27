@@ -68,16 +68,15 @@ fn main |args: [str]| -> () {
 	/# functions can contain data in the main scope
 	/# as if they were namespaces
 	struct 'data {
-		args: [str]
+		args: [str,]
+		flags: u32
 	}
-	if true {
-		let d = 'data args
-		handle_things d
-	}
+	let d = 'data args 0b0110u8
+	handle_things d
 }
 
 fn handle_things |d: main.'data| -> () {
-
+	/# do things
 }
 
 /# Not-else blocks? (cont maybe?) Executed if the else WASN'T executed.
@@ -164,8 +163,7 @@ impl number.Float(value) {
 
 data laye_obj = Int(i32) | Float(f32) | String(str)
 
-impl laye_obj
-{
+impl laye_obj {
 	fn + |that: laye_obj| -> laye_obj {
 		match this {
 			Int(value): match that {
@@ -192,6 +190,8 @@ impl laye_obj on Int(value) {
 
 
 
+
+/# CURRENTLY *VERY* RUST LIKE, JUST MESSING WITH IDEAS
 
 
 /# core_os.sr
@@ -252,5 +252,34 @@ pub type c_float = f32
 pub type c_double = f64
 
 /#[stable (feature "core_os", since "1.0.0")]
-pub type c_void = u8
+pub data c_void: u8 = priv __var1 | priv __var2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+fn add |a: i32, b: i32| -> i32 = a + b
+
+
+trait addable<B, R> {
+	fn + |that: B| -> R
+}
+
+fn add |a, b| = a + b
+/# is this:
+fn add<B, R> |a: addable, b: B| -> R
 

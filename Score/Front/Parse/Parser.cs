@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Score.Front.Parse
 {
+    using Data;
     using Lex;
-    using Patterns;
     using SyntaxTree;
-    using Types;
+    using Ty;
 
     using static Lex.Token.Type;
 
@@ -99,6 +99,8 @@ namespace Score.Front.Parse
 
         private bool CheckIdent() => Check(IDENT);
 
+        private bool CheckBuiltin() => HasCurrent && Current is TokenBuiltin;
+
         private bool CheckOp() => HasCurrent && Current is TokenOp;
 
         private bool CheckOp(Token.Type opType) => CheckOp(Util.TokenTypeToString(opType));
@@ -187,25 +189,21 @@ namespace Score.Front.Parse
                 case FN:
                     // NOTE eventually we'll have modifiers to worry about
                     return ParseFn(mods);
-                case LET:
-                    return ParseLet();
                 default:
                     return ParseExpr();
             }
         }
 
-        private Mods ParseMods()
+        private Modifiers ParseMods()
         {
-            var mods = new Mods();
+            var mods = new Modifiers();
             // pub priv extern intern
             while (HasCurrent)
             {
                 switch (Current.type)
                 {
                     case PUB: case PRIV: case EXTERN: case INTERN:
-                        string error;
-                        if (!mods.Set(Current.type, out error))
-                            log.Error(GetSpan(), error);
+                        mods.mods.Add(Current as TokenKw);
                         Advance();
                         break;
                     default: return mods;
@@ -355,17 +353,21 @@ namespace Score.Front.Parse
             return left;
         }
 
-        private IdentPath ParseIdentPath()
+        private QualifiedName ParseQualifiedName()
         {
-            var result = new IdentPath();
+            var result = new QualifiedName();
 
             // TODO(kai): clean this up some, there's gotta be a nicer looking way.
-            while (Check(IDENT) || Check(SYMBOL))
+            while (Check(IDENT) || Check(SYMBOL) || CheckBuiltin() || CheckOp())
             {
                 // Add the name to the path
                 if (Check(IDENT))
-                    result.Add((Current as TokenId).image);
-                else result.Add((Current as TokenSym).image);
+                    result.Add(new Name(Current as TokenId));
+                else if (Check(SYMBOL))
+                    result.Add(new Name(Current as TokenSym));
+                else if (CheckBuiltin())
+                    result.Add(new Name(Current as TokenBuiltin));
+                else result.Add(new Op(Current as TokenOp));
                 // Move past it
                 Advance();
                 // If there's a dot, we expect the path to continue some how.
@@ -374,10 +376,9 @@ namespace Score.Front.Parse
                     // Skip it
                     Advance();
                     // Make sure the path continues, else we're fak'd
-                    // TODO(kai): maybe also accept operators? would be convenient
-                    if (!(Check(IDENT) || Check(SYMBOL)))
+                    if (!(Check(IDENT) || Check(SYMBOL) || CheckOp()))
                     {
-                        log.Error(Current.span, "Expected identifier or symbol to coninue path");
+                        log.Error(Current.span, "Expected identifier, symbol, or operator to coninue path.");
                         break;
                     }
                 }
@@ -388,31 +389,36 @@ namespace Score.Front.Parse
             return result;
         }
 
+        private QualifiedNameWithTyArgs ParseQualifiedNameWithTyArgs()
+        {
+            var result = new QualifiedNameWithTyArgs();
+            result.name = ParseQualifiedName();
+            return result;
+        }
+
         /// <summary>
         /// This expects the arguments to be surrounded by pipes.
         /// </summary>
-        private List<ParamInfo> ParseParams()
+        private ParameterList ParseParameters()
         {
             // first pipe
 
             ExpectOp(PIPE, "Expected '|' to start parameter list.");
 
-            var result = new List<ParamInfo>();
+            var result = new ParameterList();
             if (!CheckOp(PIPE))
             {
                 while (HasCurrent)
                 {
-                    var param = new ParamInfo();
-                    result.Add(param);
-                    // The name of this param
-                    param.nameSpan = Current.span;
-                    param.name = ExpectIdent("Identifier expected to name a parameter.").image;
+                    var name = ExpectIdent("Identifier expected to name a parameter.");
+                    TyRef ty = null;
                     if (CheckOp(COLON))
                     {
                         AdvanceOp(COLON);
                         // the type of this param
-                        param.type = ParseType(out param.typeSpan);
+                        ty = ParseTy();
                     }
+                    result.parameters.Add(new Parameter(ty, new Name(name)));
                     if (CheckOp(COMMA))
                         AdvanceOp(COMMA);
                     else break;
@@ -424,15 +430,15 @@ namespace Score.Front.Parse
             return result;
         }
 
-        private TypeInfo ParseType(out Span span)
+        private TyRef ParseTy()
         {
             var start = Current.span.Start;
             if (Check(LPAREN) && NextCheck(RPAREN))
             {
-                span = start + Next.span.End;
+                var span = start + Next.span.End;
                 Advance();
                 Advance();
-                return TypeInfo.VOID;
+                return TyRef.Void(span);
             }
 
             if (!HasCurrent)
@@ -440,36 +446,18 @@ namespace Score.Front.Parse
                 // TODO(kai): error, no type to parse.
             }
 
-            // FIXME(kai): lots of repeated code, fix this
-            if (CheckOp(CARET))
+            if (CheckOp(CARET) || CheckOp(AMP))
             {
-                AdvanceOp(CARET);
+                var isPointer = CheckOp(CARET);
+                AdvanceOp(isPointer ? CARET : AMP);
                 bool isMut = false;
                 if (Check(MUT))
                 {
                     Advance();
                     isMut = true;
                 }
-                Span subSpan;
-                var type = ParseType(out subSpan);
-                span = start + subSpan.End;
-                return new PointerTypeInfo(type, isMut);
-            }
-
-
-            if (CheckOp(AMP))
-            {
-                AdvanceOp(AMP);
-                bool isMut = false;
-                if (Check(MUT))
-                {
-                    Advance();
-                    isMut = true;
-                }
-                Span subSpan;
-                var type = ParseType(out subSpan);
-                span = start + subSpan.End;
-                return new PointerTypeInfo(type, isMut);
+                var type = ParseTy();
+                return isPointer ? TyRef.PointerTo(type, isMut) as TyRef : TyRef.ReferenceTo(type, isMut) as TyRef;
             }
 
             switch (Current.type)
@@ -477,32 +465,45 @@ namespace Score.Front.Parse
                 case LBRACKET:
                 {
                     Advance();
-                    Span subSpan;
-                    var type = ParseType(out subSpan);
+                    var type = ParseTy();
                     Expect(RBRACKET, "Expected ']' to end array type definition.");
-                    span = start + subSpan.End;
-                    return new ArrayTypeInfo(type);
+                    // TODO(kai): multiple array-depth
+                    return TyRef.ArrayOf(type, 1);
                 }
+                    /*
+                case LPAREN:
+                {
+                    Advance();
+                    var types = new List<TyRef>();
+                    while (HasCurrent)
+                    {
+                        var type = ParseTy();
+                        types.Add(type);
+                        if (CheckOp(COMMA))
+                            AdvanceOp(COMMA);
+                        else break;
+                    }
+                    Expect(RPAREN, "Expected ')' to end tuple type definition.");
+                    return TyRef.TupleOf(types.ToArray());
+                }
+                */
                 default:
                 {
-                    var path = ParseIdentPath();
-                    span = start + GetSpan().End;
-                    return new PathTypeInfo(path);
+                    var name = ParseQualifiedNameWithTyArgs();
+                    return TyRef.For(TyOrVoid.FromTy(name));
                 }
             }
         }
 
-        // TODO(kai): the actual parser stuff
-
         /// <summary>
         /// This starts at the 'fn' keyword and reads until the return type.
         /// </summary>
-        private NodeFnDecl ParseFnDecl(Mods mods)
+        private void ParseFnDecl(NodeFunctionDeclaration fn)
         {
             // TODO(kai): check for no tokens?
-            var result = new NodeFnDecl(Current.span.Start, mods);
 
             // The 'fn' keyword
+            fn.fn = Current as TokenKw;
             Expect(FN, "Expected 'fn' when parsing fn declaration.");
 
             // Next, there'll be generic type arguments.
@@ -513,35 +514,24 @@ namespace Score.Front.Parse
             if (!HasCurrent)
             {
                 log.Error(GetLastSpan(), "Expected an identifier to name the function, got end of file.");
-                return result;
+                return;
             }
 
-            result.nameSpan = Current.span;
-            if (CheckIdent())
-                result.name = GetIdent();
-            else if (CheckOp())
-                result.name = GetOp();
-            else
-            {
-                log.Error(Current.span, "Invalid function name '{0}'.", Current);
-                Advance();
-            }
+            fn.name = ParseQualifiedNameWithTyArgs();
 
             // Then, the parameter list!
-            result.@params = ParseParams();
+            fn.parameters = ParseParameters();
 
             // Next, the return type!
             if (CheckOp(ARROW))
             {
+                fn.arrow = Current as Token;
                 AdvanceOp(ARROW);
-                result.retType = ParseType(out result.retSpan);
+                fn.returnTy = ParseTy();
             }
-            else result.retType = TypeInfo.INFER;
+            else fn.returnTy = null;
 
             // That's the end of the fn decl!
-
-            result.end = Last.span.End;
-            return result;
         }
 
         /// <summary>
@@ -549,19 +539,33 @@ namespace Score.Front.Parse
         /// This can still return a NodeFn for extern fns, it'll just end up being an error later (unless I do
         /// some kinda neat thing with bodied externs?)
         /// </summary>
-        private Node ParseFn(Mods mods)
+        private NodeFunctionDeclaration ParseFn(Modifiers mods)
         {
-            var decl = ParseFnDecl(mods);
+            var fn = new NodeFunctionDeclaration();
+            fn.header = new MemberHeader(mods);
+            ParseFnDecl(fn);
 
             if (!HasCurrent)
-                return decl;
+                return fn;
 
             // TODO(kai): clean this up, it's ugly
-            if (Check(EQ))
-            {
-                var fn = new NodeFn(decl);
+            if (Check(EQ) || Check(LBRACE))
+                fn.body = ParseFnBody();
+
+            // TODO(kai): check if this is followed by an expression.
+            // if it is, then we should parse that and use it as a body!
+
+            return fn;
+        }
+
+        private FunctionBody ParseFnBody()
+        {
+            var body = new FunctionBody();
+
+            /*
+                fn.body = new FunctionBody();
+                fn.body.eq = Current;
                 Advance();
-                fn.hasEq = true;
                 if (Check(LBRACE))
                     fn.body = ParseFnBodyBlock();
                 else
@@ -576,88 +580,39 @@ namespace Score.Front.Parse
                     fn.body.Add(expr);
                 }
                 fn.end = Last.span.End;
-                return fn;
-            }
-            else if (Check(LBRACE))
+            */
+
+            var hasEq = false;
+            if (Check(EQ))
             {
-                var fn = new NodeFn(decl);
-                fn.body = ParseFnBodyBlock();
-                fn.end = Last.span.End;
-                return fn;
+                hasEq = true;
+                body.eq = Current;
+                Advance();
+            }
+            
+            if (hasEq && !Check(LBRACE))
+            {
+                body.body.Add(ParseExpr());
+                return body;
             }
 
-            // TODO(kai): check if this is followed by an expression.
-            // if it is, then we should parse that and use it as a body!
-
-            return decl;
-        }
-
-        private List<Node> ParseFnBodyBlock()
-        {
-            Advance(); // '{'
-            var result = new List<Node>();
+            // TODO(kai): Maybe I need a break. check this out?
+            Expect(LBRACE, !hasEq ? "Expected '{' to start function body when '=' is not present." :
+                "Expected '{' to start function body.");
 
             while (HasCurrent && !Check(RBRACE))
             {
                 var node = ParseTopLevel();
                 if (node == null)
                     break;
-                result.Add(node);
+                body.body.Add(node);
                 if (Check(RBRACE))
                     break;
             }
 
             Expect(RBRACE, "Expected '}' to end function body block.");
-            return result;
-        }
 
-        private NodeLet ParseLet()
-        {
-            Advance();
-
-            ParsePattern();
-
-            return null;
-        }
-
-        private BasePattern ParsePattern()
-        {
-            if (Check(LPAREN))
-            {
-                Advance();
-                // TUPLE
-                if (Check(RPAREN))
-                {
-                    // TODO(kai): error, empty pattern.
-                }
-                List<BasePattern> patterns = new List<BasePattern>();
-                while (HasCurrent && !Check(RPAREN))
-                {
-                    var pattern = ParsePattern();
-                    patterns.Add(pattern);
-                    if (Check(COMMA))
-                        Advance();
-                    else break;
-                }
-                Expect(RPAREN, "Expected ')' to end tuple pattern.");
-                return new TuplePattern(patterns);
-            }
-            Span span;
-            var type = ParseType(out span);
-            if (Check(LPAREN))
-            {
-                // IDENT(TUPLE)
-                var tuple = ParsePattern() as TuplePattern;
-                return new TypePattern(type, tuple);
-            }
-            if (type is PathTypeInfo)
-            {
-                var path = (type as PathTypeInfo).path;
-                if (path.path.Count == 1)
-                    return new Pattern(path.path[0]);
-            }
-            // TODO(kai): bad things.
-            return null;
+            return body;
         }
         #endregion
     }

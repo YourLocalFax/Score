@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -75,6 +76,26 @@ namespace Score
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("Compilation successful!");
+            Console.WriteLine();
+            Console.WriteLine();
+
+            // Run the interpreter!
+            Console.WriteLine("Interpreting:");
+            var processInfo = new ProcessStartInfo("cmd.exe", @"/c ..\..\..\TEST_FILES\lli.exe ..\..\..\TEST_FILES\test.bc");
+            processInfo.CreateNoWindow = false;
+            processInfo.UseShellExecute = false;
+            processInfo.RedirectStandardOutput = true;
+            processInfo.RedirectStandardError = true;
+
+            var process = Process.Start(processInfo);
+            process.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
+            {
+                Console.WriteLine(e.Data);
+            };
+            process.BeginOutputReadLine();
+
+            process.WaitForExit();
+
             Console.ReadLine();
         }
 

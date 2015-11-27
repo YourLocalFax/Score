@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Score.Middle.Symbols
+﻿namespace Score.Middle.Symbols
 {
-    using Back.LLVM.Values;
     using Back.Types;
-    using Front.Parse;
+    using Front.Parse.Data;
 
     internal sealed class Symbol
     {
@@ -24,9 +17,9 @@ namespace Score.Middle.Symbols
         public readonly string name;
         public readonly Kind kind;
         public readonly ScoreType type;
-        public readonly Mods mods;
+        public readonly Modifiers mods;
 
-        public Symbol(string name, Kind kind, ScoreType type, Mods mods)
+        public Symbol(string name, Kind kind, ScoreType type, Modifiers mods)
         {
             this.name = name;
             this.kind = kind;

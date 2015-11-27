@@ -166,6 +166,104 @@ namespace Score.Front.Lex
                     return new TokenOp(span, image);
             }
         }
+
+        public static bool IsBuiltin(string s)
+        {
+            return GetTypeFromBuiltin(s) != Token.Type.UNKNOWN;
+        }
+
+        public static Token.Type GetTypeFromBuiltin(string s)
+        {
+            switch (s)
+            {
+                case "i8": return Token.Type.I8;
+                case "u8": return Token.Type.U8;
+                case "i16": return Token.Type.I16;
+                case "u16": return Token.Type.U16;
+                case "i32": return Token.Type.I32;
+                case "u32": return Token.Type.U32;
+                case "i64": return Token.Type.I64;
+                case "u64": return Token.Type.U64;
+                case "f16": return Token.Type.F16;
+                case "f32": return Token.Type.F32;
+                case "f64": return Token.Type.F64;
+                case "bool": return Token.Type.BOOL;
+
+                default: return Token.Type.UNKNOWN;
+            }
+        }
+
+        public static bool IsKw(string s)
+        {
+            return GetTypeFromKw(s) != Token.Type.UNKNOWN;
+        }
+
+        public static Token.Type GetTypeFromKw(string s)
+        {
+            switch (s)
+            {
+                /*
+                let|mut|lazy|take|pub|priv|stat|extern|virtual|override|implicit // these last three are idunno
+                use|from|kit
+                self|tailrec|fn|gen|new|void
+                this|base|struct|class|data|enum|trait|impl|type|sealed|partial
+                if|el|when|for|each|while|loop|match|ret|break|cont|resume|yield
+                typeof|is|as
+                */
+
+                case "let": return Token.Type.LET;
+                case "mut": return Token.Type.MUT;
+                case "lazy": return Token.Type.LAZY;
+                case "take": return Token.Type.TAKE;
+                case "pub": return Token.Type.PUB;
+                case "priv": return Token.Type.PRIV;
+                case "stat": return Token.Type.STAT;
+                case "extern": return Token.Type.EXTERN;
+                case "intern": return Token.Type.INTERN;
+                case "virtual": return Token.Type.VIRTUAL;
+                case "override": return Token.Type.OVERIDE;
+                case "implicit": return Token.Type.IMPLICIT;
+
+                case "use": return Token.Type.USE;
+                case "from": return Token.Type.FROM;
+                case "kit": return Token.Type.KIT;
+
+                case "self": return Token.Type.SELF;
+                case "tailrec": return Token.Type.TAILREC;
+                case "fn": return Token.Type.FN;
+                case "gen": return Token.Type.GEN;
+                case "new": return Token.Type.NEW;
+                case "void": return Token.Type.VOID;
+
+                case "this": return Token.Type.THIS;
+                case "base": return Token.Type.BASE;
+                case "struct": return Token.Type.STRUCT;
+                case "class": return Token.Type.CLASS;
+                case "data": return Token.Type.DATA;
+                case "enum": return Token.Type.ENUM;
+                case "trait": return Token.Type.TRAIT;
+                case "impl": return Token.Type.IMPL;
+                case "type": return Token.Type.TYPE;
+                case "sealed": return Token.Type.SEALED;
+                case "partial": return Token.Type.PARTIAL;
+
+                case "if": return Token.Type.IF;
+                case "el": return Token.Type.EL;
+                case "when": return Token.Type.WHEN;
+                case "for": return Token.Type.FOR;
+                case "each": return Token.Type.EACH;
+                case "while": return Token.Type.WHILE;
+                case "loop": return Token.Type.LOOP;
+                case "match": return Token.Type.MATCH;
+                case "ret": return Token.Type.RET;
+                case "break": return Token.Type.BREAK;
+                case "cont": return Token.Type.CONT;
+                case "resume": return Token.Type.RESUME;
+                case "yield": return Token.Type.YIELD;
+
+                default: return Token.Type.UNKNOWN;
+            }
+        }
     }
 
     internal sealed class Lexer
@@ -305,80 +403,6 @@ namespace Score.Front.Lex
             builder.Append(char.ConvertFromUtf32((int)c));
         }
 
-        private bool IsKw(string s)
-        {
-            return GetTypeFromKw(s) != Token.Type.UNKNOWN;
-        }
-
-        // FIXME(kai): Move to lexer util
-
-        private Token.Type GetTypeFromKw(string s)
-        {
-            switch (s)
-            {
-                /*
-                let|mut|lazy|take|pub|priv|stat|extern|virtual|override|implicit // these last three are idunno
-                use|from|kit
-                self|tailrec|fn|gen|new|void
-                this|base|struct|class|data|enum|trait|impl|type|sealed|partial
-                if|el|when|for|each|while|loop|match|ret|break|cont|resume|yield
-                typeof|is|as
-                */
-
-                case "let": return Token.Type.LET;
-                case "mut": return Token.Type.MUT;
-                case "lazy": return Token.Type.LAZY;
-                case "take": return Token.Type.TAKE;
-                case "pub": return Token.Type.PUB;
-                case "priv": return Token.Type.PRIV;
-                case "stat": return Token.Type.STAT;
-                case "extern": return Token.Type.EXTERN;
-                case "intern": return Token.Type.INTERN;
-                case "virtual": return Token.Type.VIRTUAL;
-                case "override": return Token.Type.OVERIDE;
-                case "implicit": return Token.Type.IMPLICIT;
-
-                case "use": return Token.Type.USE;
-                case "from": return Token.Type.FROM;
-                case "kit": return Token.Type.KIT;
-
-                case "self": return Token.Type.SELF;
-                case "tailrec": return Token.Type.TAILREC;
-                case "fn": return Token.Type.FN;
-                case "gen": return Token.Type.GEN;
-                case "new": return Token.Type.NEW;
-                case "void": return Token.Type.VOID;
-
-                case "this": return Token.Type.THIS;
-                case "base": return Token.Type.BASE;
-                case "struct": return Token.Type.STRUCT;
-                case "class": return Token.Type.CLASS;
-                case "data": return Token.Type.DATA;
-                case "enum": return Token.Type.ENUM;
-                case "trait": return Token.Type.TRAIT;
-                case "impl": return Token.Type.IMPL;
-                case "type": return Token.Type.TYPE;
-                case "sealed": return Token.Type.SEALED;
-                case "partial": return Token.Type.PARTIAL;
-
-                case "if": return Token.Type.IF;
-                case "el": return Token.Type.EL;
-                case "when": return Token.Type.WHEN;
-                case "for": return Token.Type.FOR;
-                case "each": return Token.Type.EACH;
-                case "while": return Token.Type.WHILE;
-                case "loop": return Token.Type.LOOP;
-                case "match": return Token.Type.MATCH;
-                case "ret": return Token.Type.RET;
-                case "break": return Token.Type.BREAK;
-                case "cont": return Token.Type.CONT;
-                case "resume": return Token.Type.RESUME;
-                case "yield": return Token.Type.YIELD;
-
-                default: return Token.Type.UNKNOWN; 
-            }
-        }
-
         private bool IsNotIdentStart()
         {
             // TODO(kai): I don't think this should be a switch/case.
@@ -446,6 +470,8 @@ namespace Score.Front.Lex
                 // otherwise, it's an identifier
                 if (IsKw(str))
                     return new TokenKw(GetTypeFromKw(str), start + GetLocation(), str);
+                else if (IsBuiltin(str))
+                    return new TokenBuiltin(GetTypeFromBuiltin(str), start + GetLocation(), str);
                 return new TokenId(start + GetLocation(), str);
             }
 
@@ -570,6 +596,11 @@ namespace Score.Front.Lex
 
         private string LexIdentStr()
         {
+            if (!IsIdentStart(c))
+            {
+                log.Error(GetLocation().AsSpan(), "Invalid start to an identifier.");
+                return "";
+            }
             var start = GetLocation();
             while (!EndOfSource && IsIdentContinue(c))
                 Bump();

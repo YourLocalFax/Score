@@ -18,6 +18,21 @@ namespace Score.Front.Lex
 
             WILDCARD, // '_'
 
+            #region Builtins
+            I8,
+            U8,
+            I16,
+            U16,
+            I32,
+            U32,
+            I64,
+            U64,
+            F16,
+            F32,
+            F64,
+            BOOL,
+            #endregion
+
             #region Keywords
             LET,
             MUT,
@@ -121,6 +136,22 @@ namespace Score.Front.Lex
                 case Type.WILDCARD: return "_";
                 default: return "<no idea, friend>";
             }
+        }
+    }
+
+    internal sealed class TokenBuiltin : Token
+    {
+        public readonly string image;
+
+        public TokenBuiltin(Type type, Span span, string image)
+            : base(type, span)
+        {
+            this.image = image;
+        }
+
+        public override string ToString()
+        {
+            return image;
         }
     }
 

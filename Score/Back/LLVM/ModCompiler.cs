@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using LLVMSharp;
 
@@ -10,9 +6,9 @@ using static LLVMSharp.LLVM;
 
 namespace Score.Back.LLVM
 {
+    using Front.Lex;
     using Front.Parse;
     using Front.Parse.SyntaxTree;
-    using Front.Parse.Types;
 
     using Middle.Symbols;
 
@@ -54,45 +50,46 @@ namespace Score.Back.LLVM
         }
         */
 
-        public void Visit(NodeFnDecl fnDecl)
+        public void Visit(NodeFunctionDeclaration fn)
         {
-            // Do we need this? Probably not
-            var sym = walker.Current.Lookup(fnDecl.name);
+            var name = fn.Name;
 
-            var paramTypes = new LLVMTypeRef[fnDecl.@params.Count];
+            // The decl:
+
+            var paramTypes = new LLVMTypeRef[fn.parameters.parameters.Count];
             for (int i = 0; i < paramTypes.Length; i++)
             {
-                var paramInfo = fnDecl.@params[i];
+                var param = fn.parameters.parameters[i];
 
                 // TEMP CODE PLZ FIXME(kai): this is bad
 
-                var type = ScoreType.TempGetType(log, paramInfo.type);
+                var type = ScoreType.TempGetType(log, param.ty);
                 var llvmType = type.TempGetLLVMType(Context);
 
                 paramTypes[i] = llvmType;
             }
 
-            var returnType = ScoreType.TempGetType(log, fnDecl.retType).TempGetLLVMType(Context);
+            var returnType = ScoreType.TempGetType(log, fn.returnTy).TempGetLLVMType(Context);
             var fnType = FunctionType(returnType, paramTypes, false);
 
-            var fn = AddFunction(module, fnDecl.name, fnType);
-            if (fnDecl.mods.Extern)
-                SetLinkage(fn, LLVMLinkage.LLVMExternalLinkage);
-        }
+            var fnDecl = AddFunction(module, name, fnType);
+            if (fn.header.modifiers.Has(Token.Type.EXTERN))
+                SetLinkage(fnDecl, LLVMLinkage.LLVMExternalLinkage);
 
-        public void Visit(NodeFn fn)
-        {
-            fn.decl.Accept(this);
-            var self = GetNamedFunction(module, fn.decl.name);
-            var sym = walker.Current.Lookup(fn.decl.name);
+            if (fn.body != null)
+            {
+                var self = GetNamedFunction(module, name);
+                var sym = walker.Current.Lookup(name);
 
-            walker.Step();
+                walker.Step();
 
-            var compiler = new FnCompiler(manager, module, self);
-            fn.body.ForEach(node => node.Accept(compiler));
+                var compiler = new FnCompiler(manager, module, self);
+                fn.body.body.ForEach(node => node.Accept(compiler));
 
-            if (fn.decl.retType == TypeInfo.VOID)
-                BuildRetVoid(compiler.builder);
+                if (fn.returnTy.IsVoid)
+                    BuildRetVoid(compiler.builder);
+                // TODO(kai): ELSE RETURN OTHER THINGS PLZ
+            }
         }
 
         public void Visit(NodeId id)
