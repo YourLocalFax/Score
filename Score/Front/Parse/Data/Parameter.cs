@@ -5,14 +5,14 @@
     internal sealed class Parameter
     {
         public readonly TyRef ty;
-        public readonly Name id;
+        public readonly Name name;
 
         // TODO(kai): default values
 
-        public Parameter(TyRef ty, Name id)
+        public Parameter(TyRef ty, Name name)
         {
             this.ty = ty;
-            this.id = id;
+            this.name = name;
         }
     }
 }

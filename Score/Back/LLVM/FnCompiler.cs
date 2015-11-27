@@ -62,7 +62,7 @@ namespace Score.Back.LLVM
 
             // look up puts
             // TODO(kai): THIS IS BAD PLS STOP
-            var fn = GetNamedFunction(module, (invoke.target as NodeId).token.image);
+            var fn = GetNamedFunction(module, (invoke.target as NodeId).token.Image);
             // load c"Hello, world!"
             invoke.args.ForEach(arg => arg.Accept(this));
             // retrieve the values from the stack

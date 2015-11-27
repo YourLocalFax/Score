@@ -116,6 +116,8 @@ namespace Score.Front.Lex
         public readonly Type type;
         public readonly Span span;
 
+        public virtual string Image => ToString();
+
         // TODO(kai): maybe just consolidate things, subclasses might not be nice.
         public Token(Type type, Span span)
         {
@@ -141,7 +143,8 @@ namespace Score.Front.Lex
 
     internal sealed class TokenBuiltin : Token
     {
-        public readonly string image;
+        private readonly string image;
+        public override string Image => image;
 
         public TokenBuiltin(Type type, Span span, string image)
             : base(type, span)
@@ -149,10 +152,7 @@ namespace Score.Front.Lex
             this.image = image;
         }
 
-        public override string ToString()
-        {
-            return image;
-        }
+        public override string ToString() => image;
     }
 
     /// <summary>
@@ -160,7 +160,8 @@ namespace Score.Front.Lex
     /// </summary>
     internal sealed class TokenKw : Token
     {
-        public readonly string image;
+        private readonly string image;
+        public override string Image => image;
 
         public TokenKw(Type type, Span span, string image)
             : base(type, span)
@@ -168,10 +169,7 @@ namespace Score.Front.Lex
             this.image = image;
         }
 
-        public override string ToString()
-        {
-            return image;
-        }
+        public override string ToString() => image;
     }
 
     /// <summary>
@@ -179,7 +177,8 @@ namespace Score.Front.Lex
     /// </summary>
     internal sealed class TokenId : Token
     {
-        public readonly string image;
+        private readonly string image;
+        public override string Image => image;
 
         public TokenId(Span span, string image)
             : base(Type.IDENT, span)
@@ -187,10 +186,7 @@ namespace Score.Front.Lex
             this.image = image;
         }
 
-        public override string ToString()
-        {
-            return image;
-        }
+        public override string ToString() => image;
     }
 
     internal sealed class TokenSym : Token
@@ -222,15 +218,14 @@ namespace Score.Front.Lex
             this.cstr = cstr;
         }
 
-        public override string ToString()
-        {
-            return string.Format("{0}{1}\"{2}\"", verbatim ? "v" : "", cstr ? "c" : "", value);
-        }
+        public override string ToString() =>
+            string.Format("{0}{1}\"{2}\"", verbatim ? "v" : "", cstr ? "c" : "", value);
     }
 
     internal sealed class TokenOp : Token
     {
-        public readonly string image;
+        private readonly string image;
+        public override string Image => image;
 
         public TokenOp(Span span, string image)
             : base(Type.OP, span)
@@ -244,10 +239,7 @@ namespace Score.Front.Lex
             this.image = image;
         }
 
-        public override string ToString()
-        {
-            return image;
-        }
+        public override string ToString() => image;
     }
 
     internal sealed class TokenChar : Token

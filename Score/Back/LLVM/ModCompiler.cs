@@ -56,10 +56,10 @@ namespace Score.Back.LLVM
 
             // The decl:
 
-            var paramTypes = new LLVMTypeRef[fn.parameters.parameters.Count];
+            var paramTypes = new LLVMTypeRef[fn.parameters.Count];
             for (int i = 0; i < paramTypes.Length; i++)
             {
-                var param = fn.parameters.parameters[i];
+                var param = fn.parameters[i];
 
                 // TEMP CODE PLZ FIXME(kai): this is bad
 
@@ -84,7 +84,7 @@ namespace Score.Back.LLVM
                 walker.Step();
 
                 var compiler = new FnCompiler(manager, module, self);
-                fn.body.body.ForEach(node => node.Accept(compiler));
+                fn.body.ForEach(node => node.Accept(compiler));
 
                 if (fn.returnTy.IsVoid)
                     BuildRetVoid(compiler.builder);

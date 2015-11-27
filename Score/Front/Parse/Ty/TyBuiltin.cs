@@ -13,7 +13,7 @@
         private readonly TokenBuiltin name;
 
         public Span span => name.span;
-        public string Name => name.image;
+        public string Name => name.Image;
 
         public TyBuiltin(TokenBuiltin name)
         {

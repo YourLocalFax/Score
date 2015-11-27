@@ -117,7 +117,7 @@ namespace Score.Front.Parse
 
         private string GetIdent()
         {
-            var result = (Current as TokenId).image;
+            var result = (Current as TokenId).Image;
             Advance();
             return result;
         }
@@ -127,7 +127,7 @@ namespace Score.Front.Parse
             string result;
             if (Check(PIPE))
                 result = "|";
-            else result = (Current as TokenOp).image;
+            else result = (Current as TokenOp).Image;
             Advance();
             return result;
         }
@@ -203,7 +203,7 @@ namespace Score.Front.Parse
                 switch (Current.type)
                 {
                     case PUB: case PRIV: case EXTERN: case INTERN:
-                        mods.mods.Add(Current as TokenKw);
+                        mods.modifiers.Add(Current as TokenKw);
                         Advance();
                         break;
                     default: return mods;
@@ -401,11 +401,13 @@ namespace Score.Front.Parse
         /// </summary>
         private ParameterList ParseParameters()
         {
-            // first pipe
+            var result = new ParameterList();
 
+            // first pipe
+            if (HasCurrent)
+                result.leadingPipe = Current as TokenOp;
             ExpectOp(PIPE, "Expected '|' to start parameter list.");
 
-            var result = new ParameterList();
             if (!CheckOp(PIPE))
             {
                 while (HasCurrent)
@@ -418,7 +420,7 @@ namespace Score.Front.Parse
                         // the type of this param
                         ty = ParseTy();
                     }
-                    result.parameters.Add(new Parameter(ty, new Name(name)));
+                    result.Add(new Parameter(ty, new Name(name)));
                     if (CheckOp(COMMA))
                         AdvanceOp(COMMA);
                     else break;
@@ -426,6 +428,8 @@ namespace Score.Front.Parse
             }
 
             // last pipe
+            if (HasCurrent)
+                result.trailingPipe = Current as TokenOp;
             ExpectOp(PIPE, "Expected '|' to end parameter list.");
             return result;
         }
@@ -517,7 +521,7 @@ namespace Score.Front.Parse
                 return;
             }
 
-            fn.name = ParseQualifiedNameWithTyArgs();
+            fn.nameWithTyArgs = ParseQualifiedNameWithTyArgs();
 
             // Then, the parameter list!
             fn.parameters = ParseParameters();
@@ -592,11 +596,13 @@ namespace Score.Front.Parse
             
             if (hasEq && !Check(LBRACE))
             {
-                body.body.Add(ParseExpr());
+                body.Add(ParseExpr());
                 return body;
             }
 
             // TODO(kai): Maybe I need a break. check this out?
+            if (HasCurrent)
+                body.lbrace = Current;
             Expect(LBRACE, !hasEq ? "Expected '{' to start function body when '=' is not present." :
                 "Expected '{' to start function body.");
 
@@ -605,11 +611,13 @@ namespace Score.Front.Parse
                 var node = ParseTopLevel();
                 if (node == null)
                     break;
-                body.body.Add(node);
+                body.Add(node);
                 if (Check(RBRACE))
                     break;
             }
 
+            if (HasCurrent)
+                body.rbrace = Current;
             Expect(RBRACE, "Expected '}' to end function body block.");
 
             return body;

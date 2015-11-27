@@ -35,7 +35,7 @@ namespace Score.Middle
             {
                 symbols.NewScope();
                 var analyzer = new FnAnalyzer(log, symbols);
-                fn.body.body.ForEach(node => node.Accept(analyzer));
+                fn.body.ForEach(node => node.Accept(analyzer));
                 symbols.ExitScope();
             }
         }

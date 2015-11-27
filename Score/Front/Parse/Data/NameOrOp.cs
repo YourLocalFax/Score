@@ -14,6 +14,8 @@
         public bool IsId => id != null;
         public bool IsOp => op != null;
 
+        public string Image => IsId ? id.Image : op.Image;
+
         private NameOrOp(Name id)
         {
             this.id = id;

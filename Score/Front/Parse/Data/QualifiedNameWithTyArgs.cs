@@ -3,7 +3,6 @@
     internal sealed class QualifiedNameWithTyArgs
     {
         public QualifiedName name;
-        // TODO(kai): uncomment when you add generic type arguments.
-        //public TyArgList tyArgs;
+        public TyArgList tyArgs;
     }
 }
