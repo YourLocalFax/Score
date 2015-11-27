@@ -447,7 +447,8 @@ namespace Score.Front.Parse
 
             if (!HasCurrent)
             {
-                // TODO(kai): error, no type to parse.
+                log.Error(GetSpan(), "Expected type, found end of source.");
+                return null;
             }
 
             if (CheckOp(CARET) || CheckOp(AMP))
