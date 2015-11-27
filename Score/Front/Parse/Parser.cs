@@ -471,9 +471,14 @@ namespace Score.Front.Parse
                 {
                     Advance();
                     var type = ParseTy();
+                    var depth = 1u;
+                    while (CheckOp(COMMA))
+                    {
+                        AdvanceOp(COMMA);
+                        depth++;
+                    }
                     Expect(RBRACKET, "Expected ']' to end array type definition.");
-                    // TODO(kai): multiple array-depth
-                    return TyRef.ArrayOf(type, 1);
+                    return TyRef.ArrayOf(type, depth);
                 }
                     /*
                 case LPAREN:
