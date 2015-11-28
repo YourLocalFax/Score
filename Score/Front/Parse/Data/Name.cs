@@ -4,31 +4,20 @@
 
     internal sealed class Name
     {
-        private readonly Token token;
+        private readonly Span span;
+        private readonly string image;
 
-        public bool IsId => token is TokenId;
-        public bool IsSym => token is TokenSym;
-        public bool IsBuiltin => token is TokenBuiltin;
+        public Span Span => span;
+        public string Image => image;
 
-        public TokenId Id => token as TokenId;
-        public TokenSym Sym => token as TokenSym;
-        public TokenBuiltin Builtin => token as TokenBuiltin;
-
-        public string Image => token.Image;
-
-        public Name(TokenId token)
+        private Name(Token token)
         {
-            this.token = token;
+            span = token.span;
+            image = token.Image;
         }
 
-        public Name(TokenSym token)
-        {
-            this.token = token;
-        }
-
-        public Name(TokenBuiltin token)
-        {
-            this.token = token;
-        }
+        public Name(TokenId token) : this(token as Token) { }
+        public Name(TokenSym token) : this(token as Token) { }
+        public Name(TokenPrimitiveTyName token) : this(token as Token) { }
     }
 }

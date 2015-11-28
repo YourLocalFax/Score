@@ -19,18 +19,7 @@ namespace Score.Front.Lex
             WILDCARD, // '_'
 
             #region Builtins
-            I8,
-            U8,
-            I16,
-            U16,
-            I32,
-            U32,
-            I64,
-            U64,
-            F16,
-            F32,
-            F64,
-            BOOL,
+            PRIMITIVE,
             #endregion
 
             #region Keywords
@@ -141,13 +130,13 @@ namespace Score.Front.Lex
         }
     }
 
-    internal sealed class TokenBuiltin : Token
+    internal sealed class TokenPrimitiveTyName : Token
     {
         private readonly string image;
         public override string Image => image;
 
-        public TokenBuiltin(Type type, Span span, string image)
-            : base(type, span)
+        public TokenPrimitiveTyName(Span span, string image)
+            : base(Type.PRIMITIVE, span)
         {
             this.image = image;
         }

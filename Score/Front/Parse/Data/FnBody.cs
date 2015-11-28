@@ -7,7 +7,7 @@ namespace Score.Front.Parse.Data
     using Lex;
     using SyntaxTree;
 
-    internal sealed class FunctionBody : IEnumerable<Node>
+    internal sealed class FnBody : IEnumerable<Node>
     {
         public Token eq;
         public Token lbrace;

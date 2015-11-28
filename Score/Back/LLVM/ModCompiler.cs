@@ -50,7 +50,7 @@ namespace Score.Back.LLVM
         }
         */
 
-        public void Visit(NodeFunctionDeclaration fn)
+        public void Visit(NodeFnDecl fn)
         {
             var name = fn.Name;
 

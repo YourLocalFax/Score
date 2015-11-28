@@ -6,7 +6,7 @@
     {
         void Visit(Ast node);
 
-        void Visit(NodeFunctionDeclaration fn);
+        void Visit(NodeFnDecl fn);
 
         void Visit(NodeId id);
         void Visit(NodeInt i);

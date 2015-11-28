@@ -27,13 +27,8 @@ namespace Score.Back.Types
             else if (type is BaseTyRef)
             {
                 var baseTy = type as BaseTyRef;
-                if (!baseTy.ty.IsBuiltinTy)
-                    return null; // TODO(kai): remember, we need types eventually. this is debug, but still.
-                switch (baseTy.ty.Name[0].Image)
-                {
-                    case "i8": return new ScoreIntType(8, false);
-                    case "i32": return new ScoreIntType(32, false);
-                }
+                if (baseTy.ty is TyInt)
+                    return new ScoreIntType((baseTy.ty as TyInt).BitWidth, false);
             }
             return null;
         }

@@ -14,6 +14,7 @@
         public bool IsId => id != null;
         public bool IsOp => op != null;
 
+        public Span Span => IsId ? id.Span : op.Span;
         public string Image => IsId ? id.Image : op.Image;
 
         private NameOrOp(Name id)

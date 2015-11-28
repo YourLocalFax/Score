@@ -99,7 +99,7 @@ namespace Score.Front.Parse
 
         private bool CheckIdent() => Check(IDENT);
 
-        private bool CheckBuiltin() => HasCurrent && Current is TokenBuiltin;
+        private bool CheckBuiltin() => HasCurrent && Current is TokenPrimitiveTyName;
 
         private bool CheckOp() => HasCurrent && Current is TokenOp;
 
@@ -366,7 +366,7 @@ namespace Score.Front.Parse
                 else if (Check(SYMBOL))
                     result.Add(new Name(Current as TokenSym));
                 else if (CheckBuiltin())
-                    result.Add(new Name(Current as TokenBuiltin));
+                    result.Add(new Name(Current as TokenPrimitiveTyName));
                 else result.Add(new Op(Current as TokenOp));
                 // Move past it
                 Advance();
@@ -480,7 +480,7 @@ namespace Score.Front.Parse
                     Expect(RBRACKET, "Expected ']' to end array type definition.");
                     return TyRef.ArrayOf(type, depth);
                 }
-                    /*
+                /*
                 case LPAREN:
                 {
                     Advance();
@@ -497,10 +497,16 @@ namespace Score.Front.Parse
                     return TyRef.TupleOf(types.ToArray());
                 }
                 */
+                case PRIMITIVE:
+                {
+                    var tok = Current as TokenPrimitiveTyName;
+                    Advance();
+                    return TyRef.For(TyVariant.GetForPrimitive(tok));
+                }
                 default:
                 {
                     var name = ParseQualifiedNameWithTyArgs();
-                    return TyRef.For(TyOrVoid.FromTy(name));
+                    return TyRef.For(TyVariant.GetFor(name));
                 }
             }
         }
@@ -508,7 +514,7 @@ namespace Score.Front.Parse
         /// <summary>
         /// This starts at the 'fn' keyword and reads until the return type.
         /// </summary>
-        private void ParseFnDecl(NodeFunctionDeclaration fn)
+        private void ParseFnDecl(NodeFnDecl fn)
         {
             // TODO(kai): check for no tokens?
 
@@ -549,9 +555,9 @@ namespace Score.Front.Parse
         /// This can still return a NodeFn for extern fns, it'll just end up being an error later (unless I do
         /// some kinda neat thing with bodied externs?)
         /// </summary>
-        private NodeFunctionDeclaration ParseFn(Modifiers mods)
+        private NodeFnDecl ParseFn(Modifiers mods)
         {
-            var fn = new NodeFunctionDeclaration();
+            var fn = new NodeFnDecl();
             fn.header = new MemberHeader(mods);
             ParseFnDecl(fn);
 
@@ -568,9 +574,9 @@ namespace Score.Front.Parse
             return fn;
         }
 
-        private FunctionBody ParseFnBody()
+        private FnBody ParseFnBody()
         {
-            var body = new FunctionBody();
+            var body = new FnBody();
 
             /*
                 fn.body = new FunctionBody();

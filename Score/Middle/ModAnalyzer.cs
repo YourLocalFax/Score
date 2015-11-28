@@ -27,7 +27,7 @@ namespace Score.Middle
             node.children.ForEach(child => child.Accept(this));
         }
 
-        public void Visit(NodeFunctionDeclaration fn)
+        public void Visit(NodeFnDecl fn)
         {
             // FIXME(kai): type information, please <3
             symbols.Insert(fn.Name, Symbol.Kind.FN, null, fn.header.modifiers);

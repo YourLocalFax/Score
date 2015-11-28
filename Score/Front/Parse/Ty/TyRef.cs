@@ -4,29 +4,26 @@ namespace Score.Front.Parse.Ty
 {
     internal abstract class TyRef
     {
-        public static BaseTyRef Void(Span span) => new BaseTyRef(TyOrVoid.FromVoid(span));
-        public static BaseTyRef For(TyOrVoid ty) => new BaseTyRef(ty);
+        public static BaseTyRef Void(Span span) => new BaseTyRef(new TyVoid(span));
+        public static BaseTyRef For(TyVariant ty) => new BaseTyRef(ty);
         public static PointerTyRef PointerTo(TyRef ty, bool isMut) => new PointerTyRef(ty, isMut);
         public static ReferenceTyRef ReferenceTo(TyRef ty, bool isMut) => new ReferenceTyRef(ty, isMut);
         public static ArrayTyRef ArrayOf(TyRef inner, uint depth) => new ArrayTyRef(inner, depth);
         public static TupleTyRef TupleOf(params TyRef[] inner) => new TupleTyRef(inner);
 
-        public bool IsVoid => (this as BaseTyRef)?.ty.IsVoid ?? false;
+        public bool IsVoid => (this as BaseTyRef)?.ty is TyVoid;
     }
 
     internal sealed class BaseTyRef : TyRef
     {
-        public readonly TyOrVoid ty;
+        public readonly TyVariant ty;
 
-        public BaseTyRef(TyOrVoid ty)
+        public BaseTyRef(TyVariant ty)
         {
             this.ty = ty;
         }
 
-        public override string ToString()
-        {
-            return ty.ToString();
-        }
+        public override string ToString() => ty.ToString();
     }
 
     internal sealed class PointerTyRef : TyRef
@@ -40,10 +37,8 @@ namespace Score.Front.Parse.Ty
             this.isMut = isMut;
         }
 
-        public override string ToString()
-        {
-            return string.Format("^{0}{1}", isMut ? "mut " : "", ty.ToString());
-        }
+        public override string ToString() =>
+            string.Format("^{0}{1}", isMut ? "mut " : "", ty.ToString());
     }
 
     internal sealed class ReferenceTyRef : TyRef
@@ -57,10 +52,8 @@ namespace Score.Front.Parse.Ty
             this.isMut = isMut;
         }
 
-        public override string ToString()
-        {
-            return string.Format("&{0}{1}", isMut ? "mut " : "", ty.ToString());
-        }
+        public override string ToString() =>
+            string.Format("&{0}{1}", isMut ? "mut " : "", ty.ToString());
     }
 
     internal sealed class ArrayTyRef : TyRef
@@ -74,10 +67,8 @@ namespace Score.Front.Parse.Ty
             this.depth = depth;
         }
 
-        public override string ToString()
-        {
-            return string.Format("[{0}{1}]", inner.ToString(), ",".Repeat((int)depth - 1));
-        }
+        public override string ToString() =>
+            string.Format("[{0}{1}]", inner.ToString(), ",".Repeat((int)depth - 1));
     }
 
     internal sealed class TupleTyRef : TyRef

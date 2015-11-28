@@ -167,29 +167,17 @@ namespace Score.Front.Lex
             }
         }
 
-        public static bool IsBuiltin(string s)
-        {
-            return GetTypeFromBuiltin(s) != Token.Type.UNKNOWN;
-        }
-
-        public static Token.Type GetTypeFromBuiltin(string s)
+        public static bool IsPrimitiveTyName(string s)
         {
             switch (s)
             {
-                case "i8": return Token.Type.I8;
-                case "u8": return Token.Type.U8;
-                case "i16": return Token.Type.I16;
-                case "u16": return Token.Type.U16;
-                case "i32": return Token.Type.I32;
-                case "u32": return Token.Type.U32;
-                case "i64": return Token.Type.I64;
-                case "u64": return Token.Type.U64;
-                case "f16": return Token.Type.F16;
-                case "f32": return Token.Type.F32;
-                case "f64": return Token.Type.F64;
-                case "bool": return Token.Type.BOOL;
-
-                default: return Token.Type.UNKNOWN;
+                case "i8": case "u8":
+                case "i16": case "u16":
+                case "i32": case "u32":
+                case "i64": case "u64":
+                case "f16": case "f32": case "f64":
+                case "bool": return true;
+                default: return false;
             }
         }
 
@@ -470,8 +458,8 @@ namespace Score.Front.Lex
                 // otherwise, it's an identifier
                 if (IsKw(str))
                     return new TokenKw(GetTypeFromKw(str), start + GetLocation(), str);
-                else if (IsBuiltin(str))
-                    return new TokenBuiltin(GetTypeFromBuiltin(str), start + GetLocation(), str);
+                else if (IsPrimitiveTyName(str))
+                    return new TokenPrimitiveTyName(start + GetLocation(), str);
                 return new TokenId(start + GetLocation(), str);
             }
 

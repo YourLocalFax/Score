@@ -6,7 +6,7 @@ namespace Score.Front.Parse.SyntaxTree
     using Lex;
     using Ty;
 
-    internal sealed class NodeFunctionDeclaration : Node
+    internal sealed class NodeFnDecl : Node
     {
         public MemberHeader header;
         public TokenKw @fn;
@@ -15,7 +15,7 @@ namespace Score.Front.Parse.SyntaxTree
         public Token arrow;
         // NOTE(kai): If this is null, we infer the type
         public TyRef returnTy;
-        public FunctionBody body;
+        public FnBody body;
 
         public bool InferReturnTy => returnTy == null;
 

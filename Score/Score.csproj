@@ -91,13 +91,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Back\Data\FnReturnTy.cs" />
     <Compile Include="Back\LLVM\FnCompiler.cs" />
     <Compile Include="Back\LLVM\GlobalStateManager.cs" />
     <Compile Include="Back\LLVM\ModCompiler.cs" />
     <Compile Include="Back\LLVM\KitCompiler.cs" />
     <Compile Include="Back\LLVM\ScoreCompiler.cs" />
     <Compile Include="Back\LLVM\Values\ScoreValue.cs" />
-    <Compile Include="Front\Parse\Data\FunctionBody.cs" />
+    <Compile Include="Front\Parse\Ty\TyBool.cs" />
+    <Compile Include="Front\Parse\Ty\TyFloat.cs" />
+    <Compile Include="Front\Parse\Ty\TyParameter.cs" />
+    <Compile Include="Front\Parse\Ty\TyPath.cs" />
+    <Compile Include="Front\Parse\Ty\TyPrimitive.cs" />
+    <Compile Include="Front\Parse\Ty\TyUint.cs" />
+    <Compile Include="Front\Parse\Ty\TyInt.cs" />
+    <Compile Include="Front\Parse\Ty\TyVariant.cs" />
+    <Compile Include="Front\Parse\Ty\TyVoid.cs" />
+    <Compile Include="Front\Parse\Data\FnBody.cs" />
     <Compile Include="Front\Parse\Data\Op.cs" />
     <Compile Include="Front\Parse\Data\Parameter.cs" />
     <Compile Include="Front\Parse\Data\ParameterList.cs" />
@@ -108,9 +118,7 @@
     <Compile Include="Front\Parse\Data\QualifiedName.cs" />
     <Compile Include="Front\Parse\Data\QualifiedNameWithTyArgs.cs" />
     <Compile Include="Front\Parse\Data\TyArgList.cs" />
-    <Compile Include="Front\Parse\SyntaxTree\NodeFunctionDeclaration.cs" />
-    <Compile Include="Front\Parse\Ty\TyBuiltin.cs" />
-    <Compile Include="Front\Parse\Ty\TyOrVoid.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\NodeFnDecl.cs" />
     <Compile Include="Front\Parse\Ty\TyRef.cs" />
     <Compile Include="Middle\FnAnalyzer.cs" />
     <Compile Include="Middle\ModAnalyzer.cs" />

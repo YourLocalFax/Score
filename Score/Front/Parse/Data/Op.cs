@@ -4,8 +4,9 @@
 
     internal sealed class Op
     {
-        public readonly TokenOp op;
+        private readonly TokenOp op;
 
+        public Span Span => op.span;
         public string Image => op.Image;
 
         public Op(TokenOp op)
