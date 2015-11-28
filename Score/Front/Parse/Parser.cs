@@ -451,7 +451,8 @@ namespace Score.Front.Parse
                 return null;
             }
 
-            if (CheckOp(CARET) || CheckOp(AMP))
+            // TODO(kai): if (CheckOp(CARET) || CheckOp(AMP))
+            if (CheckOp(CARET))
             {
                 var isPointer = CheckOp(CARET);
                 AdvanceOp(isPointer ? CARET : AMP);
@@ -462,11 +463,13 @@ namespace Score.Front.Parse
                     isMut = true;
                 }
                 var type = ParseTy();
-                return isPointer ? TyRef.PointerTo(type, isMut) as TyRef : TyRef.ReferenceTo(type, isMut) as TyRef;
+                // TODO(kai): return isPointer ? TyRef.PointerTo(type, isMut) as TyRef : TyRef.ReferenceTo(type, isMut) as TyRef;
+                return TyRef.PointerTo(type, isMut) as TyRef;
             }
 
             switch (Current.type)
             {
+                /*
                 case LBRACKET:
                 {
                     Advance();
@@ -480,7 +483,6 @@ namespace Score.Front.Parse
                     Expect(RBRACKET, "Expected ']' to end array type definition.");
                     return TyRef.ArrayOf(type, depth);
                 }
-                /*
                 case LPAREN:
                 {
                     Advance();

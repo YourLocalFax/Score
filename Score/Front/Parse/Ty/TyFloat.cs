@@ -1,4 +1,7 @@
-﻿namespace Score.Front.Parse.Ty
+﻿using LLVMSharp;
+using static LLVMSharp.LLVM;
+
+namespace Score.Front.Parse.Ty
 {
     internal abstract class TyFloat : TyPrimitive
     {
@@ -14,6 +17,9 @@
         public TyFloat16(Span span) : base(span) { }
 
         public override uint BitWidth => 16;
+
+        public override LLVMTypeRef GetLLVMTy(LLVMContextRef context) =>
+            HalfTypeInContext(context);
     }
 
     internal sealed class TyFloat32 : TyFloat
@@ -21,6 +27,9 @@
         public TyFloat32(Span span) : base(span) { }
 
         public override uint BitWidth => 32;
+
+        public override LLVMTypeRef GetLLVMTy(LLVMContextRef context) =>
+            FloatTypeInContext(context);
     }
 
     internal sealed class TyFloat64 : TyFloat
@@ -28,5 +37,8 @@
         public TyFloat64(Span span) : base(span) { }
 
         public override uint BitWidth => 64;
+
+        public override LLVMTypeRef GetLLVMTy(LLVMContextRef context) =>
+            DoubleTypeInContext(context);
     }
 }

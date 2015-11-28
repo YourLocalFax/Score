@@ -100,7 +100,6 @@
     <Compile Include="Back\LLVM\Values\ScoreValue.cs" />
     <Compile Include="Front\Parse\Ty\TyBool.cs" />
     <Compile Include="Front\Parse\Ty\TyFloat.cs" />
-    <Compile Include="Front\Parse\Ty\TyParameter.cs" />
     <Compile Include="Front\Parse\Ty\TyPath.cs" />
     <Compile Include="Front\Parse\Ty\TyPrimitive.cs" />
     <Compile Include="Front\Parse\Ty\TyUint.cs" />
@@ -126,7 +125,6 @@
     <Compile Include="Middle\SemanticAnalyzer.cs" />
     <Compile Include="Middle\Symbols\Symbol.cs" />
     <Compile Include="Middle\Symbols\SymbolTable.cs" />
-    <Compile Include="Back\Types\ScoreType.cs" />
     <Compile Include="Debug\AstPrinter.cs" />
     <Compile Include="DetailLogger.cs" />
     <Compile Include="Entry.cs" />

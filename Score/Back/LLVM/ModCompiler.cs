@@ -12,8 +12,6 @@ namespace Score.Back.LLVM
 
     using Middle.Symbols;
 
-    using Types;
-
     /// <summary>
     /// Compiles entire programs.
     /// </summary>
@@ -60,16 +58,10 @@ namespace Score.Back.LLVM
             for (int i = 0; i < paramTypes.Length; i++)
             {
                 var param = fn.parameters[i];
-
-                // TEMP CODE PLZ FIXME(kai): this is bad
-
-                var type = ScoreType.TempGetType(log, param.ty);
-                var llvmType = type.TempGetLLVMType(Context);
-
-                paramTypes[i] = llvmType;
+                paramTypes[i] = param.ty.GetLLVMTy(Context);
             }
 
-            var returnType = ScoreType.TempGetType(log, fn.returnTy).TempGetLLVMType(Context);
+            var returnType = fn.returnTy.GetLLVMTy(Context);
             var fnType = FunctionType(returnType, paramTypes, false);
 
             var fnDecl = AddFunction(module, name, fnType);

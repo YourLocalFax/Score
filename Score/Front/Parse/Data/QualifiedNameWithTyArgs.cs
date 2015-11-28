@@ -1,8 +1,7 @@
-﻿using System.Diagnostics;
+﻿using static System.Diagnostics.Debug;
 
 namespace Score.Front.Parse.Data
 {
-    using static System.Diagnostics.Debug;
 
     internal sealed class QualifiedNameWithTyArgs
     {

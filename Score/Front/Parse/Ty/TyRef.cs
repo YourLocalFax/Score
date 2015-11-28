@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using LLVMSharp;
+using static LLVMSharp.LLVM;
 
 namespace Score.Front.Parse.Ty
 {
@@ -7,11 +8,14 @@ namespace Score.Front.Parse.Ty
         public static BaseTyRef Void(Span span) => new BaseTyRef(new TyVoid(span));
         public static BaseTyRef For(TyVariant ty) => new BaseTyRef(ty);
         public static PointerTyRef PointerTo(TyRef ty, bool isMut) => new PointerTyRef(ty, isMut);
-        public static ReferenceTyRef ReferenceTo(TyRef ty, bool isMut) => new ReferenceTyRef(ty, isMut);
-        public static ArrayTyRef ArrayOf(TyRef inner, uint depth) => new ArrayTyRef(inner, depth);
-        public static TupleTyRef TupleOf(params TyRef[] inner) => new TupleTyRef(inner);
+        // TODO(kai): Bring these back when we decide how to use them right.
+        //public static ReferenceTyRef ReferenceTo(TyRef ty, bool isMut) => new ReferenceTyRef(ty, isMut);
+        //public static ArrayTyRef ArrayOf(TyRef inner, uint depth) => new ArrayTyRef(inner, depth);
+        //public static TupleTyRef TupleOf(params TyRef[] inner) => new TupleTyRef(inner);
 
         public bool IsVoid => (this as BaseTyRef)?.ty is TyVoid;
+
+        public abstract LLVMTypeRef GetLLVMTy(LLVMContextRef context);
     }
 
     internal sealed class BaseTyRef : TyRef
@@ -24,6 +28,9 @@ namespace Score.Front.Parse.Ty
         }
 
         public override string ToString() => ty.ToString();
+
+        public override LLVMTypeRef GetLLVMTy(LLVMContextRef context) =>
+            ty.GetLLVMTy(context);
     }
 
     internal sealed class PointerTyRef : TyRef
@@ -39,8 +46,12 @@ namespace Score.Front.Parse.Ty
 
         public override string ToString() =>
             string.Format("^{0}{1}", isMut ? "mut " : "", ty.ToString());
+
+        public override LLVMTypeRef GetLLVMTy(LLVMContextRef context) =>
+            PointerType(ty.GetLLVMTy(context), 0);
     }
 
+    /*
     internal sealed class ReferenceTyRef : TyRef
     {
         public readonly TyRef ty;
@@ -95,4 +106,5 @@ namespace Score.Front.Parse.Ty
             return builder.Append(')').ToString();
         }
     }
+    */
 }

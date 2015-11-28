@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LLVMSharp;
+using static LLVMSharp.LLVM;
 
 namespace Score.Front.Parse.Ty
 {
@@ -9,6 +10,7 @@ namespace Score.Front.Parse.Ty
         public abstract uint BitWidth { get; }
 
         public override string ToString() => "i" + BitWidth;
+
     }
 
     internal sealed class TyInt8 : TyInt
@@ -16,6 +18,9 @@ namespace Score.Front.Parse.Ty
         public TyInt8(Span span) : base(span) { }
 
         public override uint BitWidth => 8;
+
+        public override LLVMTypeRef GetLLVMTy(LLVMContextRef context) =>
+            Int8TypeInContext(context);
     }
 
     internal sealed class TyInt16 : TyInt
@@ -23,6 +28,9 @@ namespace Score.Front.Parse.Ty
         public TyInt16(Span span) : base(span) { }
 
         public override uint BitWidth => 16;
+
+        public override LLVMTypeRef GetLLVMTy(LLVMContextRef context) =>
+            Int16TypeInContext(context);
     }
 
     internal sealed class TyInt32 : TyInt
@@ -30,6 +38,9 @@ namespace Score.Front.Parse.Ty
         public TyInt32(Span span) : base(span) { }
 
         public override uint BitWidth => 32;
+
+        public override LLVMTypeRef GetLLVMTy(LLVMContextRef context) =>
+            Int32TypeInContext(context);
     }
 
     internal sealed class TyInt64 : TyInt
@@ -37,5 +48,8 @@ namespace Score.Front.Parse.Ty
         public TyInt64(Span span) : base(span) { }
 
         public override uint BitWidth => 64;
+
+        public override LLVMTypeRef GetLLVMTy(LLVMContextRef context) =>
+            Int64TypeInContext(context);
     }
 }

@@ -1,7 +1,9 @@
-﻿namespace Score.Front.Parse.Ty
-{
-    using static System.Diagnostics.Debug;
+﻿using static System.Diagnostics.Debug;
 
+using LLVMSharp;
+
+namespace Score.Front.Parse.Ty
+{
     using Data;
     using Lex;
 
@@ -42,5 +44,7 @@
         public abstract Span Span { get; }
 
         public override abstract string ToString();
+
+        public abstract LLVMTypeRef GetLLVMTy(LLVMContextRef context);
     }
 }

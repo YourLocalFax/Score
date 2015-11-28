@@ -1,7 +1,7 @@
 ﻿namespace Score.Middle.Symbols
 {
-    using Back.Types;
     using Front.Parse.Data;
+    using Front.Parse.Ty;
 
     internal sealed class Symbol
     {
@@ -16,20 +16,17 @@
 
         public readonly string name;
         public readonly Kind kind;
-        public readonly ScoreType type;
+        public readonly TyRef ty;
         public readonly Modifiers mods;
 
-        public Symbol(string name, Kind kind, ScoreType type, Modifiers mods)
+        public Symbol(string name, Kind kind, TyRef ty, Modifiers mods)
         {
             this.name = name;
             this.kind = kind;
-            this.type = type;
+            this.ty = ty;
             this.mods = mods;
         }
 
-        public override string ToString()
-        {
-            return name;
-        }
+        public override string ToString() => name;
     }
 }
