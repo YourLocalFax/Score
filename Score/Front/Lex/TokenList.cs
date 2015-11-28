@@ -33,10 +33,9 @@ namespace Score.Front.Lex
             return result;
         }
 
-        public void Advance()
-        {
-            index++;
-        }
+        public void Advance() => index++;
+        // TODO(kai): maybe add error checking to this?
+        public void Backup() => index--;
 
         public Token Peek(int offset)
         {

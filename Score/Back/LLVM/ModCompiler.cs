@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Linq;
 
 using LLVMSharp;
-
 using static LLVMSharp.LLVM;
 
 namespace Score.Back.LLVM
@@ -54,15 +54,7 @@ namespace Score.Back.LLVM
 
             // The decl:
 
-            var paramTypes = new LLVMTypeRef[fn.parameters.Count];
-            for (int i = 0; i < paramTypes.Length; i++)
-            {
-                var param = fn.parameters[i];
-                paramTypes[i] = param.ty.GetLLVMTy(Context);
-            }
-
-            var returnType = fn.returnTy.GetLLVMTy(Context);
-            var fnType = FunctionType(returnType, paramTypes, false);
+            var fnType = fn.ty.GetLLVMTy(Context);
 
             var fnDecl = AddFunction(module, name, fnType);
             if (fn.header.modifiers.Has(Token.Type.EXTERN))
@@ -78,7 +70,7 @@ namespace Score.Back.LLVM
                 var compiler = new FnCompiler(manager, module, self);
                 fn.body.ForEach(node => node.Accept(compiler));
 
-                if (fn.returnTy.IsVoid)
+                if (fn.ReturnTy.IsVoid)
                     BuildRetVoid(compiler.builder);
                 // TODO(kai): ELSE RETURN OTHER THINGS PLZ
             }

@@ -11,15 +11,13 @@ namespace Score.Front.Parse.SyntaxTree
         public MemberHeader header;
         public TokenKw @fn;
         public QualifiedNameWithTyArgs nameWithTyArgs;
-        public ParameterList parameters;
-        public Token arrow;
-        // NOTE(kai): If this is null, we infer the type
-        public TyRef returnTy;
+        public TyFn ty;
         public FnBody body;
 
-        public bool InferReturnTy => returnTy == null;
-
         public string Name => nameWithTyArgs.name[0].id.Image;
+
+        public ParameterList Parameters => ty.parameters;
+        public TyRef ReturnTy => ty.returnTy;
 
         // TODO(kai): figure out span
         internal override Span Span

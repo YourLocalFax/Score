@@ -7,6 +7,8 @@
         public readonly TyRef ty;
         public readonly Name name;
 
+        public bool IsNamed => name != null;
+
         // TODO(kai): default values
 
         public Parameter(TyRef ty, Name name)

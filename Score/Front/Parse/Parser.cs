@@ -60,6 +60,7 @@ namespace Score.Front.Parse
 
         #region Delegate Methods
         private void Advance() => tokens.Advance();
+        private void Backup() => tokens.Backup();
 
         private Token Peek(int offset) => tokens.Peek(offset);
         #endregion
@@ -412,15 +413,30 @@ namespace Score.Front.Parse
             {
                 while (HasCurrent)
                 {
-                    var name = ExpectIdent("Identifier expected to name a parameter.");
-                    TyRef ty = null;
-                    if (CheckOp(COLON))
+                    bool hasName = false;
+                    bool hasTy = true;
+
+                    if (Check(IDENT))
                     {
-                        AdvanceOp(COLON);
-                        // the type of this param
-                        ty = ParseTy();
+                        Advance();
+                        hasName = CheckOp(COLON) || CheckOp(COMMA);
+                        hasTy = CheckOp(COLON) || !CheckOp(COMMA);
+                        Backup();
                     }
-                    result.Add(new Parameter(ty, new Name(name)));
+
+                    Name name = null;
+                    if (hasName)
+                    {
+                        name = new Name(Current as TokenId);
+                        if (hasTy)
+                            AdvanceOp(COLON);
+                    }
+
+                    TyRef ty = null;
+                    if (hasTy)
+                        ty = ParseTy();
+                    
+                    result.Add(new Parameter(ty, name));
                     if (CheckOp(COMMA))
                         AdvanceOp(COMMA);
                     else break;
@@ -538,16 +554,20 @@ namespace Score.Front.Parse
             fn.nameWithTyArgs = ParseQualifiedNameWithTyArgs();
 
             // Then, the parameter list!
-            fn.parameters = ParseParameters();
+            var parameters = ParseParameters();
+            Token arrow = null;
+            TyRef returnTy = null;
 
             // Next, the return type!
             if (CheckOp(ARROW))
             {
-                fn.arrow = Current as Token;
+                arrow = Current as Token;
                 AdvanceOp(ARROW);
-                fn.returnTy = ParseTy();
+                returnTy = ParseTy();
             }
-            else fn.returnTy = null;
+            else returnTy = null;
+
+            fn.ty = new TyFn(parameters, returnTy, arrow);
 
             // That's the end of the fn decl!
         }

@@ -29,6 +29,35 @@ namespace Score.Middle
 
         public void Visit(NodeFnDecl fn)
         {
+            var mods = fn.header.modifiers;
+
+            var dups = mods.GetDuplicates();
+            if (dups.Count > 0)
+            {
+                dups.ForEach(dup =>
+                {
+                    log.Error(dup.span, "Duplicate modifier '{0}'.", dup.Image);
+                });
+            }
+
+            var conflicts = mods.GetConflicting();
+            if (conflicts.Count > 0)
+            {
+                // TODO(kai): maybe make this one more descriptive. What does it conflict with?
+                dups.ForEach(dup =>
+                {
+                    log.Error(dup.span, "Conflicting modifier '{0}'.", dup.Image);
+                });
+            }
+
+            if (mods.Has(Front.Lex.Token.Type.EXTERN))
+            {
+                // TODO(kai): 'extern' functions CAN have a body, but not now...
+                if (fn.body != null)
+                    log.Error(mods.GetSpan(Front.Lex.Token.Type.EXTERN),
+                        "Currently, extern functions cannot have a body.");
+            }
+
             // FIXME(kai): type information, please <3
             symbols.Insert(fn.Name, Symbol.Kind.FN, null, fn.header.modifiers);
             if (fn.body != null)

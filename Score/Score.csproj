@@ -100,6 +100,7 @@
     <Compile Include="Back\LLVM\Values\ScoreValue.cs" />
     <Compile Include="Front\Parse\Ty\TyBool.cs" />
     <Compile Include="Front\Parse\Ty\TyFloat.cs" />
+    <Compile Include="Front\Parse\Ty\TyFn.cs" />
     <Compile Include="Front\Parse\Ty\TyPath.cs" />
     <Compile Include="Front\Parse\Ty\TyPrimitive.cs" />
     <Compile Include="Front\Parse\Ty\TyUint.cs" />
