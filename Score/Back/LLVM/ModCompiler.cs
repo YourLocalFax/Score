@@ -70,7 +70,7 @@ namespace Score.Back.LLVM
                 var compiler = new FnCompiler(manager, module, self);
                 fn.body.ForEach(node => node.Accept(compiler));
 
-                if (fn.ReturnTy.IsVoid)
+                if (fn.ReturnParameter.ty.IsVoid)
                     BuildRetVoid(compiler.builder);
                 // TODO(kai): ELSE RETURN OTHER THINGS PLZ
             }

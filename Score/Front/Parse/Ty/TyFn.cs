@@ -14,16 +14,16 @@ namespace Score.Front.Parse.Ty
         public readonly Token arrow;
         // NOTE(kai): If this is null, we infer the type.
         // TODO(kai): have a specific "infer" type eventually.
-        public readonly TyRef returnTy;
+        public readonly Parameter returnParameter;
 
-        public TyFn(ParameterList parameters, TyRef returnTy, Token arrow)
+        public TyFn(ParameterList parameters, Parameter returnParameter, Token arrow)
         {
             this.parameters = parameters;
-            this.returnTy = returnTy;
+            this.returnParameter = returnParameter;
             this.arrow = arrow;
         }
 
         public override LLVMTypeRef GetLLVMTy(LLVMContextRef context) =>
-            FunctionType(returnTy.GetLLVMTy(context), parameters.Select(param => param.ty.GetLLVMTy(context)).ToArray(), false);
+            FunctionType(returnParameter.ty.GetLLVMTy(context), parameters.Select(param => param.ty.GetLLVMTy(context)).ToArray(), false);
     }
 }

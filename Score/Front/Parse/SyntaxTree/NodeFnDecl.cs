@@ -17,7 +17,7 @@ namespace Score.Front.Parse.SyntaxTree
         public string Name => nameWithTyArgs.name[0].id.Image;
 
         public ParameterList Parameters => ty.parameters;
-        public TyRef ReturnTy => ty.returnTy;
+        public Parameter ReturnParameter => ty.returnParameter;
 
         // TODO(kai): figure out span
         internal override Span Span

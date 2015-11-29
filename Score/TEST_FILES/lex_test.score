@@ -1,7 +1,7 @@
 
 /# type puts_ty = |out_str: ^i8| -> i32
 
-extern fn puts |^i8| -> i32
+extern fn puts |out_str: ^i8| -> res: i32
 
 fn main || -> () {
 	puts c"Hello, world! I'm Score!"

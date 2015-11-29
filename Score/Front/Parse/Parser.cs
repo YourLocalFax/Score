@@ -397,10 +397,39 @@ namespace Score.Front.Parse
             return result;
         }
 
+        private Parameter ParseParameter()
+        {
+            bool hasName = false;
+            bool hasTy = true;
+
+            if (Check(IDENT))
+            {
+                Advance();
+                hasName = CheckOp(COLON) || CheckOp(COMMA);
+                hasTy = CheckOp(COLON) || !CheckOp(COMMA);
+                Backup();
+            }
+
+            Name name = null;
+            if (hasName)
+            {
+                name = new Name(Current as TokenId);
+                Advance();
+                if (hasTy)
+                    AdvanceOp(COLON);
+            }
+
+            TyRef ty = null;
+            if (hasTy)
+                ty = ParseTy();
+
+            return new Parameter(name, ty);
+        }
+
         /// <summary>
         /// This expects the arguments to be surrounded by pipes.
         /// </summary>
-        private ParameterList ParseParameters()
+        private ParameterList ParseParameterList()
         {
             var result = new ParameterList();
 
@@ -413,30 +442,7 @@ namespace Score.Front.Parse
             {
                 while (HasCurrent)
                 {
-                    bool hasName = false;
-                    bool hasTy = true;
-
-                    if (Check(IDENT))
-                    {
-                        Advance();
-                        hasName = CheckOp(COLON) || CheckOp(COMMA);
-                        hasTy = CheckOp(COLON) || !CheckOp(COMMA);
-                        Backup();
-                    }
-
-                    Name name = null;
-                    if (hasName)
-                    {
-                        name = new Name(Current as TokenId);
-                        if (hasTy)
-                            AdvanceOp(COLON);
-                    }
-
-                    TyRef ty = null;
-                    if (hasTy)
-                        ty = ParseTy();
-                    
-                    result.Add(new Parameter(ty, name));
+                    result.Add(ParseParameter());
                     if (CheckOp(COMMA))
                         AdvanceOp(COMMA);
                     else break;
@@ -554,16 +560,16 @@ namespace Score.Front.Parse
             fn.nameWithTyArgs = ParseQualifiedNameWithTyArgs();
 
             // Then, the parameter list!
-            var parameters = ParseParameters();
+            var parameters = ParseParameterList();
             Token arrow = null;
-            TyRef returnTy = null;
+            Parameter returnTy = null;
 
             // Next, the return type!
             if (CheckOp(ARROW))
             {
                 arrow = Current as Token;
                 AdvanceOp(ARROW);
-                returnTy = ParseTy();
+                returnTy = ParseParameter();
             }
             else returnTy = null;
 

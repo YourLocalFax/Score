@@ -15,6 +15,8 @@ namespace Score.Front.Parse.Ty
 
         public bool IsVoid => (this as BaseTyRef)?.ty is TyVoid;
 
+        // TODO(kai): These things will fail when trying to infer the type.
+        // Make sure that this is only called when types are updated after inference.
         public abstract LLVMTypeRef GetLLVMTy(LLVMContextRef context);
     }
 

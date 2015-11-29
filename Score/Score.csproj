@@ -91,7 +91,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Back\Data\FnReturnTy.cs" />
     <Compile Include="Back\LLVM\FnCompiler.cs" />
     <Compile Include="Back\LLVM\GlobalStateManager.cs" />
     <Compile Include="Back\LLVM\ModCompiler.cs" />
