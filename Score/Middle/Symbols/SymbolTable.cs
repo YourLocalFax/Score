@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+
+using LLVMSharp;
 
 namespace Score.Middle.Symbols
 {
@@ -27,19 +30,14 @@ namespace Score.Middle.Symbols
 
             public void AddChild(Scope scope) => children.Add(scope);
 
-            /// <summary>
-            /// Returns true if the symbol has already been defined, false otherwise.
-            /// </summary>
-            /// <param name="name"></param>
-            /// <param name="kind"></param>
-            /// <param name="type"></param>
-            /// <returns></returns>
-            public bool Insert(string name, Symbol.Kind kind, TyRef type, Modifiers mods)
-            {
-                // TODO(kai): has it been defined?
-                symbols[name] = new Symbol(name, kind, type, mods);
-                return false;
-            }
+            public void InsertFn(string fnName, Modifiers mods, TyFn ty, LLVMValueRef llvmFn) =>
+                symbols[fnName] = new FnSymbol(fnName, mods, ty, llvmFn);
+
+            public void InsertType(string typeName, Modifiers mods, TyRef ty) =>
+                symbols[typeName] = new TypeSymbol(typeName, mods, ty);
+
+            public void InsertVar(string varName, TyRef ty, LLVMValueRef pointer, bool isMut) =>
+                symbols[varName] = new VarSymbol(varName, ty, pointer, isMut);
 
             private bool GetSymbol(string name, out Symbol symbol) =>
                 symbols.TryGetValue(name, out symbol);
@@ -66,7 +64,7 @@ namespace Score.Middle.Symbols
             public void WriteTo(StringBuilder builder, int tabs)
             {
                 builder.Append("     ".Repeat(tabs - 1)).Append(name).AppendLine(": {");
-                new List<Symbol>(symbols.Values).ForEach(symbol =>
+                new List<string>(symbols.Keys).ForEach(symbol =>
                     builder.Append("     ".Repeat(tabs)).Append(symbol).AppendLine());
                 children.ForEach(child => child.WriteTo(builder, tabs + 1));
                 builder.Append("     ".Repeat(tabs - 1)).AppendLine("}");
@@ -88,8 +86,14 @@ namespace Score.Middle.Symbols
             current = global;
         }
 
-        public void Insert(string name, Symbol.Kind kind, TyRef type, Modifiers mods) => current.Insert(name, kind, type, mods);
-        public Symbol Lookup(string name) => current.Lookup(name);
+
+        public void InsertFn(string fnName, Modifiers mods, TyFn ty, LLVMValueRef llvmFn) =>
+            current.InsertFn(fnName, mods, ty, llvmFn);
+
+        public void InsertType(string typeName, Modifiers mods, TyRef ty) =>
+            current.InsertType(typeName, mods, ty);
+
+        //public Symbol Lookup(string name) => current.Lookup(name);
 
         public void NewScope(string name) => current.AddChild(current = new Scope(name, current));
         public void ExitScope() => current = current.parent;

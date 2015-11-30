@@ -1,4 +1,6 @@
-﻿using LLVMSharp;
+﻿using System.Runtime.InteropServices;
+
+using LLVMSharp;
 using static LLVMSharp.LLVM;
 
 namespace Score.Back
@@ -19,19 +21,18 @@ namespace Score.Back
         public readonly GlobalStateManager manager;
         public readonly LLVMModuleRef module;
 
-        public ScoreCompiler(DetailLogger log, SymbolTable symbols)
+        public ScoreCompiler(DetailLogger log, SymbolTable symbols, GlobalStateManager manager, LLVMModuleRef module)
         {
             this.log = log;
             this.symbols = symbols;
-
-            manager = new GlobalStateManager(ContextCreate());
-            module = ModuleCreateWithNameInContext("score_test", manager.context);
+            this.manager = manager;
+            this.module = module;
         }
 
         public void Compile(Ast ast)
         {
             var walker = new SymbolTableWalker(symbols);
-            walker.Step();
+            //walker.Step();
 
             var compiler = new KitCompiler(log, manager, module, walker);
             ast.Accept(compiler);

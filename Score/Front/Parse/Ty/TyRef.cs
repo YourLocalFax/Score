@@ -1,8 +1,12 @@
 ﻿using LLVMSharp;
+using Score.Front.Parse.Data;
+using System;
 using static LLVMSharp.LLVM;
 
 namespace Score.Front.Parse.Ty
 {
+    using Middle.Symbols;
+
     internal abstract class TyRef
     {
         public static readonly TyRef VoidTy = For(new TyVoid());
@@ -82,7 +86,50 @@ namespace Score.Front.Parse.Ty
             PointerType(ty.GetLLVMTy(context), 0);
     }
 
+    // TODO(kai): this is a temporary path type, so shh
+    internal sealed class PathTyRef : TyRef
+    {
+        public readonly Span span;
+        public readonly string name;
+
+        public PathTyRef(Span span, string name)
+        {
+            this.span = span;
+            this.name = name;
+        }
+
+        public override LLVMTypeRef GetLLVMTy(LLVMContextRef context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool SameAs(TyRef ty)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString() => name;
+    }
+
     /*
+    internal sealed class PathTyRef : TyRef
+    {
+        public readonly QualifiedName name;
+
+        public PathTyRef(QualifiedName name)
+        {
+            this.name = name;
+        }
+
+        public override string ToString() => name.ToString();
+
+        // TODO(kai): I don't like this, maybe change things.
+
+        public override bool SameAs(TyRef ty) { throw new NotImplementedException(); }
+
+        public override LLVMTypeRef GetLLVMTy(LLVMContextRef context) { throw new NotImplementedException(); }
+    }
+
     internal sealed class ReferenceTyRef : TyRef
     {
         public readonly TyRef ty;

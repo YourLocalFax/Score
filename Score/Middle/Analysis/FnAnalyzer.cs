@@ -1,5 +1,12 @@
-﻿namespace Score.Middle.Analysis
+﻿using System;
+
+using LLVMSharp;
+using static LLVMSharp.LLVM;
+
+namespace Score.Middle.Analysis
 {
+    using Back;
+
     using Front.Parse;
     using Front.Parse.SyntaxTree;
 
@@ -10,10 +17,16 @@
         private readonly DetailLogger log;
         private readonly SymbolTable symbols;
 
-        public FnAnalyzer(DetailLogger log, SymbolTable symbols)
+        private readonly GlobalStateManager manager;
+        private readonly LLVMModuleRef module;
+
+        public FnAnalyzer(DetailLogger log, SymbolTable symbols, GlobalStateManager manager, LLVMModuleRef module)
         {
             this.log = log;
             this.symbols = symbols;
+
+            this.manager = manager;
+            this.module = module;
         }
 
         public void Visit(Ast node)
@@ -23,15 +36,12 @@
 
         public void Visit(NodeFnDecl fn)
         {
-            // FIXME(kai): type information, please <3
-            symbols.Insert(fn.Name, Symbol.Kind.FN, null, fn.header.modifiers);
-            if (fn.body != null)
-            {
-                symbols.NewScope(fn.Name);
-                var analyzer = new FnAnalyzer(log, symbols);
-                fn.body.ForEach(node => node.Accept(analyzer));
-                symbols.ExitScope();
-            }
+            throw new NotImplementedException();
+        }
+
+        public void Visit(NodeTypeDef type)
+        {
+            throw new NotImplementedException();
         }
 
         public void Visit(NodeId id)

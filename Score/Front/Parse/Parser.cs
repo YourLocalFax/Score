@@ -190,6 +190,9 @@ namespace Score.Front.Parse
                 case FN:
                     // NOTE eventually we'll have modifiers to worry about
                     return ParseFn(mods);
+                case TYPE:
+                    // NOTE eventually we'll have modifiers to worry about
+                    return ParseTypeDef(mods);
                 default:
                     return ParseExpr();
             }
@@ -359,13 +362,11 @@ namespace Score.Front.Parse
             var result = new QualifiedName();
 
             // TODO(kai): clean this up some, there's gotta be a nicer looking way.
-            while (Check(IDENT) || Check(SYMBOL) || CheckBuiltin() || CheckOp())
+            while (Check(IDENT) || CheckBuiltin() || CheckOp())
             {
                 // Add the name to the path
                 if (Check(IDENT))
                     result.Add(new Name(Current as TokenId));
-                else if (Check(SYMBOL))
-                    result.Add(new Name(Current as TokenSym));
                 else if (CheckBuiltin())
                     result.Add(new Name(Current as TokenPrimitiveTyName));
                 else result.Add(new Op(Current as TokenOp));
@@ -377,7 +378,7 @@ namespace Score.Front.Parse
                     // Skip it
                     Advance();
                     // Make sure the path continues, else we're fak'd
-                    if (!(Check(IDENT) || Check(SYMBOL) || CheckOp()))
+                    if (!(Check(IDENT) || CheckOp()))
                     {
                         log.Error(Current.span, "Expected identifier, symbol, or operator to coninue path.");
                         break;
@@ -421,7 +422,7 @@ namespace Score.Front.Parse
 
             TyRef ty = null;
             if (hasTy)
-                ty = ParseTy();
+                ty = ParseTy().value; // TODO(kai): make this actually take a spanned plz
 
             return new Parameter(name, ty);
         }
@@ -456,7 +457,7 @@ namespace Score.Front.Parse
             return result;
         }
 
-        private TyRef ParseTy()
+        private Spanned<TyRef> ParseTy()
         {
             var start = Current.span.Start;
             if (Check(LPAREN) && NextCheck(RPAREN))
@@ -464,7 +465,7 @@ namespace Score.Front.Parse
                 var span = start + Next.span.End;
                 Advance();
                 Advance();
-                return TyRef.VoidTy;
+                return new Spanned<TyRef>(start + GetLastSpan().End, TyRef.VoidTy);
             }
 
             if (!HasCurrent)
@@ -486,7 +487,7 @@ namespace Score.Front.Parse
                 }
                 var type = ParseTy();
                 // TODO(kai): return isPointer ? TyRef.PointerTo(type, isMut) as TyRef : TyRef.ReferenceTo(type, isMut) as TyRef;
-                return TyRef.PointerTo(type, isMut) as TyRef;
+                return new Spanned<TyRef>(start + type.span.End, TyRef.PointerTo(type.value, isMut) as TyRef);
             }
 
             switch (Current.type)
@@ -525,12 +526,12 @@ namespace Score.Front.Parse
                 {
                     var tok = Current as TokenPrimitiveTyName;
                     Advance();
-                    return TyRef.For(TyVariant.GetForPrimitive(tok));
+                    return new Spanned<TyRef>(GetLastSpan(), TyRef.For(TyVariant.GetForPrimitive(tok)));
                 }
                 default:
                 {
                     var name = ParseQualifiedNameWithTyArgs();
-                    return TyRef.For(TyVariant.GetFor(name));
+                    return new Spanned<TyRef>(name.Span, TyRef.For(TyVariant.GetFor(name)));
                 }
             }
         }
@@ -573,7 +574,7 @@ namespace Score.Front.Parse
             }
             else returnTy = null;
 
-            fn.ty = new TyFn(parameters, returnTy, arrow);
+            fn.ty = new TyFn(parameters, returnTy);
 
             // That's the end of the fn decl!
         }
@@ -661,6 +662,24 @@ namespace Score.Front.Parse
             Expect(RBRACE, "Expected '}' to end function body block.");
 
             return body;
+        }
+
+        private NodeTypeDef ParseTypeDef(Modifiers mods)
+        {
+            var type = new NodeTypeDef();
+            type.mods = mods;
+            type.type = Current as TokenKw;
+            Advance();
+
+            type.name = new Name(ExpectIdent("Identifier expected to name the type."));
+
+            if (HasCurrent)
+                type.eq = Current;
+            Expect(EQ, "Expected '='.");
+
+            type.ty = ParseTy();
+
+            return type;
         }
         #endregion
     }

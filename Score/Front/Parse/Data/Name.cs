@@ -17,7 +17,6 @@
         }
 
         public Name(TokenId token) : this(token as Token) { }
-        public Name(TokenSym token) : this(token as Token) { }
         public Name(TokenPrimitiveTyName token) : this(token as Token) { }
     }
 }

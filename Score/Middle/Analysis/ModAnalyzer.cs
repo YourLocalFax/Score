@@ -1,7 +1,14 @@
-﻿namespace Score.Middle.Analysis
+﻿using LLVMSharp;
+using static LLVMSharp.LLVM;
+
+namespace Score.Middle.Analysis
 {
+    using Back;
+
+    using Front.Lex;
     using Front.Parse;
     using Front.Parse.SyntaxTree;
+    using Front.Parse.Ty;
 
     using Symbols;
 
@@ -10,10 +17,16 @@
         private readonly DetailLogger log;
         private readonly SymbolTable symbols;
 
-        public ModAnalyzer(DetailLogger log, SymbolTable symbols)
+        private readonly GlobalStateManager manager;
+        private readonly LLVMModuleRef module;
+
+        public ModAnalyzer(DetailLogger log, SymbolTable symbols, GlobalStateManager manager, LLVMModuleRef module)
         {
             this.log = log;
             this.symbols = symbols;
+
+            this.manager = manager;
+            this.module = module;
         }
 
         public void Visit(Ast node)
@@ -24,6 +37,8 @@
         public void Visit(NodeFnDecl fn)
         {
             var mods = fn.header.modifiers;
+
+            // Perform sanity checks on modifiers:
 
             var dups = mods.GetDuplicates();
             if (dups.Count > 0)
@@ -52,14 +67,28 @@
                         "Currently, extern functions cannot have a body.");
             }
 
-            symbols.Insert(fn.Name, Symbol.Kind.FN, fn.ty, fn.header.modifiers);
+            // Finished with sanity checks for modifiers
+
+            // Create the symbol and the LLVM function
+            var llvmTy = fn.ty.GetLLVMTy(manager.context);
+            var llvmFn = AddFunction(module, fn.Name, llvmTy);
+            symbols.InsertFn(fn.Name, mods, fn.ty, llvmFn);
+
+            if (fn.header.modifiers.Has(Token.Type.EXTERN))
+                SetLinkage(llvmFn, LLVMLinkage.LLVMExternalLinkage);
+
             if (fn.body != null)
             {
                 symbols.NewScope(fn.Name);
-                var analyzer = new FnAnalyzer(log, symbols);
+                var analyzer = new FnAnalyzer(log, symbols, manager, module);
                 fn.body.ForEach(node => node.Accept(analyzer));
                 symbols.ExitScope();
             }
+        }
+
+        public void Visit(NodeTypeDef type)
+        {
+            symbols.InsertType(type.name.Image, type.mods, type.Ty);
         }
 
         public void Visit(NodeId id)

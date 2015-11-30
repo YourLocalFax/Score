@@ -1,14 +1,15 @@
-﻿namespace Score.Middle.Analysis
+﻿using LLVMSharp;
+
+namespace Score.Middle.Analysis
 {
-    using Front.Parse;
-    using Front.Parse.SyntaxTree;
+    using Back;
 
     using Symbols;
 
     internal sealed class KitAnalyzer : ModAnalyzer
     {
-        public KitAnalyzer(DetailLogger log, SymbolTable symbols)
-            : base(log, symbols)
+        public KitAnalyzer(DetailLogger log, SymbolTable symbols, GlobalStateManager manager, LLVMModuleRef module)
+            : base(log, symbols, manager, module)
         {
         }
     }

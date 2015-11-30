@@ -45,5 +45,7 @@ namespace Score.Front.Parse.Ty
         public override abstract string ToString();
 
         public abstract LLVMTypeRef GetLLVMTy(LLVMContextRef context);
+
+        public bool SameAs(TyVariant ty) => ty.GetType() == GetType();
     }
 }

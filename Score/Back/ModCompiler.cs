@@ -51,30 +51,24 @@ namespace Score.Back
 
         public void Visit(NodeFnDecl fn)
         {
-            var name = fn.Name;
-
-            // The decl:
-
-            var fnType = fn.ty.GetLLVMTy(Context);
-
-            var fnDecl = AddFunction(module, name, fnType);
-            if (fn.header.modifiers.Has(Token.Type.EXTERN))
-                SetLinkage(fnDecl, LLVMLinkage.LLVMExternalLinkage);
-
             if (fn.body != null)
             {
-                var self = GetNamedFunction(module, name);
-                var sym = walker.Current.Lookup(name);
+                // TODO(kai): LookupFn(name)
+                var sym = walker.Current.Lookup(fn.Name) as FnSymbol;
 
                 walker.Step();
 
-                var compiler = new FnCompiler(log, manager, module, walker, new ScoreVal(fn.Span, sym.ty, self));
+                var compiler = new FnCompiler(log, manager, module, walker, new ScoreVal(fn.Span, sym.ty, sym.llvmFn));
                 fn.body.ForEach(node => node.Accept(compiler));
 
                 if (fn.ReturnParameter.ty.IsVoid)
                     BuildRetVoid(compiler.builder);
                 // TODO(kai): ELSE RETURN OTHER THINGS PLZ
             }
+        }
+
+        public void Visit(NodeTypeDef type)
+        {
         }
 
         public void Visit(NodeId id)

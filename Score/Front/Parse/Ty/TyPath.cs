@@ -1,6 +1,8 @@
 ﻿namespace Score.Front.Parse.Ty
 {
+    using System;
     using Data;
+    using LLVMSharp;
 
     /* TODO(kai): when you get path types, do this.
     internal sealed class TyPath : TyVariant
@@ -12,5 +14,6 @@
 
         public override string ToString() => nameWithTyArgs.ToString();
     }
-    */
+    //*/
+
 }

@@ -12,16 +12,14 @@ namespace Score.Front.Parse.Ty
     internal sealed class TyFn : TyRef
     {
         public readonly ParameterList parameters;
-        public readonly Token arrow; // TODO(kai): remove this
         // NOTE(kai): If this is null, we infer the type.
         // TODO(kai): have a specific "infer" type eventually.
         public readonly Parameter returnParameter;
 
-        public TyFn(ParameterList parameters, Parameter returnParameter, Token arrow)
+        public TyFn(ParameterList parameters, Parameter returnParameter)
         {
             this.parameters = parameters;
             this.returnParameter = returnParameter;
-            this.arrow = arrow;
         }
 
         public override LLVMTypeRef GetLLVMTy(LLVMContextRef context) =>

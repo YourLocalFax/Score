@@ -1,14 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Score.Front.Parse.SyntaxTree
+﻿namespace Score.Front.Parse.SyntaxTree
 {
+    using Data;
+
     internal sealed class NodeLet : Node
     {
-        internal override Span Span => new Span();
+        // TODO(kai): Just for temps
+
+        public readonly Parameter binding;
+        public readonly NodeExpr value;
+
+        internal override Span Span => binding.name.Span;
+
+        public NodeLet(Parameter binding, NodeExpr value)
+        {
+            this.binding = binding;
+            this.value = value;
+        }
 
         // TODO(kai): welp
 

@@ -5,7 +5,7 @@
     internal sealed class Parameter
     {
         public readonly Name name;
-        public readonly TyRef ty;
+        public TyRef ty;
 
         public bool IsNamed => name != null;
 

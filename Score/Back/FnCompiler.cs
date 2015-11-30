@@ -68,57 +68,30 @@ namespace Score.Back
             throw new NotImplementedException();
         }
 
+        public void Visit(NodeTypeDef type)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Visit(NodeInvoke invoke)
         {
-            // get the target
-            // load the args
-            // check types, do any implicit casts.
-            // call the thing
-
-            // puts c"Hello, world!"
-
-            // TODO(kai): Check types in a new (type checker) pass? yes.
-            // look up puts
-            // TODO(kai): THIS IS BAD PLS STOP
-            // TODO(kai): mangle names
-            // TODO(kai): with name mangling comes searching for the specific type we're looking for,
-            // so don't forget about that.
-            var name = (invoke.target as NodeId).token.Image;
-            var sym = walker.Current.Lookup(name);
-            if (sym == null)
-            {
-                // ERRORRRRR
-                return; // TODO(kai): maybe we shouldn't return here,
-                // There are aguments that haven't been processed yet. that might be bad?
-            }
-            var ty = sym.ty as TyFn;
-            var fn = GetNamedFunction(module, name);
-            // load c"Hello, world!"
             invoke.args.ForEach(arg => arg.Accept(this));
             // retrieve the values from the stack
             var argValues = PopCount(invoke.args.Count);
-            // check that there is indeed one arg
-            // check that the c-str is ^i8 (it is) because puts takes a ^i8
-            if (ty.parameters.Count != argValues.Length)
+
+            // TODO(kai): use mangled names here
+            var name = (invoke.target as NodeId).token.Image;
+            var fn = walker.Current.Lookup(name) as FnSymbol;
+
+            if (fn == null)
             {
-                // ERRRORRRRRRRR
+                log.Error(invoke.target.Span, "Attempt to call a non-function value.");
                 return;
             }
-            for (int i = 0, len = argValues.Length; i < len; i++)
-            {
-                var paramTy = ty.parameters[i].ty;
-                var argTy = argValues[i].ty;
-                if (!paramTy.SameAs(argTy))
-                {
-                    // TODO(kai): MUCH more description, please <3
-                    log.Error(argValues[i].span, "Argument {0}'s type ({1}) does not match parameter type ({2}).",
-                        i, argTy, paramTy);
-                    return;
-                }
-            }
+
             // create the invocation
             var args = argValues.Map(val => val.value);
-            BuildCall(builder, fn, args, "");
+            BuildCall(builder, fn.llvmFn, args, "");
         }
 
         public void Visit(NodeInt i)

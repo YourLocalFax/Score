@@ -75,7 +75,6 @@ namespace Score.Front.Lex
             #endregion
 
             IDENT,
-            SYMBOL,
 
             EQ, // '='
             DOT, // '.'
@@ -164,7 +163,7 @@ namespace Score.Front.Lex
     /// <summary>
     /// Identifiers are not reserved, but MAY hold special meaning in different context.
     /// </summary>
-    internal sealed class TokenId : Token
+    internal class TokenId : Token
     {
         private readonly string image;
         public override string Image => image;
@@ -178,20 +177,12 @@ namespace Score.Front.Lex
         public override string ToString() => image;
     }
 
-    internal sealed class TokenSym : Token
+    internal sealed class TokenSym : TokenId
     {
-        public readonly string image;
-
         public TokenSym(Span span, string image)
-            : base(Type.SYMBOL, span)
-        {
-            this.image = image;
-        }
+            : base(span, image) { }
 
-        public override string ToString()
-        {
-            return "'" + image;
-        }
+        public override string ToString() => "'" + Image;
     }
 
     internal sealed class TokenStr : Token

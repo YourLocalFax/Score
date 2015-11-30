@@ -97,6 +97,7 @@
     <Compile Include="Back\KitCompiler.cs" />
     <Compile Include="Back\ScoreCompiler.cs" />
     <Compile Include="Back\Val\ScoreVal.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\NodeTypeDef.cs" />
     <Compile Include="Front\Parse\Ty\TyBool.cs" />
     <Compile Include="Front\Parse\Ty\TyFloat.cs" />
     <Compile Include="Front\Parse\Ty\TyFn.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Front\Parse\Data\TyArgList.cs" />
     <Compile Include="Front\Parse\SyntaxTree\NodeFnDecl.cs" />
     <Compile Include="Front\Parse\Ty\TyRef.cs" />
+    <Compile Include="Front\Spanned.cs" />
     <Compile Include="Middle\Analysis\FnAnalyzer.cs" />
     <Compile Include="Middle\Analysis\ModAnalyzer.cs" />
     <Compile Include="Middle\Analysis\KitAnalyzer.cs" />
@@ -151,6 +153,10 @@
     <Compile Include="Front\Span.cs" />
     <Compile Include="HashHelper.cs" />
     <Compile Include="Middle\Symbols\SymbolTableWalker.cs" />
+    <Compile Include="Middle\TypeCheck\FnTypeChecker.cs" />
+    <Compile Include="Middle\TypeCheck\KitTypeChecker.cs" />
+    <Compile Include="Middle\TypeCheck\ModTypeChecker.cs" />
+    <Compile Include="Middle\TypeCheck\TypeChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
