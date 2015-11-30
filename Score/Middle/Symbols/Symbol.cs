@@ -65,16 +65,15 @@ namespace Score.Middle.Symbols
     internal class VarSymbol : Symbol
     {
         public readonly TyRef ty;
-        public readonly LLVMValueRef pointer;
+        public LLVMValueRef pointer;
         public readonly bool isMut;
 
         public override TyRef Ty => ty;
 
-        public VarSymbol(string name, TyRef ty, LLVMValueRef pointer, bool isMut)
+        public VarSymbol(string name, TyRef ty, bool isMut)
             : base(name, Kind.VAR)
         {
             this.ty = ty;
-            this.pointer = pointer;
             this.isMut = isMut;
         }
     }

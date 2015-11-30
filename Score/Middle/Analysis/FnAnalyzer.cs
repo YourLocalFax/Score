@@ -44,6 +44,11 @@ namespace Score.Middle.Analysis
             throw new NotImplementedException();
         }
 
+        public void Visit(NodeLet let)
+        {
+            symbols.InsertVar(let.binding.name.Image, let.binding.ty);
+        }
+
         public void Visit(NodeId id)
         {
             // NOTE(kai): do nothing.

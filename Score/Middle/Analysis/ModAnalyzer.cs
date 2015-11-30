@@ -91,6 +91,11 @@ namespace Score.Middle.Analysis
             symbols.InsertType(type.name.Image, type.mods, type.Ty);
         }
 
+        public void Visit(NodeLet let)
+        {
+            log.Error(let.Span, "A let binding is not valid in this placement. Perhaps you meant to put it in a function?");
+        }
+
         public void Visit(NodeId id)
         {
             log.Error(id.Span, "An identifier is not valid in this placement. Perhaps you meant to put it in a function?");

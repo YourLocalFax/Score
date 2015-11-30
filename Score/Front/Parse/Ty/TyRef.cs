@@ -49,6 +49,8 @@ namespace Score.Front.Parse.Ty
 
         public BaseTyRef(TyVariant ty)
         {
+            if (ty == null)
+                throw new ArgumentNullException("ty");
             this.ty = ty;
         }
 

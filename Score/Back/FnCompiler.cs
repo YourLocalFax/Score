@@ -52,6 +52,8 @@ namespace Score.Back
             return val;
         }
 
+        private ScoreVal Pop() => stack.Pop();
+
         private ScoreVal[] PopCount(int count)
         {
             if (count > stack.Count)
@@ -71,6 +73,17 @@ namespace Score.Back
         public void Visit(NodeTypeDef type)
         {
             throw new NotImplementedException();
+        }
+
+        public void Visit(NodeLet let)
+        {
+            var sym = walker.Current.Lookup(let.binding.name.Image) as VarSymbol;
+            sym.pointer = BuildAlloca(builder, let.binding.ty.GetLLVMTy(Context), let.binding.name.Image);
+
+            let.value.Accept(this);
+            var value = Pop().value;
+
+            BuildStore(builder, value, sym.pointer);
         }
 
         public void Visit(NodeInvoke invoke)
@@ -149,7 +162,10 @@ namespace Score.Back
 
         public void Visit(NodeId id)
         {
-            throw new NotImplementedException();
+            var name = id.token.Image;
+            var sym = walker.Current.Lookup(name) as VarSymbol;
+            var val = BuildLoad(builder, sym.pointer, "");
+            Push(id.Span, sym.ty, val);
         }
 
         public void Visit(Ast node)

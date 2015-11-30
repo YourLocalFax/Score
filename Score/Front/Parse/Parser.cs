@@ -188,11 +188,12 @@ namespace Score.Front.Parse
             switch (Current.type)
             {
                 case FN:
-                    // NOTE eventually we'll have modifiers to worry about
                     return ParseFn(mods);
                 case TYPE:
-                    // NOTE eventually we'll have modifiers to worry about
                     return ParseTypeDef(mods);
+                case LET:
+                    // TODO(kai): make sure there are NO mods.
+                    return ParseLet();
                 default:
                     return ParseExpr();
             }
@@ -424,6 +425,8 @@ namespace Score.Front.Parse
             if (hasTy)
                 ty = ParseTy().value; // TODO(kai): make this actually take a spanned plz
 
+            Console.WriteLine(ty);
+
             return new Parameter(name, ty);
         }
 
@@ -530,8 +533,10 @@ namespace Score.Front.Parse
                 }
                 default:
                 {
-                    var name = ParseQualifiedNameWithTyArgs();
-                    return new Spanned<TyRef>(name.Span, TyRef.For(TyVariant.GetFor(name)));
+                    log.Error(GetSpan(), "Failed to parse type.");
+                    return null;
+                    //var name = ParseQualifiedNameWithTyArgs();
+                    //return new Spanned<TyRef>(name.Span, TyRef.For(TyVariant.GetFor(name)));
                 }
             }
         }
@@ -680,6 +685,28 @@ namespace Score.Front.Parse
             type.ty = ParseTy();
 
             return type;
+        }
+
+        private NodeLet ParseLet()
+        {
+            Advance();
+
+            // TODO(kai): this is temp, but be careful
+            var name = new Name(ExpectIdent("Expected ident for let binding name."));
+            TyRef ty = null;
+            if (CheckOp(COLON))
+            {
+                Advance();
+                ty = ParseTy().value;
+            }
+
+            var binding = new Parameter(name, ty);
+
+            Expect(EQ, "Expected '=' in let binding.");
+
+            var value = ParseExpr();
+
+            return new NodeLet(binding, value);
         }
         #endregion
     }

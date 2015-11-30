@@ -36,8 +36,8 @@ namespace Score.Middle.Symbols
             public void InsertType(string typeName, Modifiers mods, TyRef ty) =>
                 symbols[typeName] = new TypeSymbol(typeName, mods, ty);
 
-            public void InsertVar(string varName, TyRef ty, LLVMValueRef pointer, bool isMut) =>
-                symbols[varName] = new VarSymbol(varName, ty, pointer, isMut);
+            public void InsertVar(string varName, TyRef ty, bool isMut) =>
+                symbols[varName] = new VarSymbol(varName, ty, isMut);
 
             private bool GetSymbol(string name, out Symbol symbol) =>
                 symbols.TryGetValue(name, out symbol);
@@ -92,6 +92,9 @@ namespace Score.Middle.Symbols
 
         public void InsertType(string typeName, Modifiers mods, TyRef ty) =>
             current.InsertType(typeName, mods, ty);
+
+        public void InsertVar(string varName, TyRef ty) =>
+            current.InsertVar(varName, ty, false);
 
         //public Symbol Lookup(string name) => current.Lookup(name);
 

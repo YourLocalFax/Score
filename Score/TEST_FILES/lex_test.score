@@ -43,11 +43,10 @@ extern fn puts |^i8| -> i32
 /# let llvm_fn = add_function module "main" main_ty_llvm
 /# symbols.insert_fn "main" main_ty_score llvm_fn
 fn main || -> () {
-	/# let hello: ^i8 = c"Hello, world! I'm Score!"
-	/# let task = c"Today, I think we can test things :)"
-	/# puts hello
-	puts c"Hello, world! I'm Score!"
-	puts c"Today, I think we can test things :)"
+	let hello: ^i8 = c"Hello, world! I'm Score!"
+	let task = c"Today, I think we can test things :)"
+	puts hello
+	puts task
 }
 
 /# Symbol Table {

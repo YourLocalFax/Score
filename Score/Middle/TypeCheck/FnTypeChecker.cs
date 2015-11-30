@@ -29,6 +29,8 @@ namespace Score.Middle.TypeCheck
 
         private void Push(TyRef ty) => stack.Push(ty);
 
+        private TyRef Pop() => stack.Pop();
+
         private TyRef[] PopCount(int count)
         {
             if (count > stack.Count)
@@ -87,6 +89,20 @@ namespace Score.Middle.TypeCheck
             }
         }
 
+        public void Visit(NodeLet let)
+        {
+            let.value.Accept(this);
+            var ty = Pop();
+            if (let.binding.ty == null)
+                // TODO(kai): eventually values will be optional, fix that here too.
+                let.binding.ty = ty;
+            else
+            {
+                if (!ty.SameAs(let.binding.ty))
+                    log.Error(let.Span, "Type mismatch: Cannot assign {0} to {1}.", ty, let.binding.ty);
+            }
+        }
+
         public void Visit(NodeInt i)
         {
             // FIXME(kai): This is temp just to get the type of the int.
@@ -133,7 +149,11 @@ namespace Score.Middle.TypeCheck
 
         public void Visit(NodeId id)
         {
-            throw new NotImplementedException();
+            var name = id.token.Image;
+            var sym = walker.Current.Lookup(name);
+            if (sym.kind != Symbol.Kind.VAR)
+                log.Error(id.Span, "Currently only variables may be referenced by identifiers. Sorry.");
+            else Push((sym as VarSymbol).ty);
         }
 
         public void Visit(Ast node)

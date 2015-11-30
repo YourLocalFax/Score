@@ -8,6 +8,7 @@
 
         void Visit(NodeFnDecl fn);
         void Visit(NodeTypeDef fn);
+        void Visit(NodeLet let);
 
         void Visit(NodeId id);
         void Visit(NodeInt i);

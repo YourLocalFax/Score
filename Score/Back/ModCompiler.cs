@@ -71,6 +71,11 @@ namespace Score.Back
         {
         }
 
+        public void Visit(NodeLet let)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Visit(NodeId id)
         {
             throw new NotImplementedException();
