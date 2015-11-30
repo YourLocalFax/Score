@@ -6,11 +6,47 @@ namespace Score
 {
     using Front.Lex;
     using Front.Parse;
+    using Front.Parse.Ty;
+    using Front.Parse.Data;
     using Debug;
-    using Middle;
+    using Middle.Analysis;
     using Middle.Symbols;
     using Back;
-    using Back.LLVM;
+
+    internal static class Tests
+    {
+        static void TestSymbolTable()
+        {
+            var symbols = new SymbolTable();
+
+            symbols.Insert("test_kit", Symbol.Kind.KIT, null, null);
+            symbols.NewScope("test_kit"); {
+
+                symbols.Insert("main", Symbol.Kind.FN, new TyFn(new ParameterList(),
+                    new Parameter(null, TyRef.VoidTy), null), new Modifiers());
+                symbols.NewScope("main"); {
+                    symbols.Insert("test", Symbol.Kind.VAR, TyRef.BoolTy, new Modifiers());
+                } symbols.ExitScope();
+
+                var putsParamTys = new ParameterList();
+                putsParamTys.Add(new Parameter(null, TyRef.PointerTo(TyRef.Int8Ty, false)));
+                var putsTy = new TyFn(putsParamTys, new Parameter(null, TyRef.Int32Ty), null);
+                symbols.Insert("puts", Symbol.Kind.FN, putsTy, new Modifiers());
+
+            } symbols.ExitScope();
+
+            Console.WriteLine(symbols);
+
+            var walker = new SymbolTableWalker(symbols);
+            while (walker.Current != null)
+            {
+                Console.WriteLine(walker.Current);
+                walker.Step();
+            }
+
+            Entry.Wait();
+        }
+    }
 
     public static class Entry
     {
@@ -60,6 +96,14 @@ namespace Score
             Console.WriteLine();
             Console.WriteLine(symbols);
 
+            /*
+            Wait();
+            return;
+            */
+
+            Console.WriteLine();
+            Console.WriteLine("COMPILING:");
+
             var compiler = new ScoreCompiler(log, symbols);
             compiler.Compile(ast);
 
@@ -92,7 +136,14 @@ namespace Score
 
             process.WaitForExit();
 
-            Console.ReadLine();
+            Wait();
+        }
+
+        public static void Wait()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
         }
 
         private static void Fail(DetailLogger log)

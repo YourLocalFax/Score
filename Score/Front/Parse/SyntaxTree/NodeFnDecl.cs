@@ -24,7 +24,7 @@ namespace Score.Front.Parse.SyntaxTree
         {
             get
             {
-                throw new NotImplementedException();
+                return @fn.span; // TODO(kai): ACTUALLY DO SPAN PLS
             }
         }
 

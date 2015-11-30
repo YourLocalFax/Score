@@ -15,6 +15,20 @@ namespace Score
             return builder.ToString();
         }
 
+        public static void ForEach<T>(this T[] arr, Action<T> action)
+        {
+            foreach (var t in arr)
+                action(t);
+        }
+
+        public static TResult[] Map<T, TResult>(this T[] arr, Func<T, TResult> func)
+        {
+            var result = new TResult[arr.Length];
+            for (int i = 0, len = arr.Length; i < len; i++)
+                result[i] = func(arr[i]);
+            return result;
+        }
+
         public static V GetOrCreate<K, V>(this Dictionary<K, V> dict, K key, Func<V> valueFunc)
         {
             V value;

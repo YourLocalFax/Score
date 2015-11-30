@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Linq;
 
 using LLVMSharp;
 using static LLVMSharp.LLVM;
 
-namespace Score.Back.LLVM
+namespace Score.Back
 {
+    using Val;
+
     using Front.Lex;
     using Front.Parse;
     using Front.Parse.SyntaxTree;
@@ -67,7 +68,7 @@ namespace Score.Back.LLVM
 
                 walker.Step();
 
-                var compiler = new FnCompiler(manager, module, self);
+                var compiler = new FnCompiler(log, manager, module, walker, new ScoreVal(fn.Span, sym.ty, self));
                 fn.body.ForEach(node => node.Accept(compiler));
 
                 if (fn.ReturnParameter.ty.IsVoid)

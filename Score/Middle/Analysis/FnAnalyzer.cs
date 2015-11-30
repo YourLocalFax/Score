@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Score.Middle
+﻿namespace Score.Middle.Analysis
 {
     using Front.Parse;
     using Front.Parse.SyntaxTree;
@@ -33,7 +27,7 @@ namespace Score.Middle
             symbols.Insert(fn.Name, Symbol.Kind.FN, null, fn.header.modifiers);
             if (fn.body != null)
             {
-                symbols.NewScope();
+                symbols.NewScope(fn.Name);
                 var analyzer = new FnAnalyzer(log, symbols);
                 fn.body.ForEach(node => node.Accept(analyzer));
                 symbols.ExitScope();

@@ -91,12 +91,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Back\LLVM\FnCompiler.cs" />
-    <Compile Include="Back\LLVM\GlobalStateManager.cs" />
-    <Compile Include="Back\LLVM\ModCompiler.cs" />
-    <Compile Include="Back\LLVM\KitCompiler.cs" />
-    <Compile Include="Back\LLVM\ScoreCompiler.cs" />
-    <Compile Include="Back\LLVM\Values\ScoreValue.cs" />
+    <Compile Include="Back\FnCompiler.cs" />
+    <Compile Include="Back\GlobalStateManager.cs" />
+    <Compile Include="Back\ModCompiler.cs" />
+    <Compile Include="Back\KitCompiler.cs" />
+    <Compile Include="Back\ScoreCompiler.cs" />
+    <Compile Include="Back\Val\ScoreVal.cs" />
     <Compile Include="Front\Parse\Ty\TyBool.cs" />
     <Compile Include="Front\Parse\Ty\TyFloat.cs" />
     <Compile Include="Front\Parse\Ty\TyFn.cs" />
@@ -119,10 +119,10 @@
     <Compile Include="Front\Parse\Data\TyArgList.cs" />
     <Compile Include="Front\Parse\SyntaxTree\NodeFnDecl.cs" />
     <Compile Include="Front\Parse\Ty\TyRef.cs" />
-    <Compile Include="Middle\FnAnalyzer.cs" />
-    <Compile Include="Middle\ModAnalyzer.cs" />
-    <Compile Include="Middle\KitAnalyzer.cs" />
-    <Compile Include="Middle\SemanticAnalyzer.cs" />
+    <Compile Include="Middle\Analysis\FnAnalyzer.cs" />
+    <Compile Include="Middle\Analysis\ModAnalyzer.cs" />
+    <Compile Include="Middle\Analysis\KitAnalyzer.cs" />
+    <Compile Include="Middle\Analysis\SemanticAnalyzer.cs" />
     <Compile Include="Middle\Symbols\Symbol.cs" />
     <Compile Include="Middle\Symbols\SymbolTable.cs" />
     <Compile Include="Debug\AstPrinter.cs" />

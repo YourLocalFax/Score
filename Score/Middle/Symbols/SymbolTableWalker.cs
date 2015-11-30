@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Score.Middle.Symbols
 {
@@ -10,44 +7,62 @@ namespace Score.Middle.Symbols
 
     internal sealed class SymbolTableWalker
     {
+        private sealed class Node
+        {
+            private readonly Scope anchor;
+            private readonly List<Node> children = new List<Node>();
+            private int index = -1;
+
+            public bool IsOver => index >= children.Count;
+
+            public Node(Scope anchor)
+            {
+                this.anchor = anchor;
+                for (int i = 0; i < anchor.ScopeCount; i++)
+                    children.Add(new Node(anchor.GetScope(i)));
+            }
+
+            // NOTE(kai): SHOULD NOT BE CALLED IF IsOver RETURNED TRUE
+            public Scope Get() => index == -1 ? anchor : IsOver ? null : children[index].Get();
+
+            public Node Step()
+            {
+                if (index >= 0)
+                {
+                    if (!children[index].IsOver)
+                        children[index].Step();
+                    else index++;
+                }
+                else index++;
+                return this;
+            }
+        }
+
         public readonly SymbolTable symbols;
+        private readonly Node root;
 
-        private Scope current;
-        public Scope Current => current;
-
-        private Stack<int> indices = new Stack<int>();
+        public Scope Current => root.Get();
 
         public SymbolTableWalker(SymbolTable symbols)
         {
             this.symbols = symbols;
-
-            current = symbols.global.GetScope(0);
-            indices.Push(0);
+            root = new Node(symbols.global);
         }
 
-        public Scope Step()
+        public void Step()
         {
-            var result = current;
-            // step into this scope.
-            if (current.ScopeCount > 0)
-            {
-                current = result.GetScope(0);
-                indices.Push(0);
-            }
-            // No need to step into a scope, so continue inside it...
-            else
-            {
-                var index = indices.Peek();
-                // ...or step out of it.
-                if (index >= current.ScopeCount)
-                    indices.Pop();
-                index = indices.Pop() + 1;
-                indices.Push(index);
-                current = symbols.global.GetScope(index);
-            }
-            return result;
+            /*
+            Console.WriteLine("Preparint to step, you have: ");
+            foreach (var key in Current.symbols.Keys)
+                Console.WriteLine(key);
+            //*/
+            root.Step();
+            /*
+            Console.WriteLine("Finished stepping, you have: ");
+            foreach (var key in Current.symbols.Keys)
+                Console.WriteLine(key);
+            Console.WriteLine();
+            //*/
         }
-
-        // public void Walk(Action<SymbolTable.Scope> action) { }
     }
 }

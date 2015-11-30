@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Score.Middle
+﻿namespace Score.Middle.Analysis
 {
     using Front.Parse.SyntaxTree;
 
@@ -25,7 +19,7 @@ namespace Score.Middle
         public void Analyze(string name, Ast ast)
         {
             symbols.Insert(name, Symbol.Kind.KIT, null, null);
-            symbols.NewScope();
+            symbols.NewScope(name);
             var analyzer = new KitAnalyzer(log, symbols);
             ast.children.ForEach(child => child.Accept(analyzer));
             symbols.ExitScope();

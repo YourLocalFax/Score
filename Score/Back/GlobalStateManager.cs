@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 using LLVMSharp;
-
 using static LLVMSharp.LLVM;
 
-namespace Score.Back.LLVM
+namespace Score.Back
 {
     internal sealed class GlobalStateManager
     {
@@ -21,10 +16,10 @@ namespace Score.Back.LLVM
             this.context = context;
         }
 
-        public LLVMValueRef CStrConst(LLVMBuilderRef builder, string value)
+        public LLVMValueRef CStrConst(LLVMBuilderRef builder, string value, string name = "")
         {
             // FIXME(kai): things!
-            return BuildGlobalStringPtr(builder, value, "");
+            return BuildGlobalStringPtr(builder, value, name);
         }
     }
 }

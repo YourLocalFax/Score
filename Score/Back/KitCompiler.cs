@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LLVMSharp;
 
-using LLVMSharp;
-
-using static LLVMSharp.LLVM;
-
-namespace Score.Back.LLVM
+namespace Score.Back
 {
     using Front.Parse;
     using Front.Parse.SyntaxTree;

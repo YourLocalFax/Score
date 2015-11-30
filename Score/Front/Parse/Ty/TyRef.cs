@@ -5,7 +5,23 @@ namespace Score.Front.Parse.Ty
 {
     internal abstract class TyRef
     {
-        public static BaseTyRef Void(Span span) => new BaseTyRef(new TyVoid(span));
+        public static readonly TyRef VoidTy = For(new TyVoid());
+        public static readonly TyRef BoolTy = For(new TyBool());
+
+        public static readonly TyRef Int8Ty = For(new TyInt8());
+        public static readonly TyRef Int16Ty = For(new TyInt16());
+        public static readonly TyRef Int32Ty = For(new TyInt32());
+        public static readonly TyRef Int64Ty = For(new TyInt64());
+
+        public static readonly TyRef Uint8Ty = For(new TyUint8());
+        public static readonly TyRef Uint16Ty = For(new TyUint16());
+        public static readonly TyRef Uint32Ty = For(new TyUint32());
+        public static readonly TyRef Uint64Ty = For(new TyUint64());
+
+        public static readonly TyRef Float16Ty = For(new TyFloat16());
+        public static readonly TyRef Float32Ty = For(new TyFloat32());
+        public static readonly TyRef Float64Ty = For(new TyFloat64());
+
         public static BaseTyRef For(TyVariant ty) => new BaseTyRef(ty);
         public static PointerTyRef PointerTo(TyRef ty, bool isMut) => new PointerTyRef(ty, isMut);
         // TODO(kai): Bring these back when we decide how to use them right.
@@ -18,6 +34,9 @@ namespace Score.Front.Parse.Ty
         // TODO(kai): These things will fail when trying to infer the type.
         // Make sure that this is only called when types are updated after inference.
         public abstract LLVMTypeRef GetLLVMTy(LLVMContextRef context);
+
+        // FIXME(kai): This is probably really stupid
+        public abstract bool SameAs(TyRef ty);
     }
 
     internal sealed class BaseTyRef : TyRef
@@ -30,6 +49,8 @@ namespace Score.Front.Parse.Ty
         }
 
         public override string ToString() => ty.ToString();
+
+        public override bool SameAs(TyRef ty) => (ty as BaseTyRef)?.ty.GetType() == this.ty.GetType();
 
         public override LLVMTypeRef GetLLVMTy(LLVMContextRef context) =>
             ty.GetLLVMTy(context);
@@ -48,6 +69,14 @@ namespace Score.Front.Parse.Ty
 
         public override string ToString() =>
             string.Format("^{0}{1}", isMut ? "mut " : "", ty.ToString());
+
+        public override bool SameAs(TyRef ty)
+        {
+            var pty = ty as PointerTyRef;
+            if (pty == null)
+                return false;
+            return (pty.isMut == isMut) && pty.ty.SameAs(this.ty);
+        }
 
         public override LLVMTypeRef GetLLVMTy(LLVMContextRef context) =>
             PointerType(ty.GetLLVMTy(context), 0);

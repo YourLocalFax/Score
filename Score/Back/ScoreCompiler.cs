@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using LLVMSharp;
-
+﻿using LLVMSharp;
 using static LLVMSharp.LLVM;
 
-namespace Score.Back.LLVM
+namespace Score.Back
 {
     using Front.Parse;
     using Front.Parse.SyntaxTree;
@@ -37,7 +30,10 @@ namespace Score.Back.LLVM
 
         public void Compile(Ast ast)
         {
-            var compiler = new KitCompiler(log, manager, module, new SymbolTableWalker(symbols));
+            var walker = new SymbolTableWalker(symbols);
+            walker.Step();
+
+            var compiler = new KitCompiler(log, manager, module, walker);
             ast.Accept(compiler);
 
             DumpModule(module);

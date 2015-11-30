@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Score.Middle
+﻿namespace Score.Middle.Analysis
 {
     using Front.Parse;
     using Front.Parse.SyntaxTree;

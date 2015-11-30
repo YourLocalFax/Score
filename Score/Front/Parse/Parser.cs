@@ -464,7 +464,7 @@ namespace Score.Front.Parse
                 var span = start + Next.span.End;
                 Advance();
                 Advance();
-                return TyRef.Void(span);
+                return TyRef.VoidTy;
             }
 
             if (!HasCurrent)
