@@ -107,7 +107,6 @@ namespace Score.Front.Parse.Ty
 
         public void Resolve(TyRef ty)
         {
-            Console.WriteLine("Attempting to resolve path ty...");
             if (ty is PathTyRef)
             {
                 var path = ty as PathTyRef;
@@ -116,8 +115,6 @@ namespace Score.Front.Parse.Ty
                 Resolve(path.Ty);
             }
             else this.ty = ty;
-            Console.WriteLine(Resolved ? "Succeded!" : "Failed...");
-            Console.WriteLine();
         }
 
         public override LLVMTypeRef GetLLVMTy(LLVMContextRef context)
