@@ -1,71 +1,45 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Score.Middle.TypeResolve
+using LLVMSharp;
+using static LLVMSharp.LLVM;
+
+namespace Score.Middle.FnPopulation
 {
+    using Back;
+
     using Front;
+    using Front.Lex;
     using Front.Parse;
     using Front.Parse.SyntaxTree;
     using Front.Parse.Ty;
 
     using Symbols;
 
-    internal sealed class TypeResolver : IAstVisitor
+    internal sealed class FnPopulator : IAstVisitor
     {
         private readonly DetailLogger log;
+        private readonly GlobalStateManager manager;
+        private readonly LLVMModuleRef module;
 
         private SymbolTableWalker walker;
 
         private bool hasResolved;
 
-        public TypeResolver(DetailLogger log)
+        public FnPopulator(DetailLogger log, GlobalStateManager manager, LLVMModuleRef module)
         {
             this.log = log;
+            this.manager = manager;
+            this.module = module;
         }
 
-        public void Resolve(Ast ast, SymbolTable symbols)
+        public void Populate(Ast ast, SymbolTable symbols)
         {
             walker = new SymbolTableWalker(symbols);
-
-            hasResolved = false;
-            while (!hasResolved)
-            {
-                hasResolved = true;
-                ast.Accept(this);
-            }
-        }
-
-        private void ResolveTy(Spanned<TyRef> spTy)
-        {
-            var ty = spTy.value;
-            if (ty is PathTyRef)
-            {
-                var path = ty as PathTyRef;
-                if (!path.Resolved)
-                {
-                    // TODO(kai): eventually this will all be qualified, we'll have to deal with that.
-                    var name = path.name;
-                    var sym = walker.Current.Lookup(name);
-                    if (sym == null)
-                    {
-                        // TODO(kai): use spanned types
-                        log.Error(spTy.span, "Could not locate symbol \"{0}\", failed to resolve type.", name);
-                        return;
-                    }
-                    var symTy = sym.Ty;
-                    if (symTy is PathTyRef)
-                    {
-                        if ((symTy as PathTyRef).Resolved)
-                            path.Resolve(symTy);
-                        else hasResolved = false;
-                    }
-                    else path.Resolve(symTy);
-                }
-            }
+            ast.Accept(this);
         }
 
         public void Visit(Ast node)
@@ -75,8 +49,16 @@ namespace Score.Middle.TypeResolve
 
         public void Visit(NodeFnDecl fn)
         {
-            fn.Parameters.ForEach(param => ResolveTy(param.spTy));
-            ResolveTy(fn.ReturnParameter.spTy);
+            var sym = walker.Current.Lookup(fn.Name);
+
+            var llvmTy = fn.ty.GetLLVMTy(manager.context);
+            var llvmFn = AddFunction(module, fn.Name, llvmTy);
+
+            if (fn.header.modifiers.Has(Token.Type.EXTERN))
+                SetLinkage(llvmFn, LLVMLinkage.LLVMExternalLinkage);
+            
+            (sym as FnSymbol).llvmFn = llvmFn;
+
             if (fn.body != null)
             {
                 walker.Step();
@@ -86,13 +68,10 @@ namespace Score.Middle.TypeResolve
 
         public void Visit(NodeTypeDef type)
         {
-            ResolveTy(type.spTy);
         }
 
         public void Visit(NodeLet let)
         {
-            if (let.binding.IsTyd)
-                ResolveTy(let.binding.spTy);
             let.value.Accept(this);
         }
 

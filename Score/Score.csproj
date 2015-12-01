@@ -124,6 +124,7 @@
     <Compile Include="Middle\Analysis\ModAnalyzer.cs" />
     <Compile Include="Middle\Analysis\KitAnalyzer.cs" />
     <Compile Include="Middle\Analysis\SemanticAnalyzer.cs" />
+    <Compile Include="Middle\FnPopulation\FnPopulator.cs" />
     <Compile Include="Middle\Symbols\Symbol.cs" />
     <Compile Include="Middle\Symbols\SymbolTable.cs" />
     <Compile Include="Debug\AstPrinter.cs" />

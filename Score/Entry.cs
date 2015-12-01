@@ -17,7 +17,9 @@ namespace Score
     using Debug;
     using Middle.Analysis;
     using Middle.Symbols;
+    using Middle.FnPopulation;
     using Middle.TypeCheck;
+    using Middle.TypeResolve;
     using Back;
 
     internal static class Tests
@@ -110,6 +112,30 @@ namespace Score
             Wait();
             return;
             */
+
+            Console.WriteLine();
+            Console.WriteLine("TYPE RESOLVING:");
+
+            var typeResolver = new TypeResolver(log);
+            typeResolver.Resolve(ast, symbols);
+
+            if (log.HasErrors)
+            {
+                Fail(log);
+                return;
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("FUNCTION POPULATING:");
+
+            var fnPopulator = new FnPopulator(log, manager, module);
+            fnPopulator.Populate(ast, symbols);
+
+            if (log.HasErrors)
+            {
+                Fail(log);
+                return;
+            }
 
             Console.WriteLine();
             Console.WriteLine("TYPE CHECKING:");

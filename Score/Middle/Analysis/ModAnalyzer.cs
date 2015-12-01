@@ -70,12 +70,8 @@ namespace Score.Middle.Analysis
             // Finished with sanity checks for modifiers
 
             // Create the symbol and the LLVM function
-            var llvmTy = fn.ty.GetLLVMTy(manager.context);
-            var llvmFn = AddFunction(module, fn.Name, llvmTy);
-            symbols.InsertFn(fn.Name, mods, fn.ty, llvmFn);
-
-            if (fn.header.modifiers.Has(Token.Type.EXTERN))
-                SetLinkage(llvmFn, LLVMLinkage.LLVMExternalLinkage);
+            //symbols.InsertFn(fn.Name, mods, fn.ty, llvmFn);
+            symbols.InsertFn(fn.Name, mods, fn.ty);
 
             if (fn.body != null)
             {

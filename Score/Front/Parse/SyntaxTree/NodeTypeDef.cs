@@ -10,11 +10,11 @@
         public TokenKw type;
         public Name name;
         public Token eq;
-        public Spanned<TyRef> ty;
+        public Spanned<TyRef> spTy;
 
-        public TyRef Ty => ty.value;
+        public TyRef Ty => spTy.value;
 
-        internal override Span Span => type.span.Start + ty.span.End;
+        internal override Span Span => type.span.Start + spTy.span.End;
 
         public override void Accept(IAstVisitor visitor) => visitor.Visit(this);
     }

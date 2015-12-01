@@ -34,16 +34,15 @@ namespace Score.Middle.Symbols
     {
         public readonly Modifiers mods;
         public readonly TyFn ty;
-        public readonly LLVMValueRef llvmFn;
+        public LLVMValueRef llvmFn;
 
         public override TyRef Ty => ty;
 
-        public FnSymbol(string name, Modifiers mods, TyFn ty, LLVMValueRef llvmFn)
+        public FnSymbol(string name, Modifiers mods, TyFn ty)
             : base(name, Kind.FN)
         {
             this.mods = mods;
             this.ty = ty;
-            this.llvmFn = llvmFn;
         }
     }
 

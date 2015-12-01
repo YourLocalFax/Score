@@ -23,7 +23,7 @@ type c_str = ^i8
 /# let puts_ty_score = |^i8| -> i32
 /# let llvm_fn = add_function module "puts" puts_ty_llvm
 /# symbols.insert_fn "puts" puts_ty_score llvm_fn
-extern fn puts |^i8| -> i32
+extern fn puts |c_str| -> i32
 
 /# Symbol Table {
 /#   puts = ( |^i8| -> i32 , llvm_puts_fn )

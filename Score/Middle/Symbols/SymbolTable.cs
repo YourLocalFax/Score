@@ -30,8 +30,8 @@ namespace Score.Middle.Symbols
 
             public void AddChild(Scope scope) => children.Add(scope);
 
-            public void InsertFn(string fnName, Modifiers mods, TyFn ty, LLVMValueRef llvmFn) =>
-                symbols[fnName] = new FnSymbol(fnName, mods, ty, llvmFn);
+            public void InsertFn(string fnName, Modifiers mods, TyFn ty) =>
+                symbols[fnName] = new FnSymbol(fnName, mods, ty);
 
             public void InsertType(string typeName, Modifiers mods, TyRef ty) =>
                 symbols[typeName] = new TypeSymbol(typeName, mods, ty);
@@ -87,8 +87,8 @@ namespace Score.Middle.Symbols
         }
 
 
-        public void InsertFn(string fnName, Modifiers mods, TyFn ty, LLVMValueRef llvmFn) =>
-            current.InsertFn(fnName, mods, ty, llvmFn);
+        public void InsertFn(string fnName, Modifiers mods, TyFn ty) =>
+            current.InsertFn(fnName, mods, ty);
 
         public void InsertType(string typeName, Modifiers mods, TyRef ty) =>
             current.InsertType(typeName, mods, ty);

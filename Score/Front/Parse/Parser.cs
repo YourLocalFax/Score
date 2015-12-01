@@ -523,6 +523,13 @@ namespace Score.Front.Parse
                     return TyRef.TupleOf(types.ToArray());
                 }
                 */
+                case IDENT:
+                    {
+                        var span = Current.span;
+                        var name = Current.Image;
+                        Advance();
+                        return new Spanned<TyRef>(span, new PathTyRef(span, name));
+                    }
                 case PRIMITIVE:
                 {
                     var tok = Current as TokenPrimitiveTyName;
@@ -680,7 +687,7 @@ namespace Score.Front.Parse
                 type.eq = Current;
             Expect(EQ, "Expected '='.");
 
-            type.ty = ParseTy();
+            type.spTy = ParseTy();
 
             return type;
         }
