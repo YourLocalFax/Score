@@ -421,11 +421,9 @@ namespace Score.Front.Parse
                     AdvanceOp(COLON);
             }
 
-            TyRef ty = null;
+            Spanned<TyRef> ty = null;
             if (hasTy)
-                ty = ParseTy().value; // TODO(kai): make this actually take a spanned plz
-
-            Console.WriteLine(ty);
+                ty = ParseTy(); // TODO(kai): make this actually take a spanned plz
 
             return new Parameter(name, ty);
         }
@@ -693,11 +691,11 @@ namespace Score.Front.Parse
 
             // TODO(kai): this is temp, but be careful
             var name = new Name(ExpectIdent("Expected ident for let binding name."));
-            TyRef ty = null;
+            Spanned<TyRef> ty = null;
             if (CheckOp(COLON))
             {
                 Advance();
-                ty = ParseTy().value;
+                ty = ParseTy();
             }
 
             var binding = new Parameter(name, ty);

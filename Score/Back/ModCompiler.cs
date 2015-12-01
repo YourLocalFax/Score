@@ -61,7 +61,7 @@ namespace Score.Back
                 var compiler = new FnCompiler(log, manager, module, walker, new ScoreVal(fn.Span, sym.ty, sym.llvmFn));
                 fn.body.ForEach(node => node.Accept(compiler));
 
-                if (fn.ReturnParameter.ty.IsVoid)
+                if (fn.ReturnParameter.Ty.IsVoid)
                     BuildRetVoid(compiler.builder);
                 // TODO(kai): ELSE RETURN OTHER THINGS PLZ
             }

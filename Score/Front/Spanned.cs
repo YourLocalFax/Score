@@ -2,8 +2,8 @@
 {
     internal sealed class Spanned<T>
     {
-        public readonly Span span;
-        public readonly T value;
+        public Span span;
+        public T value;
 
         public Spanned(Span span, T t)
         {

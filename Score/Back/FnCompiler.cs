@@ -78,7 +78,7 @@ namespace Score.Back
         public void Visit(NodeLet let)
         {
             var sym = walker.Current.Lookup(let.binding.name.Image) as VarSymbol;
-            sym.pointer = BuildAlloca(builder, let.binding.ty.GetLLVMTy(Context), let.binding.name.Image);
+            sym.pointer = BuildAlloca(builder, let.binding.Ty.GetLLVMTy(Context), let.binding.name.Image);
 
             let.value.Accept(this);
             var value = Pop().value;

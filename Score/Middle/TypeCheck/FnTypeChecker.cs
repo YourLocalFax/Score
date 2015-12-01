@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Score.Middle.TypeCheck
 {
+    using Front;
     using Front.Parse;
     using Front.Parse.Data;
     using Front.Parse.SyntaxTree;
@@ -93,13 +94,13 @@ namespace Score.Middle.TypeCheck
         {
             let.value.Accept(this);
             var ty = Pop();
-            if (let.binding.ty == null)
+            if (!let.binding.IsTyd)
                 // TODO(kai): eventually values will be optional, fix that here too.
-                let.binding.ty = ty;
+                let.binding.spTy = new Spanned<TyRef>(let.binding.name.Span, ty);
             else
             {
-                if (!ty.SameAs(let.binding.ty))
-                    log.Error(let.Span, "Type mismatch: Cannot assign {0} to {1}.", ty, let.binding.ty);
+                if (!ty.SameAs(let.binding.Ty))
+                    log.Error(let.Span, "Type mismatch: Cannot assign {0} to {1}.", ty, let.binding.Ty);
             }
         }
 

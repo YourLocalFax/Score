@@ -46,7 +46,7 @@ namespace Score.Middle.Analysis
 
         public void Visit(NodeLet let)
         {
-            symbols.InsertVar(let.binding.name.Image, let.binding.ty);
+            symbols.InsertVar(let.binding.name.Image, let.binding.Ty);
         }
 
         public void Visit(NodeId id)

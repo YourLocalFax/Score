@@ -23,7 +23,7 @@ namespace Score.Front.Parse.Ty
         }
 
         public override LLVMTypeRef GetLLVMTy(LLVMContextRef context) =>
-            FunctionType(returnParameter.ty.GetLLVMTy(context), parameters.Select(param => param.ty.GetLLVMTy(context)).ToArray(), false);
+            FunctionType(returnParameter.Ty.GetLLVMTy(context), parameters.Select(param => param.Ty.GetLLVMTy(context)).ToArray(), false);
 
         public override bool SameAs(TyRef ty)
         {
@@ -32,10 +32,10 @@ namespace Score.Front.Parse.Ty
                 return false;
             if (fn.parameters.Count != parameters.Count)
                 return false;
-            if (!returnParameter.ty.SameAs(fn.returnParameter.ty))
+            if (!returnParameter.Ty.SameAs(fn.returnParameter.Ty))
                 return false;
             for (int i = 0, len = parameters.Count; i < len; i++)
-                if (!fn.parameters[i].ty.SameAs(parameters[i].ty))
+                if (!fn.parameters[i].Ty.SameAs(parameters[i].Ty))
                     return false;
             return true;
         }
