@@ -95,8 +95,8 @@ namespace Score
 
             var symbols = new SymbolTable();
             var manager = new GlobalStateManager(ContextCreate());
-            var analyzer = new SemanticAnalyzer(log, symbols, manager);
 
+            var analyzer = new SemanticAnalyzer(log, symbols, manager);
             var module = analyzer.Analyze(Path.GetFileNameWithoutExtension(testFile), ast);
 
             if (log.HasErrors)
@@ -130,6 +130,8 @@ namespace Score
 
             var fnPopulator = new FnPopulator(log, manager, module);
             fnPopulator.Populate(ast, symbols);
+
+            AddPutI(symbols, manager, module);
 
             if (log.HasErrors)
             {
@@ -211,6 +213,65 @@ namespace Score
 #endif
 
             Wait();
+        }
+
+        private static void AddPutI(SymbolTable symbols, GlobalStateManager manager, LLVMModuleRef module)
+        {
+            /*
+            var putcharTy = FunctionType(Int32TypeInContext(manager.context), new LLVMTypeRef[] { Int32TypeInContext(manager.context) }, false);
+            var putchar = AddFunction(module, "putchar", putcharTy);
+            SetLinkage(putchar, LLVMLinkage.LLVMExternalLinkage);
+            */
+
+            var putchar = (symbols.global.Lookup("putchar") as FnSymbol).llvmFn;
+
+            var putiTy = FunctionType(VoidTypeInContext(manager.context), new LLVMTypeRef[] { Int32TypeInContext(manager.context) }, false);
+            var puti = AddFunction(module, "puti", putiTy);
+
+            var putiScParams = new ParameterList();
+            putiScParams.Add(new Parameter(null, new Front.Spanned<TyRef>(default(Front.Span), TyRef.Int32Ty)));
+            symbols.InsertFn("puti", new Modifiers(), new TyFn(putiScParams,
+                new Parameter(null, new Front.Spanned<TyRef>(default(Front.Span), TyRef.VoidTy))));
+            (symbols.global.Lookup("puti") as FnSymbol).llvmFn = puti;
+
+            var iParam = GetParam(puti, 0);
+            SetValueName(iParam, "i");
+
+            var builder = CreateBuilderInContext(manager.context);
+
+            var _entry = AppendBasicBlockInContext(manager.context, puti, ".entry");
+            var _if0 = AppendBasicBlockInContext(manager.context, puti, ".if0");
+            var _next0 = AppendBasicBlockInContext(manager.context, puti, ".next0");
+            var _if1 = AppendBasicBlockInContext(manager.context, puti, ".if1");
+            var _next1 = AppendBasicBlockInContext(manager.context, puti, ".next1");
+
+            PositionBuilderAtEnd(builder, _entry);
+            var i = BuildAlloca(builder, Int32TypeInContext(manager.context), "i_loc");
+            BuildStore(builder, iParam, i);
+
+            var ilt0 = BuildICmp(builder, LLVMIntPredicate.LLVMIntSLT, BuildLoad(builder, i, ""), ConstInt(Int32TypeInContext(manager.context), 0, true), "");
+            BuildCondBr(builder, ilt0, _if0, _next0);
+
+            PositionBuilderAtEnd(builder, _if0);
+            BuildCall(builder, putchar, new LLVMValueRef[] { ConstInt(Int32TypeInContext(manager.context), 45, true) }, "");
+            BuildStore(builder, BuildNeg(builder, BuildLoad(builder, i, ""), ""), i);
+            BuildBr(builder, _next0);
+
+            PositionBuilderAtEnd(builder, _next0);
+            var igt9 = BuildICmp(builder, LLVMIntPredicate.LLVMIntSGT, BuildLoad(builder, i, ""), ConstInt(Int32TypeInContext(manager.context), 9, true), "");
+            BuildCondBr(builder, igt9, _if1, _next1);
+
+            PositionBuilderAtEnd(builder, _if1);
+            var io10 = BuildSDiv(builder, BuildLoad(builder, i, ""), ConstInt(Int32TypeInContext(manager.context), 10, true), "");
+            BuildCall(builder, puti, new LLVMValueRef[] { io10 }, "");
+            BuildBr(builder, _next1);
+
+            PositionBuilderAtEnd(builder, _next1);
+            var im10 = BuildSRem(builder, BuildLoad(builder, i, ""), ConstInt(Int32TypeInContext(manager.context), 10, true), "");
+            var c0pim10 = BuildAdd(builder, ConstInt(Int32TypeInContext(manager.context), 48, true), im10, "");
+
+            BuildCall(builder, putchar, new LLVMValueRef[] { c0pim10 }, "");
+            BuildRetVoid(builder);
         }
 
         public static void Wait()

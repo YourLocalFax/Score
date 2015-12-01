@@ -29,6 +29,21 @@ extern fn puts |c_str| -> i32
 /#   puts = ( |^i8| -> i32 , llvm_puts_fn )
 /# }
 
+extern fn putchar |i32| -> i32
+
+/*
+fn puti |i: i32 mut| -> () {
+    if i < 0 {
+        putchar '-'
+        i = -i
+    }
+    if i > 9 {
+        puti i / 10
+    }
+    putchar c'0' + i % 10
+}
+*/
+
 /# Here, the value "main" is inserted into
 /# the symbol table with Kind "FN" and a reference
 /# to the LLVM function it represents.
@@ -47,6 +62,7 @@ fn main || -> () {
 	let task = c"Today, I think we can test things :)"
 	puts hello
 	puts task
+	puti 24601
 }
 
 /# Symbol Table {
