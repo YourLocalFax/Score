@@ -94,20 +94,41 @@ namespace Score.Front.Parse.Ty
         public readonly Span span;
         public readonly string name;
 
+        private TyRef ty = null;
+
+        public TyRef Ty => ty;
+        public bool Resolved => ty != null;
+
         public PathTyRef(Span span, string name)
         {
             this.span = span;
             this.name = name;
         }
 
+        public void Resolve(TyRef ty)
+        {
+            if (ty is PathTyRef)
+            {
+                var path = ty as PathTyRef;
+                if (!path.Resolved)
+                    throw new ArgumentException("Cannot resolve this type with an unresolved path type.");
+                Resolve(path.Ty);
+            }
+            else this.ty = ty;
+        }
+
         public override LLVMTypeRef GetLLVMTy(LLVMContextRef context)
         {
-            throw new NotImplementedException();
+            if (!Resolved)
+                throw new InvalidOperationException("This path type has not yet been resolved. Cannot construct a valid type.");
+            return ty.GetLLVMTy(context);
         }
 
         public override bool SameAs(TyRef ty)
         {
-            throw new NotImplementedException();
+            if (!Resolved)
+                throw new InvalidOperationException("This path type has not yet been resolved. Cannot determine if it is the same as another type.");
+            return ty.SameAs(this.ty);
         }
 
         public override string ToString() => name;

@@ -1,9 +1,15 @@
 
+/# This is the first data type I want to support
+data Answer = yes | no
+
+/# This is the first *generic* data type I want to support
+/# This is actually usefull, so.
+data Maybe t = none | some t
+
+
+
 /# a result type
 data Res t e = ok t | err e
-
-/# a maybe type
-data Maybe t = some t | none
 
 /# the main entry point. this one prints the args.
 fn main |args: [str]| -> () {
@@ -22,7 +28,7 @@ fn main |args: [str]| -> () {
 
 struct vec2 |x: float = 0, y: float = x| {
 	fn + |that: vec2| -> vec2 {
-		vec2 x + that.x y + that.y
+		vec2 (x + that.x) (y + that.y)
 	}
 }
 
@@ -75,7 +81,7 @@ fn main |args: [str]| -> () {
 	handle_things d
 }
 
-fn handle_things |d: main.'data| -> () {
+fn handle_things |d: main .'data| -> () {
 	/# do things
 }
 
@@ -90,15 +96,15 @@ type cmd = || (entity) -> ()
 type action = (cmd,)
 
 impl action {
-	fn do || (plr) { this.0 : plr () }
-	fn undo || (plr) { this.1 : plr () }
+	fn do || (plr) { this .0 : plr () }
+	fn undo || (plr) { this .1 : plr () }
 }
 
 fn make_move_to |pos: (f32,)| -> (cmd,) = {
 	let last mut = pos
 	(|| (e) {
-		last = e.pos
-		e.pos = pos
+		last = e .pos
+		e .pos = pos
 	}, || (e) { e.pos = last })
 }
 
@@ -275,11 +281,10 @@ pub data c_void: u8 = priv __var1 | priv __var2
 fn add |a: i32, b: i32| -> i32 = a + b
 
 
+fn add |a, b| = a + b
+/# is this:
 trait addable<B, R> {
 	fn + |that: B| -> R
 }
-
-fn add |a, b| = a + b
-/# is this:
-fn add<B, R> |a: addable, b: B| -> R
+fn add<B, R> |a: addable, b: B| -> R = a + b
 

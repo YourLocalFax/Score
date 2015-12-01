@@ -101,7 +101,6 @@
     <Compile Include="Front\Parse\Ty\TyBool.cs" />
     <Compile Include="Front\Parse\Ty\TyFloat.cs" />
     <Compile Include="Front\Parse\Ty\TyFn.cs" />
-    <Compile Include="Front\Parse\Ty\TyPath.cs" />
     <Compile Include="Front\Parse\Ty\TyPrimitive.cs" />
     <Compile Include="Front\Parse\Ty\TyUint.cs" />
     <Compile Include="Front\Parse\Ty\TyInt.cs" />
@@ -171,7 +170,9 @@
     <Content Include="x86\libLLVM.dll" />
     <Content Include="x86\libLLVM.pdb" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Middle\TypeResolve\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\LLVMSharp.3.7.0\build\LLVMSharp.targets" Condition="Exists('..\packages\LLVMSharp.3.7.0\build\LLVMSharp.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
