@@ -21,6 +21,6 @@
         void Visit(NodeInfix infix);
         void Visit(NodeSuffix suffix);
 
-        //void Visit(NodeIf @if);
+        void Visit(NodeIf @if);
     }
 }

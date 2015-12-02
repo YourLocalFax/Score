@@ -180,6 +180,58 @@ namespace Score.Back
 
         public void Visit(NodeIf @if)
         {
+            var _next = AppendBasicBlockInContext(Context, self.value, ".next");
+
+            var _if_then = AppendBasicBlockInContext(Context, self.value, ".if-then");
+
+            @if.conditions[0].condition.Accept(this);
+            var condition = Pop();
+
+            // Check the condition
+            BuildCondBr(builder, condition.value, _if_then, _next);
+
+            PositionBuilderAtEnd(builder, _if_then);
+            walker.Step();
+            @if.conditions[0].body.ForEach(node => node.Accept(this));
+            BuildBr(builder, _next);
+
+            /*
+            for (int i = 0, len = @if.conditions.Count; i < len; i++)
+            {
+                var cond = @if.conditions[i];
+
+                var _if_then = AppendBasicBlockInContext(Context, self.value, ".if-then");
+                var _if_else = i < len - 1 ? AppendBasicBlockInContext(Context, self.value, ".if-else")
+                    : default(LLVMBasicBlockRef);
+
+                cond.condition.Accept(this);
+                var condition = Pop();
+
+                // Check the condition
+                BuildCondBr(builder, condition.value, _if_then, _if_else);
+
+                PositionBuilderAtEnd(builder, _if_then);
+                walker.Step();
+                cond.body.ForEach(node => node.Accept(this));
+                BuildBr(builder, _next);
+
+                if (i < len - 1)
+                    PositionBuilderAtEnd(builder, _if_else);
+            }
+            //*
+
+            /*
+            if (@if.fail.Count > 0)
+            {
+                PositionBuilderAtEnd(builder, AppendBasicBlockInContext(Context, self.value, ".else"));
+                walker.Step();
+                @if.fail.ForEach(node => node.Accept(this));
+            }
+
+            BuildBr(builder, _next);
+            //*/
+
+            PositionBuilderAtEnd(builder, _next);
         }
     }
 }

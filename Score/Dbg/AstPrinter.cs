@@ -217,6 +217,7 @@ namespace Score.Dbg
                 });
                 Untab();
                 WriteLine();
+                WriteTabs();
                 Write(" '}' ");
             });
             if (@if.fail.Count > 0)
@@ -232,6 +233,7 @@ namespace Score.Dbg
                 });
                 Untab();
                 WriteLine();
+                WriteTabs();
                 Write(" '}' ");
             }
         }

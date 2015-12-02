@@ -118,5 +118,20 @@ namespace Score.Middle.FnPopulation
         {
             suffix.target.Accept(this);
         }
+
+        public void Visit(NodeIf @if)
+        {
+            @if.conditions.ForEach(cond =>
+            {
+                cond.condition.Accept(this);
+                walker.Step();
+                cond.body.ForEach(node => node.Accept(this));
+            });
+            if (@if.fail.Count > 0)
+            {
+                walker.Step();
+                @if.fail.ForEach(node => node.Accept(this));
+            }
+        }
     }
 }

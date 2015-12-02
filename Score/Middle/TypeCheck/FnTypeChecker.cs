@@ -43,8 +43,27 @@ namespace Score.Middle.TypeCheck
             return result;
         }
 
+        public void Visit(Ast node)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Visit(NodeFnDecl fn)
         {
+            var name = fn.Name;
+
+            // The decl:
+
+            if (fn.body != null)
+            {
+                walker.Step();
+
+                var typeChecker = new FnTypeChecker(log, walker);
+                fn.body.ForEach(node => node.Accept(typeChecker));
+
+                // TODO(kai): check that returns are valid, too. Some can be done in the FnTypeChecker,
+                // but the rest should be done here? I dunno yet.
+            }
         }
 
         public void Visit(NodeTypeDef type)
@@ -162,9 +181,22 @@ namespace Score.Middle.TypeCheck
             else Push((sym as VarSymbol).ty);
         }
 
-        public void Visit(Ast node)
+        public void Visit(NodeIf @if)
         {
-            throw new NotImplementedException();
+            @if.conditions.ForEach(cond =>
+            {
+                cond.condition.Accept(this);
+                var condTy = Pop();
+                if (!condTy.SameAs(TyRef.BoolTy))
+                    log.Error(cond.Span, "Currently, the condition of an if expression should result in a bool value.");
+                walker.Step();
+                cond.body.ForEach(node => node.Accept(this));
+            });
+            if (@if.fail.Count > 0)
+            {
+                walker.Step();
+                @if.fail.ForEach(node => node.Accept(this));
+            }
         }
     }
 }

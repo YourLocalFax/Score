@@ -96,5 +96,22 @@ namespace Score.Middle.Analysis
         {
             suffix.target.Accept(this);
         }
+
+        public void Visit(NodeIf @if)
+        {
+            @if.conditions.ForEach(cond =>
+            {
+                cond.condition.Accept(this);
+                symbols.NewScope("if scope");
+                cond.body.ForEach(node => node.Accept(this));
+                symbols.ExitScope();
+            });
+            if (@if.fail.Count > 0)
+            {
+                symbols.NewScope("el scope");
+                @if.fail.ForEach(node => node.Accept(this));
+                symbols.ExitScope();
+            }
+        }
     }
 }

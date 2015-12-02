@@ -99,5 +99,10 @@ namespace Score.Middle.TypeCheck
         {
             throw new NotImplementedException();
         }
+
+        public void Visit(NodeIf @if)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

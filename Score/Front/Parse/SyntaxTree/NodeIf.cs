@@ -26,6 +26,6 @@ namespace Score.Front.Parse.SyntaxTree
         // TODO(kai): Do this better
         public override Span Span => conditions[0].Span;
 
-        public override void Accept(IAstVisitor visitor) { } //=> visitor.Visit(this);
+        public override void Accept(IAstVisitor visitor) => visitor.Visit(this);
     }
 }

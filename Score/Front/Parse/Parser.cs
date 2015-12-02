@@ -263,7 +263,7 @@ namespace Score.Front.Parse
                     break;
             }
 
-            Expect(LBRACE, "Expected '{' to end block.");
+            Expect(RBRACE, "Expected '}' to end block.");
             return block;
         }
 
