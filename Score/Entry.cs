@@ -14,7 +14,7 @@ namespace Score
     using Front.Parse;
     using Front.Parse.Ty;
     using Front.Parse.Data;
-    using Debug;
+    using Dbg;
     using Middle.Analysis;
     using Middle.Symbols;
     using Middle.FnPopulation;
