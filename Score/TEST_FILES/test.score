@@ -11,6 +11,10 @@ data Maybe t = none | some t
 /# a result type
 data Res t e = ok t | err e
 
+/# a function that should be found
+/# somewhere else.
+extern fn puts |^i8| -> i32
+
 /# the main entry point. this one prints the args.
 fn main |args: [str]| -> () {
 	/# each loop, iterates over things
@@ -182,7 +186,7 @@ impl laye_obj {
 	}
 }
 
-impl laye_obj on Int(value) {
+impl laye_obj.Int(value) {
 	fn + |that: laye_obj| -> laye_obj {
 		match that {
 			Int(value2): Int(value + value2)
