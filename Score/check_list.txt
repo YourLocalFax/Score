@@ -34,6 +34,7 @@ PARSER:
 
 
 Today:
+	[!] Control Flow
 	[ ] Enclosed Expressions
 	[ ] Infix Expression (w/o precedence)
 	[ ] Compile to LLVM Instructions
