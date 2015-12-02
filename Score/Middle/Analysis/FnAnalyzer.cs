@@ -54,6 +54,11 @@ namespace Score.Middle.Analysis
             // NOTE(kai): do nothing.
         }
 
+        public void Visit(NodeBool b)
+        {
+            // NOTE(kai): do nothing.
+        }
+
         public void Visit(NodeInt i)
         {
             // NOTE(kai): do nothing.

@@ -104,6 +104,11 @@ namespace Score.Middle.TypeCheck
             }
         }
 
+        public void Visit(NodeBool b)
+        {
+            Push(TyRef.BoolTy);
+        }
+
         public void Visit(NodeInt i)
         {
             // FIXME(kai): This is temp just to get the type of the int.

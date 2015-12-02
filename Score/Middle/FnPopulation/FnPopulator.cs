@@ -79,6 +79,10 @@ namespace Score.Middle.FnPopulation
         {
         }
 
+        public void Visit(NodeBool b)
+        {
+        }
+
         public void Visit(NodeInt i)
         {
         }

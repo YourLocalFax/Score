@@ -11,6 +11,7 @@
         void Visit(NodeLet let);
 
         void Visit(NodeId id);
+        void Visit(NodeBool b);
         void Visit(NodeInt i);
         void Visit(NodeStr s);
         void Visit(NodeTuple tuple);

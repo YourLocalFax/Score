@@ -130,6 +130,11 @@ namespace Score.Back
             Push(i.Span, intTy, constInt);
         }
 
+        public void Visit(NodeBool b)
+        {
+            Push(b.Span, TyRef.BoolTy, ConstInt(Int1TypeInContext(Context), b.Value ? 1ul : 0ul, false));
+        }
+
         public void Visit(NodeStr s)
         {
             // TODO(kai): things need types, please.

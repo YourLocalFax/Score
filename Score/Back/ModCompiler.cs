@@ -81,6 +81,11 @@ namespace Score.Back
             throw new NotImplementedException();
         }
 
+        public void Visit(NodeBool b)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Visit(NodeInt i)
         {
             throw new NotImplementedException();

@@ -97,6 +97,11 @@ namespace Score.Middle.Analysis
             log.Error(id.Span, "An identifier is not valid in this placement. Perhaps you meant to put it in a function?");
         }
 
+        public void Visit(NodeBool b)
+        {
+            log.Error(b.Span, "A bool literal is not valid in this placement. Perhaps you meant to put it in a function?");
+        }
+
         public void Visit(NodeInt i)
         {
             log.Error(i.Span, "An int literal is not valid in this placement. Perhaps you meant to put it in a function?");

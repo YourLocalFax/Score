@@ -100,8 +100,13 @@ namespace Score.Middle.TypeResolve
         {
         }
 
+        public void Visit(NodeBool b)
+        {
+        }
+
         public void Visit(NodeInt i)
         {
+            // TODO(kai): resolve suffixes? prob doesn't matter yet.
         }
 
         public void Visit(NodeStr s)
