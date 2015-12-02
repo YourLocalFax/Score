@@ -262,29 +262,35 @@ namespace Score
             SetLinkage(putchar, LLVMLinkage.LLVMExternalLinkage);
             */
 
+            var puts = (symbols.global.Lookup("puts") as FnSymbol).llvmFn;
             var putchar = (symbols.global.Lookup("putchar") as FnSymbol).llvmFn;
 
             var putiTy = FunctionType(VoidTypeInContext(manager.context), new LLVMTypeRef[] { Int32TypeInContext(manager.context) }, false);
+            var puti_ = AddFunction(module, "puti_", putiTy);
             var puti = AddFunction(module, "puti", putiTy);
 
             var putiScParams = new ParameterList();
             putiScParams.Add(new Parameter(null, new Front.Spanned<TyRef>(default(Front.Span), TyRef.Int32Ty)));
+            symbols.InsertFn("puti_", new Modifiers(), new TyFn(putiScParams,
+                new Parameter(null, new Front.Spanned<TyRef>(default(Front.Span), TyRef.VoidTy))));
             symbols.InsertFn("puti", new Modifiers(), new TyFn(putiScParams,
                 new Parameter(null, new Front.Spanned<TyRef>(default(Front.Span), TyRef.VoidTy))));
+            (symbols.global.Lookup("puti_") as FnSymbol).llvmFn = puti_;
             (symbols.global.Lookup("puti") as FnSymbol).llvmFn = puti;
 
-            var iParam = GetParam(puti, 0);
+            var iParam = GetParam(puti_, 0);
             SetValueName(iParam, "i");
 
             var builder = CreateBuilderInContext(manager.context);
 
-            var _entry = AppendBasicBlockInContext(manager.context, puti, ".entry");
-            var _if0 = AppendBasicBlockInContext(manager.context, puti, ".if0");
-            var _next0 = AppendBasicBlockInContext(manager.context, puti, ".next0");
-            var _if1 = AppendBasicBlockInContext(manager.context, puti, ".if1");
-            var _next1 = AppendBasicBlockInContext(manager.context, puti, ".next1");
+            // fn puti_
+            var _entry_ = AppendBasicBlockInContext(manager.context, puti_, ".entry");
+            var _if0 = AppendBasicBlockInContext(manager.context, puti_, ".if0");
+            var _next0 = AppendBasicBlockInContext(manager.context, puti_, ".next0");
+            var _if1 = AppendBasicBlockInContext(manager.context, puti_, ".if1");
+            var _next1 = AppendBasicBlockInContext(manager.context, puti_, ".next1");
 
-            PositionBuilderAtEnd(builder, _entry);
+            PositionBuilderAtEnd(builder, _entry_);
             var i = BuildAlloca(builder, Int32TypeInContext(manager.context), "i_loc");
             BuildStore(builder, iParam, i);
 
@@ -292,7 +298,7 @@ namespace Score
             BuildCondBr(builder, ilt0, _if0, _next0);
 
             PositionBuilderAtEnd(builder, _if0);
-            BuildCall(builder, putchar, new LLVMValueRef[] { ConstInt(Int32TypeInContext(manager.context), 45, true) }, "");
+            BuildCall(builder, putchar, new LLVMValueRef[] { ConstInt(Int32TypeInContext(manager.context), '-', true) }, "");
             BuildStore(builder, BuildNeg(builder, BuildLoad(builder, i, ""), ""), i);
             BuildBr(builder, _next0);
 
@@ -302,14 +308,22 @@ namespace Score
 
             PositionBuilderAtEnd(builder, _if1);
             var io10 = BuildSDiv(builder, BuildLoad(builder, i, ""), ConstInt(Int32TypeInContext(manager.context), 10, true), "");
-            BuildCall(builder, puti, new LLVMValueRef[] { io10 }, "");
+            BuildCall(builder, puti_, new LLVMValueRef[] { io10 }, "");
             BuildBr(builder, _next1);
 
             PositionBuilderAtEnd(builder, _next1);
             var im10 = BuildSRem(builder, BuildLoad(builder, i, ""), ConstInt(Int32TypeInContext(manager.context), 10, true), "");
-            var c0pim10 = BuildAdd(builder, ConstInt(Int32TypeInContext(manager.context), 48, true), im10, "");
+            var c0pim10 = BuildAdd(builder, ConstInt(Int32TypeInContext(manager.context), '0', true), im10, "");
 
             BuildCall(builder, putchar, new LLVMValueRef[] { c0pim10 }, "");
+            BuildRetVoid(builder);
+
+            // fn puti
+            var _entry = AppendBasicBlockInContext(manager.context, puti, ".entry");
+
+            PositionBuilderAtEnd(builder, _entry);
+            BuildCall(builder, puti_, new LLVMValueRef[] { GetParam(puti, 0) }, "");
+            BuildCall(builder, putchar, new LLVMValueRef[] { ConstInt(Int32TypeInContext(manager.context), '\n', true) }, "");
             BuildRetVoid(builder);
         }
 
