@@ -1,37 +1,18 @@
 
-/# For right now, we're going to ignore kits and modules.
-/# These comments will describe the symbol table.
-
-/# At this point, the symbol table only contains
-/# an empty global scope. There's nothing in it.
-
-/# Symbol Table {
-/# }
-
-/# Here, the type "c_str" is inserted into the
-/# symbol table with the Kind "TYPE" and a reference
-/# to the type is it synonymous for.
-/#
-/# let ty = ^i8
-/# symbols.insert_type "c_str" ty
 type c_str = ^i8
 
-/# Here, the value "puts" is inserted into
-/# the symbol table with Kind "FN" and a reference
-/# to the LLVM function it represents.
-/#
-/# let puts_ty_score = |^i8| -> i32
-/# let llvm_fn = add_function module "puts" puts_ty_llvm
-/# symbols.insert_fn "puts" puts_ty_score llvm_fn
 extern fn puts |c_str| -> i32
-
-/# Symbol Table {
-/#   puts = ( |^i8| -> i32 , llvm_puts_fn )
-/# }
-
 extern fn putchar |i32| -> i32
 
 /*
+fn putb |b: bool| -> () {
+	if b {
+		puts c"true"
+	} el {
+		puts c"false"
+	}
+}
+
 fn puti |i: i32 mut| -> () {
     if i < 0 {
         putchar '-'
@@ -40,23 +21,10 @@ fn puti |i: i32 mut| -> () {
     if i > 9 {
         puti i / 10
     }
-    putchar c'0' + i % 10
+    putchar c'0' + (i % 10)
 }
 */
 
-/# Here, the value "main" is inserted into
-/# the symbol table with Kind "FN" and a reference
-/# to the LLVM function it represents.
-/#
-/# This function has a body. At the time of symbol table
-/# generation, the body is only considered if it contains
-/# other valuable information that the symbol table will need.
-/# This includes functions and data types. This function
-/# does not contain valuable symbols, so it is skipped.
-/#
-/# let main_ty_score = |^i8| -> i32
-/# let llvm_fn = add_function module "main" main_ty_llvm
-/# symbols.insert_fn "main" main_ty_score llvm_fn
 fn main || -> () {
 	let hello: ^i8 = c"Hello, world! I'm Score!"
 	let task = c"Today, I think we can test things :)"
@@ -64,8 +32,3 @@ fn main || -> () {
 	puts task
 	puti 24601
 }
-
-/# Symbol Table {
-/#   puts = ( |^i8| -> i32 , llvm_puts_fn )
-/#   main = ( || -> () , llvm_main_fn )
-/# }

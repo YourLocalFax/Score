@@ -131,6 +131,7 @@ namespace Score
             var fnPopulator = new FnPopulator(log, manager, module);
             fnPopulator.Populate(ast, symbols);
 
+            AddPutB(symbols, manager, module);
             AddPutI(symbols, manager, module);
 
             if (log.HasErrors)
@@ -213,6 +214,44 @@ namespace Score
 #endif
 
             Wait();
+        }
+
+        private static void AddPutB(SymbolTable symbols, GlobalStateManager manager, LLVMModuleRef module)
+        {
+            var puts = (symbols.global.Lookup("puts") as FnSymbol).llvmFn;
+
+            var putbTy = FunctionType(VoidTypeInContext(manager.context), new LLVMTypeRef[] { Int1TypeInContext(manager.context) }, false);
+            var putb = AddFunction(module, "putb", putbTy);
+
+            var putbScParams = new ParameterList();
+            putbScParams.Add(new Parameter(null, new Front.Spanned<TyRef>(default(Front.Span), TyRef.BoolTy)));
+            symbols.InsertFn("putb", new Modifiers(), new TyFn(putbScParams,
+                new Parameter(null, new Front.Spanned<TyRef>(default(Front.Span), TyRef.VoidTy))));
+            (symbols.global.Lookup("putb") as FnSymbol).llvmFn = putb;
+
+            var bParam = GetParam(putb, 0);
+            SetValueName(bParam, "b");
+
+            var builder = CreateBuilderInContext(manager.context);
+
+            var _entry = AppendBasicBlockInContext(manager.context, putb, ".entry");
+            var _if = AppendBasicBlockInContext(manager.context, putb, ".if");
+            var _next = AppendBasicBlockInContext(manager.context, putb, ".next");
+            var _exit = AppendBasicBlockInContext(manager.context, putb, ".exit");
+
+            PositionBuilderAtEnd(builder, _entry);
+            BuildCondBr(builder, bParam, _if, _next);
+
+            PositionBuilderAtEnd(builder, _if);
+            BuildCall(builder, puts, new LLVMValueRef[] { manager.CStrConst(builder, "true") }, "");
+            BuildBr(builder, _exit);
+
+            PositionBuilderAtEnd(builder, _next);
+            BuildCall(builder, puts, new LLVMValueRef[] { manager.CStrConst(builder, "false") }, "");
+            BuildBr(builder, _exit);
+
+            PositionBuilderAtEnd(builder, _exit);
+            BuildRetVoid(builder);
         }
 
         private static void AddPutI(SymbolTable symbols, GlobalStateManager manager, LLVMModuleRef module)
