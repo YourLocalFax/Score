@@ -41,6 +41,7 @@ namespace Score.Dbg
         {
             node.children.ForEach(child =>
             {
+                WriteTabs();
                 child.Accept(this);
                 WriteLine();
             });
@@ -198,6 +199,41 @@ namespace Score.Dbg
             if (Front.Lex.LexerUtil.IsIdentStart(image[0]))
                 Write(" `" + image + " ");
             else Write(" " + image + " ");
+        }
+
+        public void Visit(NodeIf @if)
+        {
+            @if.conditions.ForEach(cond =>
+            {
+                Write("'if' ");
+                cond.condition.Accept(this);
+                WriteLine(" '{' ");
+                Tab();
+                cond.body.ForEach(node =>
+                {
+                    WriteTabs();
+                    node.Accept(this);
+                    WriteLine();
+                });
+                Untab();
+                WriteLine();
+                Write(" '}' ");
+            });
+            if (@if.fail.Count > 0)
+            {
+                Write("'el' ");
+                Write(" '{' ");
+                Tab();
+                @if.fail.ForEach(node =>
+                {
+                    WriteTabs();
+                    node.Accept(this);
+                    WriteLine();
+                });
+                Untab();
+                WriteLine();
+                Write(" '}' ");
+            }
         }
     }
 }

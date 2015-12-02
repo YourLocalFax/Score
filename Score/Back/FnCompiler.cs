@@ -177,5 +177,9 @@ namespace Score.Back
         {
             throw new NotImplementedException();
         }
+
+        public void Visit(NodeIf @if)
+        {
+        }
     }
 }

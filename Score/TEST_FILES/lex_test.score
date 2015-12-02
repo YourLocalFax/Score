@@ -25,13 +25,13 @@ fn puti_ |i: i32 mut| -> () {
 }
 
 fn puti |i: i32| -> () {
-	puti i
+	puti_ i
 	puts c""
 }
 */
 
 fn main || -> () {
-	let hello: ^i8 = c"Hello, world! I'm Score!"
+	let hello: c_str = c"Hello, world! I'm Score!"
 	let task = c"Today, I think we can test things :)"
 	puts hello
 	puts task

@@ -248,6 +248,25 @@ namespace Score.Front.Parse
             return result;
         }
 
+        private List<Node> ParseBlock()
+        {
+            Expect(LBRACE, "Expected '{' to start block.");
+
+            List<Node> block = new List<Node>();
+            while (HasCurrent && !Check(RBRACE))
+            {
+                var node = ParseTopLevel();
+                if (node == null)
+                    break;
+                block.Add(node);
+                if (Check(RBRACE))
+                    break;
+            }
+
+            Expect(LBRACE, "Expected '{' to end block.");
+            return block;
+        }
+
         private NodeExpr ParsePrimaryExpr(bool isEnclosed, bool doError = true)
         {
             if (!HasCurrent)
@@ -259,6 +278,25 @@ namespace Score.Front.Parse
             NodeExpr result;
             switch (Current.type)
             {
+                case IF:
+                {
+                    var @if = new NodeIf();
+                    while (Check(IF))
+                    {
+                        Advance();
+                        @if.conditions.Add(new NodeIf.IfBlock(ParseExpr(), ParseBlock()));
+                        if (Check(EL))
+                        {
+                            if (!Check(IF))
+                            {
+                                @if.fail = ParseBlock();
+                                break;
+                            }
+                            else Advance();
+                        }
+                    }
+                    result = @if;
+                } break;
                 case LPAREN:
                     var start = Current.span.Start;
                     Advance();

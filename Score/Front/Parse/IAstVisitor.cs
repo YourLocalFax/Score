@@ -20,5 +20,7 @@
         void Visit(NodeInvoke invoke);
         void Visit(NodeInfix infix);
         void Visit(NodeSuffix suffix);
+
+        //void Visit(NodeIf @if);
     }
 }

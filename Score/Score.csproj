@@ -97,6 +97,7 @@
     <Compile Include="Back\KitCompiler.cs" />
     <Compile Include="Back\ScoreCompiler.cs" />
     <Compile Include="Back\Val\ScoreVal.cs" />
+    <Compile Include="Dbg\AstPrinter.cs" />
     <Compile Include="Front\Parse\SyntaxTree\NodeIf.cs" />
     <Compile Include="Front\Parse\SyntaxTree\NodeBool.cs" />
     <Compile Include="Front\Parse\SyntaxTree\NodeTypeDef.cs" />
@@ -129,7 +130,6 @@
     <Compile Include="Middle\FnPopulation\FnPopulator.cs" />
     <Compile Include="Middle\Symbols\Symbol.cs" />
     <Compile Include="Middle\Symbols\SymbolTable.cs" />
-    <Compile Include="Debug\AstPrinter.cs" />
     <Compile Include="DetailLogger.cs" />
     <Compile Include="Entry.cs" />
     <Compile Include="Extensions.cs" />

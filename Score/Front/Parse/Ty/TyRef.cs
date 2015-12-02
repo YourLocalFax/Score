@@ -78,6 +78,8 @@ namespace Score.Front.Parse.Ty
 
         public override bool SameAs(TyRef ty)
         {
+            if (ty is PathTyRef)
+                return ty.SameAs(this);
             var pty = ty as PointerTyRef;
             if (pty == null)
                 return false;
@@ -128,7 +130,7 @@ namespace Score.Front.Parse.Ty
         {
             if (!Resolved)
                 throw new InvalidOperationException("This path type has not yet been resolved. Cannot determine if it is the same as another type.");
-            return ty.SameAs(this.ty);
+            return ty.SameAs(Ty);
         }
 
         public override string ToString() => name;
