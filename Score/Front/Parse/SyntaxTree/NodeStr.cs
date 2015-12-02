@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Score.Front.Parse.SyntaxTree
 {
     using Lex;
@@ -12,16 +9,13 @@ namespace Score.Front.Parse.SyntaxTree
     {
         public TokenStr str;
 
-        internal override Span Span => str.span;
+        public override Span Span => str.span;
 
         public NodeStr(TokenStr str)
         {
             this.str = str;
         }
 
-        public override void Accept(IAstVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
+        public override void Accept(IAstVisitor visitor) => visitor.Visit(this);
     }
 }

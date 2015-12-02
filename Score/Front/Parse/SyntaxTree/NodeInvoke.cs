@@ -11,7 +11,7 @@ namespace Score.Front.Parse.SyntaxTree
         public NodeExpr target;
         public List<NodeExpr> args;
 
-        internal override Span Span => target.Span.Start + args[args.Count - 1].Span.End;
+        public override Span Span => target.Span.Start + args[args.Count - 1].Span.End;
 
         public NodeInvoke(NodeExpr target, List<NodeExpr> args)
         {
@@ -19,9 +19,6 @@ namespace Score.Front.Parse.SyntaxTree
             this.args = args;
         }
 
-        public override void Accept(IAstVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
+        public override void Accept(IAstVisitor visitor) => visitor.Visit(this);
     }
 }

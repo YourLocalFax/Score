@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Score.Front.Parse.SyntaxTree
+﻿namespace Score.Front.Parse.SyntaxTree
 {
     using Lex;
 
@@ -12,7 +6,7 @@ namespace Score.Front.Parse.SyntaxTree
     {
         public TokenInt token;
 
-        internal override Span Span => token.span;
+        public override Span Span => token.span;
 
         public NodeInt(TokenInt token)
         {

@@ -7,7 +7,7 @@ namespace Score.Front.Parse.SyntaxTree
         public Location start, end;
         public List<NodeExpr> values;
 
-        internal override Span Span => start + end;
+        public override Span Span => start + end;
 
         public NodeTuple(List<NodeExpr> values, Location start, Location end)
         {

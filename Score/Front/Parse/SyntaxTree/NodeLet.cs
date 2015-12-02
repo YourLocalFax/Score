@@ -9,7 +9,7 @@
         public readonly Parameter binding;
         public readonly NodeExpr value;
 
-        internal override Span Span => binding.name.Span;
+        public override Span Span => binding.name.Span;
 
         public NodeLet(Parameter binding, NodeExpr value)
         {

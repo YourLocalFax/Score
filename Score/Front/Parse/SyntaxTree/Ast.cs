@@ -10,12 +10,9 @@ namespace Score.Front.Parse.SyntaxTree
     {
         public readonly List<Node> children = new List<Node>();
 
-        internal override Span Span => children.Count == 0 ? new Span() :
+        public override Span Span => children.Count == 0 ? new Span() :
             children[0].Span.Start + children[children.Count - 1].Span.End;
 
-        public override void Accept(IAstVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
+        public override void Accept(IAstVisitor visitor) => visitor.Visit(this);
     }
 }

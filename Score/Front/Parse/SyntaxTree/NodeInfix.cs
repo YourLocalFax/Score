@@ -7,7 +7,7 @@
         public NodeExpr left, right;
         public TokenOp op;
 
-        internal override Span Span => left.Span.Start + right.Span.End;
+        public override Span Span => left.Span.Start + right.Span.End;
 
         public NodeInfix(NodeExpr left, NodeExpr right, TokenOp op)
         {
@@ -16,9 +16,6 @@
             this.op = op;
         }
 
-        public override void Accept(IAstVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
+        public override void Accept(IAstVisitor visitor) => visitor.Visit(this);
     }
 }

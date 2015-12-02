@@ -20,7 +20,7 @@ namespace Score.Front.Parse.SyntaxTree
         public Parameter ReturnParameter => ty.returnParameter;
 
         // TODO(kai): figure out span
-        internal override Span Span
+        public override Span Span
         {
             get
             {
@@ -28,9 +28,6 @@ namespace Score.Front.Parse.SyntaxTree
             }
         }
 
-        public override void Accept(IAstVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
+        public override void Accept(IAstVisitor visitor) => visitor.Visit(this);
     }
 }
