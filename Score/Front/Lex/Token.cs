@@ -96,6 +96,8 @@ namespace Score.Front.Lex
             RBRACE, // '}'
 
             STR,
+            TRUE,
+            FALSE,
             INT,
             FLOAT,
             CHAR,

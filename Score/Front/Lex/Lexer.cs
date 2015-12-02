@@ -199,6 +199,9 @@ namespace Score.Front.Lex
                 typeof|is|as
                 */
 
+                case "true": return Token.Type.TRUE;
+                case "false": return Token.Type.FALSE;
+
                 case "let": return Token.Type.LET;
                 case "mut": return Token.Type.MUT;
                 case "lazy": return Token.Type.LAZY;

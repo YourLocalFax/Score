@@ -282,6 +282,11 @@ namespace Score.Front.Parse
                         result = new NodeTuple(exprs, start, GetLastSpan().End);
                     }
                     break;
+                case TRUE: case FALSE:
+                {
+                    result = new NodeBool(Current as TokenKw);
+                    Advance();
+                } break;
                 case INT:
                 {
                     result = new NodeInt(Current as TokenInt);

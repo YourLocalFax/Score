@@ -13,7 +13,7 @@ fn putb |b: bool| -> () {
 	}
 }
 
-fn puti |i: i32 mut| -> () {
+fn puti_ |i: i32 mut| -> () {
     if i < 0 {
         putchar '-'
         i = -i
@@ -23,6 +23,11 @@ fn puti |i: i32 mut| -> () {
     }
     putchar c'0' + (i % 10)
 }
+
+fn puti |i: i32| -> () {
+	puti i
+	puts c""
+}
 */
 
 fn main || -> () {
@@ -31,4 +36,6 @@ fn main || -> () {
 	puts hello
 	puts task
 	puti 24601
+	putb true
+	puts c""
 }
