@@ -97,6 +97,7 @@
     <Compile Include="Back\KitCompiler.cs" />
     <Compile Include="Back\ScoreCompiler.cs" />
     <Compile Include="Back\Val\ScoreVal.cs" />
+    <Compile Include="Front\Parse\SyntaxTree\NodeIf.cs" />
     <Compile Include="Front\Parse\SyntaxTree\NodeBool.cs" />
     <Compile Include="Front\Parse\SyntaxTree\NodeTypeDef.cs" />
     <Compile Include="Front\Parse\Ty\TyBool.cs" />
