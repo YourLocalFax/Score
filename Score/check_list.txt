@@ -30,3 +30,10 @@ PARSER:
 // C# uses UTF-16, so chars are 16-bit things.
 // I very well could also do that, though I would much prefer a dynamic char size and do UTF-8...
 // Ideas are welcome, I'll go with an integer representation internally anyway
+
+
+
+Today:
+	[ ] Enclosed Expressions
+	[ ] Infix Expression (w/o precedence)
+	[ ] Compile to LLVM Instructions
