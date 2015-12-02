@@ -37,5 +37,4 @@ fn main || -> () {
 	puts task
 	puti 24601
 	putb true
-	puts c""
 }
