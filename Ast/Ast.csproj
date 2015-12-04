@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>a7e739f0-6f84-4219-8e60-14555f38a5ee</ProjectGuid>
+    <ProjectGuid>{A7E739F0-6F84-4219-8E60-14555F38A5EE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ast</RootNamespace>
@@ -30,24 +30,44 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System"/>
-    
-    <Reference Include="System.Core"/>
-    <Reference Include="System.Xml.Linq"/>
-    <Reference Include="System.Data.DataSetExtensions"/>
-    
-    
-    <Reference Include="Microsoft.CSharp"/>
-    
-    <Reference Include="System.Data"/>
-    
-    <Reference Include="System.Net.Http"/>
-    
-    <Reference Include="System.Xml"/>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Ast.cs" />
+    <Compile Include="IAstVisitor.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="NodeBool.cs" />
+    <Compile Include="NodeExpr.cs" />
+    <Compile Include="NodeFnDecl.cs" />
+    <Compile Include="NodeIdent.cs" />
+    <Compile Include="NodeIf.cs" />
+    <Compile Include="NodeIndex.cs" />
+    <Compile Include="NodeInfix.cs" />
+    <Compile Include="NodeInt.cs" />
+    <Compile Include="NodeInvoke.cs" />
+    <Compile Include="NodeLet.cs" />
+    <Compile Include="NodeStr.cs" />
+    <Compile Include="NodeSuffix.cs" />
+    <Compile Include="NodeTuple.cs" />
+    <Compile Include="NodeTypeDef.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\File\Source.csproj">
+      <Project>{e916fc5f-741e-492a-8768-2689065cd05c}</Project>
+      <Name>Source</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lex\Lex.csproj">
+      <Project>{702ee42a-acd8-4b50-9e06-4af9b2c70007}</Project>
+      <Name>Lex</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -57,5 +77,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-
- </Project>
+</Project>
