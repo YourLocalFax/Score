@@ -234,7 +234,7 @@ namespace Lex
                 var span = new Span(fileName, start, GetLocation());
                 // _ is a special token called Wildcard, much like how * works in other environments.
                 if (str == "_")
-                    return Token.New(WILDCARD).Spanned(span);
+                    return Token.New(WILDCARD, "_").Spanned(span);
                 // otherwise, it's an identifier
                 if (IsKw(str))
                     return Token.NewKeyword(GetTypeFromKeyword(str), str).Spanned(span);
@@ -281,55 +281,55 @@ namespace Lex
                 // These should NOT be identifiers, those are checked above.
                 // These should turn into cstr/verbatim strings.
                 case 'c':
-                {
-                    Advance(); // 'c'
-                    bool verbatim = c == 'v';
-                    if (verbatim)
-                        Advance(); // 'v'
-                    var str = LexStrLiteral(verbatim);
-                    var span = new Span(fileName, start, GetLocation());
-                    return Token.NewString(str, verbatim, true).Spanned(span);
-                }
-                case 'v':
-                {
-                    Advance(); // 'v'
-                    bool cstr = c == 'c';
-                    if (cstr)
+                    {
                         Advance(); // 'c'
-                    var str = LexStrLiteral(true);
-                    var span = new Span(fileName, start, GetLocation());
-                    return Token.NewString(str, true, cstr).Spanned(span);
-                }
+                        bool verbatim = c == 'v';
+                        if (verbatim)
+                            Advance(); // 'v'
+                        var str = LexStrLiteral(verbatim);
+                        var span = new Span(fileName, start, GetLocation());
+                        return Token.NewString(str, verbatim, true).Spanned(span);
+                    }
+                case 'v':
+                    {
+                        Advance(); // 'v'
+                        bool cstr = c == 'c';
+                        if (cstr)
+                            Advance(); // 'c'
+                        var str = LexStrLiteral(true);
+                        var span = new Span(fileName, start, GetLocation());
+                        return Token.NewString(str, true, cstr).Spanned(span);
+                    }
                 // Just a normal string literal
                 case '"':
-                {
-                    var str = LexStrLiteral(false);
-                    var span = new Span(fileName, start, GetLocation());
-                    return Token.NewString(str, false, false).Spanned(span);
-                }
+                    {
+                        var str = LexStrLiteral(false);
+                        var span = new Span(fileName, start, GetLocation());
+                        return Token.NewString(str, false, false).Spanned(span);
+                    }
                 case '\'': // TODO(kai): Not sure what kind of modifiers we can have on chars.
                     return LexCharLiteralOrSymbol();
                 case ',':
                     Advance();
-                    return Token.New(COMMA).Spanned(new Span(fileName, start, GetLocation()));
+                    return Token.New(COMMA, ",").Spanned(new Span(fileName, start, GetLocation()));
                 case '(':
                     Advance();
-                    return Token.New(LPAREN).Spanned(new Span(fileName, start, GetLocation()));
+                    return Token.New(LPAREN, "(").Spanned(new Span(fileName, start, GetLocation()));
                 case ')':
                     Advance();
-                    return Token.New(RPAREN).Spanned(new Span(fileName, start, GetLocation()));
+                    return Token.New(RPAREN, ")").Spanned(new Span(fileName, start, GetLocation()));
                 case '[':
                     Advance();
-                    return Token.New(LBRACKET).Spanned(new Span(fileName, start, GetLocation()));
+                    return Token.New(LBRACKET, "[").Spanned(new Span(fileName, start, GetLocation()));
                 case ']':
                     Advance();
-                    return Token.New(RBRACKET).Spanned(new Span(fileName, start, GetLocation()));
+                    return Token.New(RBRACKET, "]").Spanned(new Span(fileName, start, GetLocation()));
                 case '{':
                     Advance();
-                    return Token.New(LBRACE).Spanned(new Span(fileName, start, GetLocation()));
+                    return Token.New(LBRACE, "{").Spanned(new Span(fileName, start, GetLocation()));
                 case '}':
                     Advance();
-                    return Token.New(RBRACE).Spanned(new Span(fileName, start, GetLocation()));
+                    return Token.New(RBRACE, "}").Spanned(new Span(fileName, start, GetLocation()));
                 default:
                     // TODO(kai): fatal error, we don't know how to continue.
                     return null;

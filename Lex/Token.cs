@@ -99,21 +99,6 @@ namespace Lex
 
     public sealed class Token
     {
-        private static string TokenTypeToString(TokenType type)
-        {
-            switch (type)
-            {
-                case EQ: return "=";
-                case DOT: return ".";
-                case COLON: return ":";
-                case PIPE: return "|";
-                case AMP: return "&";
-                case CARET: return "^";
-                case ARROW: return "->";
-                default: return "<no idea, friend>";
-            }
-        }
-
         #region Factory Methods
         /// <summary>
         /// Create a new token.
@@ -124,8 +109,8 @@ namespace Lex
         /// <param name="type"></param>
         /// <param name="image"></param>
         /// <returns></returns>
-        internal static Token New(TokenType type, string image = null) =>
-            new Token(type, image ?? TokenTypeToString(type));
+        internal static Token New(TokenType type, string image) =>
+            new Token(type, image ?? "<no idea, friend>");
 
         /// <summary>
         /// Returns a new token for a builtin type name.
