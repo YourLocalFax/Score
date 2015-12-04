@@ -31,7 +31,10 @@ fn puti |i: i32| -> () {
 */
 
 fn main || -> () {
-	let: hello = c"Hello, world! I'm Score!"
+	if false {
+		puts c"It doesn't work!"
+	}
+	let hello: c_str = c"Hello, world! I'm Score!"
 	let task = c"Today, I think we can test things :)"
 	puts hello
 	puts task

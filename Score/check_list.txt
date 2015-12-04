@@ -5,7 +5,6 @@
 x = Done
 
 GENERAL:
-	[ ] Remove ',' as an operator character!
 	[?] Detail Logger
 	[ ] Detail Message Formatter
 

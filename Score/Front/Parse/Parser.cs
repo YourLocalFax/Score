@@ -207,10 +207,7 @@ namespace Score.Front.Parse
             {
                 switch (Current.type)
                 {
-                    case PUB:
-                    case PRIV:
-                    case EXTERN:
-                    case INTERN:
+                    case PUB: case PRIV: case EXTERN: case INTERN:
                         mods.modifiers.Add(Current as TokenKw);
                         Advance();
                         break;
@@ -282,25 +279,24 @@ namespace Score.Front.Parse
             switch (Current.type)
             {
                 case IF:
+                {
+                    var @if = new NodeIf();
+                    while (Check(IF))
                     {
-                        var @if = new NodeIf();
-                        while (Check(IF))
+                        Advance();
+                        @if.conditions.Add(new NodeIf.IfBlock(ParseExpr(), ParseBlock()));
+                        if (Check(EL))
                         {
-                            Advance();
-                            @if.conditions.Add(new NodeIf.IfBlock(ParseExpr(), ParseBlock()));
-                            if (Check(EL))
+                            if (!Check(IF))
                             {
-                                if (!Check(IF))
-                                {
-                                    @if.fail = ParseBlock();
-                                    break;
-                                }
-                                else Advance();
+                                @if.fail = ParseBlock();
+                                break;
                             }
+                            else Advance();
                         }
-                        result = @if;
                     }
-                    break;
+                    result = @if;
+                } break;
                 case LPAREN:
                     var start = Current.span.Start;
                     Advance();
@@ -324,31 +320,26 @@ namespace Score.Front.Parse
                         result = new NodeTuple(exprs, start, GetLastSpan().End);
                     }
                     break;
-                case TRUE:
-                case FALSE:
-                    {
-                        result = new NodeBool(Current as TokenKw);
-                        Advance();
-                    }
-                    break;
+                case TRUE: case FALSE:
+                {
+                    result = new NodeBool(Current as TokenKw);
+                    Advance();
+                } break;
                 case INT:
-                    {
-                        result = new NodeInt(Current as TokenInt);
-                        Advance();
-                    }
-                    break;
+                {
+                    result = new NodeInt(Current as TokenInt);
+                    Advance();
+                } break;
                 case STR:
-                    {
-                        result = new NodeStr(Current as TokenStr);
-                        Advance();
-                    }
-                    break;
+                {
+                    result = new NodeStr(Current as TokenStr);
+                    Advance();
+                } break;
                 case IDENT:
-                    {
-                        result = new NodeId(Current as TokenId);
-                        Advance();
-                    }
-                    break;
+                {
+                    result = new NodeId(Current as TokenId);
+                    Advance();
+                } break;
                 default:
                     if (doError)
                     {
@@ -583,18 +574,18 @@ namespace Score.Front.Parse
                         return new Spanned<TyRef>(span, new PathTyRef(span, name));
                     }
                 case PRIMITIVE:
-                    {
-                        var tok = Current as TokenPrimitiveTyName;
-                        Advance();
-                        return new Spanned<TyRef>(GetLastSpan(), TyRef.For(TyVariant.GetForPrimitive(tok)));
-                    }
+                {
+                    var tok = Current as TokenPrimitiveTyName;
+                    Advance();
+                    return new Spanned<TyRef>(GetLastSpan(), TyRef.For(TyVariant.GetForPrimitive(tok)));
+                }
                 default:
-                    {
-                        log.Error(GetSpan(), "Failed to parse type.");
-                        return null;
-                        //var name = ParseQualifiedNameWithTyArgs();
-                        //return new Spanned<TyRef>(name.Span, TyRef.For(TyVariant.GetFor(name)));
-                    }
+                {
+                    log.Error(GetSpan(), "Failed to parse type.");
+                    return null;
+                    //var name = ParseQualifiedNameWithTyArgs();
+                    //return new Spanned<TyRef>(name.Span, TyRef.For(TyVariant.GetFor(name)));
+                }
             }
         }
 
@@ -696,7 +687,7 @@ namespace Score.Front.Parse
                 body.eq = Current;
                 Advance();
             }
-
+            
             if (hasEq && !Check(LBRACE))
             {
                 body.Add(ParseExpr());
