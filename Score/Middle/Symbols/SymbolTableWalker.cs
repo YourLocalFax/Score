@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
+
+
+// FIXME(kai): Instead of step, say "StepIntoNext" and "StepOutOf" rather than just Step.
+
+
+
 namespace Score.Middle.Symbols
 {
     using static SymbolTable;

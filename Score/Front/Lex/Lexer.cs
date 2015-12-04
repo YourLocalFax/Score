@@ -18,17 +18,57 @@ namespace Score.Front.Lex
             switch (c)
             {
                 case '_':
-                case 'a': case 'b': case 'c': case 'd': case 'e':
-                case 'f': case 'g': case 'h': case 'i': case 'j':
-                case 'k': case 'l': case 'm': case 'n': case 'o':
-                case 'p': case 'q': case 'r': case 's': case 't':
-                case 'u': case 'v': case 'w': case 'x': case 'y':
+                case 'a':
+                case 'b':
+                case 'c':
+                case 'd':
+                case 'e':
+                case 'f':
+                case 'g':
+                case 'h':
+                case 'i':
+                case 'j':
+                case 'k':
+                case 'l':
+                case 'm':
+                case 'n':
+                case 'o':
+                case 'p':
+                case 'q':
+                case 'r':
+                case 's':
+                case 't':
+                case 'u':
+                case 'v':
+                case 'w':
+                case 'x':
+                case 'y':
                 case 'z':
-                case 'A': case 'B': case 'C': case 'D': case 'E':
-                case 'F': case 'G': case 'H': case 'I': case 'J':
-                case 'K': case 'L': case 'M': case 'N': case 'O':
-                case 'P': case 'Q': case 'R': case 'S': case 'T':
-                case 'U': case 'V': case 'W': case 'X': case 'Y':
+                case 'A':
+                case 'B':
+                case 'C':
+                case 'D':
+                case 'E':
+                case 'F':
+                case 'G':
+                case 'H':
+                case 'I':
+                case 'J':
+                case 'K':
+                case 'L':
+                case 'M':
+                case 'N':
+                case 'O':
+                case 'P':
+                case 'Q':
+                case 'R':
+                case 'S':
+                case 'T':
+                case 'U':
+                case 'V':
+                case 'W':
+                case 'X':
+                case 'Y':
                 case 'Z':
                     return true;
                 default:
@@ -45,8 +85,16 @@ namespace Score.Front.Lex
         {
             switch (c)
             {
-                case '0': case '1': case '2': case '3': case '4':
-                case '5': case '6': case '7': case '8': case '9':
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
                     return true;
                 default:
                     return false;
@@ -60,8 +108,18 @@ namespace Score.Front.Lex
                 case 16:
                     switch (c)
                     {
-                        case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
-                        case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
+                        case 'a':
+                        case 'b':
+                        case 'c':
+                        case 'd':
+                        case 'e':
+                        case 'f':
+                        case 'A':
+                        case 'B':
+                        case 'C':
+                        case 'D':
+                        case 'E':
+                        case 'F':
                             return true;
                         default:
                             return IsDigit(c);
@@ -95,11 +153,14 @@ namespace Score.Front.Lex
             // I really hate using upercase prefixes, but I guess it'd be REALLY stupid to disallow it.
             switch (c)
             {
-                case 'x': case 'X':
+                case 'x':
+                case 'X':
                     return 16;
-                case 'c': case 'C':
+                case 'c':
+                case 'C':
                     return 8;
-                case 'b': case 'B':
+                case 'b':
+                case 'B':
                     return 2;
                 default:
                     return 0;
@@ -171,11 +232,17 @@ namespace Score.Front.Lex
         {
             switch (s)
             {
-                case "i8": case "u8":
-                case "i16": case "u16":
-                case "i32": case "u32":
-                case "i64": case "u64":
-                case "f16": case "f32": case "f64":
+                case "i8":
+                case "u8":
+                case "i16":
+                case "u16":
+                case "i32":
+                case "u32":
+                case "i64":
+                case "u64":
+                case "f16":
+                case "f32":
+                case "f64":
                 case "bool": return true;
                 default: return false;
             }
@@ -477,7 +544,10 @@ namespace Score.Front.Lex
             {
                 // Let's handle whitespace, it should be completely ignored.
                 // TODO(kai): this can probably go in a separate method EatWhitespace, but meh for now.
-                case ' ': case '\t': case '\r': case '\n':
+                case ' ':
+                case '\t':
+                case '\r':
+                case '\n':
                     // skip the whitespace
                     Advance();
                     // Attempt to return a token, please.
@@ -504,29 +574,29 @@ namespace Score.Front.Lex
                 // These should NOT be identifiers, those are checked above.
                 // These should turn into cstr/verbatim strings.
                 case 'c':
-                {
-                    Advance(); // 'c'
-                    bool verbatim = c == 'v';
-                    if (verbatim)
-                        Advance(); // 'v'
-                    var str = LexStrLiteral(verbatim);
-                    return new TokenStr(start + GetLocation(), str, verbatim, true);
-                }
-                case 'v':
-                {
-                    Advance(); // 'v'
-                    bool cstr = c == 'c';
-                    if (cstr)
+                    {
                         Advance(); // 'c'
-                    var str = LexStrLiteral(true);
-                    return new TokenStr(start + GetLocation(), str, true, cstr);
-                }
+                        bool verbatim = c == 'v';
+                        if (verbatim)
+                            Advance(); // 'v'
+                        var str = LexStrLiteral(verbatim);
+                        return new TokenStr(start + GetLocation(), str, verbatim, true);
+                    }
+                case 'v':
+                    {
+                        Advance(); // 'v'
+                        bool cstr = c == 'c';
+                        if (cstr)
+                            Advance(); // 'c'
+                        var str = LexStrLiteral(true);
+                        return new TokenStr(start + GetLocation(), str, true, cstr);
+                    }
                 // Just a normal string literal
                 case '"':
-                {
-                    var str = LexStrLiteral(false);
-                    return new TokenStr(start + GetLocation(), str, false, false);
-                }
+                    {
+                        var str = LexStrLiteral(false);
+                        return new TokenStr(start + GetLocation(), str, false, false);
+                    }
                 case '\'': // TODO(kai): Not sure what kind of modifiers we can have on chars.
                     return LexCharLiteralOrSymbol();
                 case '(':
@@ -767,7 +837,7 @@ namespace Score.Front.Lex
             // What the operator looks like now
             var image = GetString();
             var span = start + GetLocation();
-            
+
             return GetOpToken(image, span);
         }
 
@@ -893,8 +963,8 @@ namespace Score.Front.Lex
                     return '\"';
                 // Any other important escapes I should worry about now?
                 case 'x':
-                    // TODO(kai): hex codes plz. This will probably be unicode, so we don't need \u0000 for that.
-                    // Until then, fall through with an error.
+                // TODO(kai): hex codes plz. This will probably be unicode, so we don't need \u0000 for that.
+                // Until then, fall through with an error.
                 default:
                     log.Error(GetLocation().AsSpan(), "Invalid escape sequence character '{0}'.", c);
                     Advance();

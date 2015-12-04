@@ -181,7 +181,7 @@ namespace Score.Dbg
             infix.left.Accept(this);
             Write(" ')'");
             // TODO(kai): maybe use something different
-            if (Front.Lex.LexerUtil.IsIdentStart(image[0]))
+            if (Util.IsIdentifierStart(image[0]))
                 Write(" `" + image + " ");
             else Write(" " + image + " ");
             Write("'(' ");
@@ -196,7 +196,7 @@ namespace Score.Dbg
             suffix.target.Accept(this);
             Write(" ')'");
             // TODO(kai): maybe use something different
-            if (Front.Lex.LexerUtil.IsIdentStart(image[0]))
+            if (Util.IsIdentifierStart(image[0]))
                 Write(" `" + image + " ");
             else Write(" " + image + " ");
         }
