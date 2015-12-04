@@ -5,11 +5,11 @@ namespace Ast
 {
     public sealed class NodeIndex : NodeExpr
     {
-        public NodeExpr target;
+        public Spanned<NodeExpr> target;
         public Spanned<Token> spDot;
         public NodeId index;
 
-        public NodeIndex(NodeExpr target, Spanned<Token> spDot, NodeId index)
+        public NodeIndex(Spanned<NodeExpr> target, Spanned<Token> spDot, NodeId index)
         {
             this.target = target;
             this.spDot = spDot;
