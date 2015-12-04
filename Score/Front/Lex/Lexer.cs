@@ -1,146 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Score.Front.Lex
 {
+    using static Util;
     using static LexerUtil;
 
     // Yes, some of these look pretty useless.
     // I just do it to have more visible control over what is and is not a letter/digit/etc.
     internal static class LexerUtil
     {
-        public static bool IsIdentStart(char c)
-        {
-            switch (c)
-            {
-                case '_':
-                case 'a': case 'b': case 'c': case 'd': case 'e':
-                case 'f': case 'g': case 'h': case 'i': case 'j':
-                case 'k': case 'l': case 'm': case 'n': case 'o':
-                case 'p': case 'q': case 'r': case 's': case 't':
-                case 'u': case 'v': case 'w': case 'x': case 'y':
-                case 'z':
-                case 'A': case 'B': case 'C': case 'D': case 'E':
-                case 'F': case 'G': case 'H': case 'I': case 'J':
-                case 'K': case 'L': case 'M': case 'N': case 'O':
-                case 'P': case 'Q': case 'R': case 'S': case 'T':
-                case 'U': case 'V': case 'W': case 'X': case 'Y':
-                case 'Z':
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public static bool IsIdentContinue(char c)
-        {
-            return IsIdentStart(c) || IsDigit(c);
-        }
-
-        public static bool IsDigit(char c)
-        {
-            switch (c)
-            {
-                case '0': case '1': case '2': case '3': case '4':
-                case '5': case '6': case '7': case '8': case '9':
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public static bool IsDigitInRadix(char c, int radix)
-        {
-            switch (radix)
-            {
-                case 16:
-                    switch (c)
-                    {
-                        case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
-                        case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
-                            return true;
-                        default:
-                            return IsDigit(c);
-                    }
-                case 8:
-                    return IsDigit(c) && c < '8';
-                case 2:
-                    return IsDigit(c) && c < '2';
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Returns true if the character is valid for a number prefix, false otherwise.
-        /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
-        public static bool IsNumPrefix(char c)
-        {
-            return GetNumPrefixRadix(c) != 0;
-        }
-
-        /// <summary>
-        /// Returns the integer radix that a given character represents for numeric literals.
-        /// Returns 0 if the character is not a valid number prefix.
-        /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
-        public static int GetNumPrefixRadix(char c)
-        {
-            // I really hate using upercase prefixes, but I guess it'd be REALLY stupid to disallow it.
-            switch (c)
-            {
-                case 'x': case 'X':
-                    return 16;
-                case 'c': case 'C':
-                    return 8;
-                case 'b': case 'B':
-                    return 2;
-                default:
-                    return 0;
-            }
-        }
-
-        public static bool IsOperator(char c)
-        {
-            // Check every valid operator character
-            // Some of these will end up being reserved, but all are viable for custom operators.
-            switch (c)
-            {
-                case '`':
-                case '~':
-                case '!':
-                case '@':
-                case '#':
-                case '$':
-                case '%':
-                case '^':
-                case '&':
-                case '*':
-                case '-':
-                case '=':
-                case '+':
-                case '\\':
-                case '|':
-                case ';':
-                case ':':
-                case ',':
-                case '<':
-                case '.':
-                case '>':
-                case '/':
-                case '?':
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
         public static Token GetOpToken(string image, Span span)
         {
             // TODO(kai): make sure we have all special operators
@@ -152,8 +23,6 @@ namespace Score.Front.Lex
                     return new TokenOp(Token.Type.COLON, span, image);
                 case ".":
                     return new TokenOp(Token.Type.DOT, span, image);
-                case ",":
-                    return new TokenOp(Token.Type.COMMA, span, image);
                 case "|":
                     return new TokenOp(Token.Type.PIPE, span, image);
                 case "&":
@@ -164,95 +33,6 @@ namespace Score.Front.Lex
                     return new TokenOp(Token.Type.ARROW, span, image);
                 default:
                     return new TokenOp(span, image);
-            }
-        }
-
-        public static bool IsPrimitiveTyName(string s)
-        {
-            switch (s)
-            {
-                case "i8": case "u8":
-                case "i16": case "u16":
-                case "i32": case "u32":
-                case "i64": case "u64":
-                case "f16": case "f32": case "f64":
-                case "bool": return true;
-                default: return false;
-            }
-        }
-
-        public static bool IsKw(string s)
-        {
-            return GetTypeFromKw(s) != Token.Type.UNKNOWN;
-        }
-
-        public static Token.Type GetTypeFromKw(string s)
-        {
-            switch (s)
-            {
-                /*
-                let|mut|lazy|take|pub|priv|stat|extern|virtual|override|implicit // these last three are idunno
-                use|from|kit
-                self|tailrec|fn|gen|new|void
-                this|base|struct|class|data|enum|trait|impl|type|sealed|partial
-                if|el|when|for|each|while|loop|match|ret|break|cont|resume|yield
-                typeof|is|as
-                */
-
-                case "true": return Token.Type.TRUE;
-                case "false": return Token.Type.FALSE;
-
-                case "let": return Token.Type.LET;
-                case "mut": return Token.Type.MUT;
-                case "lazy": return Token.Type.LAZY;
-                case "take": return Token.Type.TAKE;
-                case "pub": return Token.Type.PUB;
-                case "priv": return Token.Type.PRIV;
-                case "stat": return Token.Type.STAT;
-                case "extern": return Token.Type.EXTERN;
-                case "intern": return Token.Type.INTERN;
-                case "virtual": return Token.Type.VIRTUAL;
-                case "override": return Token.Type.OVERIDE;
-                case "implicit": return Token.Type.IMPLICIT;
-
-                case "use": return Token.Type.USE;
-                case "from": return Token.Type.FROM;
-                case "kit": return Token.Type.KIT;
-
-                case "self": return Token.Type.SELF;
-                case "tailrec": return Token.Type.TAILREC;
-                case "fn": return Token.Type.FN;
-                case "gen": return Token.Type.GEN;
-                case "new": return Token.Type.NEW;
-                case "void": return Token.Type.VOID;
-
-                case "this": return Token.Type.THIS;
-                case "base": return Token.Type.BASE;
-                case "struct": return Token.Type.STRUCT;
-                case "class": return Token.Type.CLASS;
-                case "data": return Token.Type.DATA;
-                case "enum": return Token.Type.ENUM;
-                case "trait": return Token.Type.TRAIT;
-                case "impl": return Token.Type.IMPL;
-                case "type": return Token.Type.TYPE;
-                case "sealed": return Token.Type.SEALED;
-                case "partial": return Token.Type.PARTIAL;
-
-                case "if": return Token.Type.IF;
-                case "el": return Token.Type.EL;
-                case "when": return Token.Type.WHEN;
-                case "for": return Token.Type.FOR;
-                case "each": return Token.Type.EACH;
-                case "while": return Token.Type.WHILE;
-                case "loop": return Token.Type.LOOP;
-                case "match": return Token.Type.MATCH;
-                case "ret": return Token.Type.RET;
-                case "break": return Token.Type.BREAK;
-                case "cont": return Token.Type.CONT;
-                case "resume": return Token.Type.RESUME;
-                case "yield": return Token.Type.YIELD;
-
-                default: return Token.Type.UNKNOWN;
             }
         }
     }
@@ -429,10 +209,10 @@ namespace Score.Front.Lex
         {
             if (c == '`')
             {
-                if (IsIdentStart(Peek()))
+                if (IsIdentifierStart(Peek()))
                 {
                     if (Peek() == '_')
-                        return IsIdentContinue(Peek(2));
+                        return IsIdentifierPart(Peek(2));
                     return true;
                 }
             }
@@ -452,7 +232,7 @@ namespace Score.Front.Lex
             // This should be an identifier or keyword unless
             // it's v", in which case it should be a verbatim string
             // (handled below)
-            if (IsIdentStart(c) && !IsNotIdentStart())
+            if (IsIdentifierStart(c) && !IsNotIdentStart())
             {
                 var str = LexIdentStr();
                 // _ is a special token called Wildcard, much like how * works in other environments.
@@ -529,6 +309,9 @@ namespace Score.Front.Lex
                 }
                 case '\'': // TODO(kai): Not sure what kind of modifiers we can have on chars.
                     return LexCharLiteralOrSymbol();
+                case ',':
+                    Advance();
+                    return new Token(Token.Type.COMMA, start + GetLocation());
                 case '(':
                     Advance();
                     return new Token(Token.Type.LPAREN, start + GetLocation());
@@ -587,13 +370,13 @@ namespace Score.Front.Lex
 
         private string LexIdentStr()
         {
-            if (!IsIdentStart(c))
+            if (!IsIdentifierStart(c))
             {
                 log.Error(GetLocation().AsSpan(), "Invalid start to an identifier.");
                 return "";
             }
             var start = GetLocation();
-            while (!EndOfSource && IsIdentContinue(c))
+            while (!EndOfSource && IsIdentifierPart(c))
                 Bump();
             return GetString();
         }
@@ -661,7 +444,7 @@ namespace Score.Front.Lex
                         // one posibility for floats
                         case '.':
                             // I think we should also check if this is followed by a character. 1.field should be valid, not a literal with errors
-                            if (isFloat || IsIdentStart(Peek()))
+                            if (isFloat || IsIdentifierStart(Peek()))
                                 // exit our loop plz
                                 goto loop_end;
                             isFloat = true;
@@ -746,7 +529,7 @@ namespace Score.Front.Lex
         private string LexOptionalNumSuffix()
         {
             // can't possibly be a suffix.
-            if (!IsIdentStart(c))
+            if (!IsIdentifierStart(c))
                 return "";
 
             // OH, that makes it easy actually.
@@ -833,7 +616,7 @@ namespace Score.Front.Lex
             var start = GetLocation();
             Advance(); // '''
             // It CAN'T be a symbol, so attempt to 
-            if (!IsIdentStart(c) || Peek() == '\'')
+            if (!IsIdentifierStart(c) || Peek() == '\'')
             {
                 bool fail;
                 var c = LexCharLiteral(out fail);

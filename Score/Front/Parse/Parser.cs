@@ -450,8 +450,8 @@ namespace Score.Front.Parse
             if (Check(IDENT))
             {
                 Advance();
-                hasName = CheckOp(COLON) || CheckOp(COMMA);
-                hasTy = CheckOp(COLON) || !CheckOp(COMMA);
+                hasName = CheckOp(COLON) || Check(COMMA);
+                hasTy = CheckOp(COLON) || !Check(COMMA);
                 Backup();
             }
 
@@ -488,8 +488,8 @@ namespace Score.Front.Parse
                 while (HasCurrent)
                 {
                     result.Add(ParseParameter());
-                    if (CheckOp(COMMA))
-                        AdvanceOp(COMMA);
+                    if (Check(COMMA))
+                        Advance();
                     else break;
                 }
             }
@@ -542,9 +542,9 @@ namespace Score.Front.Parse
                     Advance();
                     var type = ParseTy();
                     var depth = 1u;
-                    while (CheckOp(COMMA))
+                    while (Check(COMMA))
                     {
-                        AdvanceOp(COMMA);
+                        Advance();
                         depth++;
                     }
                     Expect(RBRACKET, "Expected ']' to end array type definition.");
@@ -558,8 +558,8 @@ namespace Score.Front.Parse
                     {
                         var type = ParseTy();
                         types.Add(type);
-                        if (CheckOp(COMMA))
-                            AdvanceOp(COMMA);
+                        if (Check(COMMA))
+                            Advance();
                         else break;
                     }
                     Expect(RPAREN, "Expected ')' to end tuple type definition.");
