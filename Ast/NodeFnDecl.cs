@@ -1,30 +1,30 @@
-﻿using System;
+﻿using Lex;
+using Source;
+using Ty;
 
-namespace Score.Front.Parse.SyntaxTree
+namespace Ast
 {
     using Data;
-    using Lex;
-    using Ty;
 
-    internal sealed class NodeFnDecl : Node
+    public sealed class NodeFnDecl : Node
     {
         public MemberHeader header;
-        public TokenKw @fn;
-        public QualifiedNameWithTyArgs nameWithTyArgs;
-        public TyFn ty;
+        public Spanned<Token> @fn;
+        public NameOrOp name;
+        public FnTyRef ty;
         public FnBody body;
 
-        public string Name => nameWithTyArgs.name[0].id.Image;
+        public string Name => name.Image;
 
         public ParameterList Parameters => ty.parameters;
         public Parameter ReturnParameter => ty.returnParameter;
 
-        // TODO(kai): figure out span
         public override Span Span
         {
             get
             {
-                return @fn.span; // TODO(kai): ACTUALLY DO SPAN PLS
+                // TODO(kai): Handle the member header span
+                return new Span(@fn.span.fileName, @fn.span.start, body.Span.end);
             }
         }
 

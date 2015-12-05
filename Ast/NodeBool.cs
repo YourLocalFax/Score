@@ -8,7 +8,7 @@ namespace Ast
     /// </summary>
     public sealed class NodeBool : NodeExpr
     {
-        private readonly Spanned<Token> spToken;
+        public readonly Spanned<Token> spToken;
 
         /// <summary>
         /// The value of this literal.
@@ -22,7 +22,7 @@ namespace Ast
         /// <summary>
         /// Location information for the token that this node was created from.
         /// </summary>
-        public Span Span => spToken.span;
+        public override Span Span => spToken.span;
 
         public NodeBool(Spanned<Token> token)
         {

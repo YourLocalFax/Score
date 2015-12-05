@@ -118,7 +118,7 @@ namespace Lex
         /// <param name="name"></param>
         /// <returns></returns>
         internal static Token NewBuiltinTyName(string name) =>
-            new Token(TokenType.BUILTIN_TY_NAME, name);
+            new Token(BUILTIN_TY_NAME, name);
 
         /// <summary>
         /// Returns a new token for a keyword.
@@ -135,7 +135,7 @@ namespace Lex
         /// <param name="image"></param>
         /// <returns></returns>
         internal static Token NewIdentifier(string image) =>
-            new Token(TokenType.IDENT, image);
+            new Token(IDENT, image);
 
         /// <summary>
         /// Returns a new token for a symbol.
@@ -143,7 +143,7 @@ namespace Lex
         /// <param name="image"></param>
         /// <returns></returns>
         internal static Token NewSymbol(string image) =>
-            new Token(TokenType.IDENT, image, tok => "'" + tok.Image);
+            new Token(IDENT, image, tok => "'" + tok.Image);
 
         /// <summary>
         /// Returns a new token for a string literal.
@@ -154,7 +154,7 @@ namespace Lex
         /// <returns></returns>
         internal static Token NewString(string value, bool verbatim, bool cstr)
         {
-            var res = new Token(TokenType.STR, value, tok =>
+            var res = new Token(STR, value, tok =>
                 string.Format("{0}{1}\"{2}\"", tok.StrVerbatim ? "v" : "", tok.StrC ? "c" : "", value));
             res.StrVerbatim = verbatim;
             res.StrC = cstr;
@@ -167,7 +167,7 @@ namespace Lex
         /// <param name="image"></param>
         /// <returns></returns>
         internal static Token NewOperator(string image) =>
-            new Token(TokenType.OP, image);
+            new Token(OP, image);
 
         /// <summary>
         /// Returns a new token for a specific reserved operator.
@@ -183,7 +183,7 @@ namespace Lex
         /// <param name="image"></param>
         /// <returns></returns>
         internal static Token NewIdentifierOperator(string image) =>
-            new Token(TokenType.OP, image, tok => "`" + tok.Image);
+            new Token(OP, image, tok => "`" + tok.Image);
 
         /// <summary>
         /// Returns a new token for a character literal.
@@ -192,7 +192,7 @@ namespace Lex
         /// <returns></returns>
         internal static Token NewChar(uint value)
         {
-            var res = new Token(TokenType.CHAR, char.ConvertFromUtf32((int)value), tok =>
+            var res = new Token(CHAR, char.ConvertFromUtf32((int)value), tok =>
                 string.Format("'{0}'", tok.Image));
             res.CharValue = value;
             return res;
@@ -207,7 +207,7 @@ namespace Lex
         /// <returns></returns>
         internal static Token NewInteger(ulong value, string image, string suffix)
         {
-            var res = new Token(TokenType.INT, image, tok => tok.Image + tok.NumericSuffix);
+            var res = new Token(INT, image, tok => tok.Image + tok.NumericSuffix);
             res.IntegerValue = value;
             res.NumericSuffix = suffix;
             return res;
@@ -222,7 +222,7 @@ namespace Lex
         /// <returns></returns>
         internal static Token NewFloat(double value, string image, string suffix)
         {
-            var res = new Token(TokenType.FLOAT, image, tok => tok.Image + tok.NumericSuffix);
+            var res = new Token(FLOAT, image, tok => tok.Image + tok.NumericSuffix);
             res.FloatValue = value;
             res.NumericSuffix = suffix;
             return res;

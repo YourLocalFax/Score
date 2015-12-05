@@ -1,4 +1,55 @@
 
+fn main || -> () {
+	puts c"Hello, world!"
+}
+
+type mainTy = || -> ()
+|| -> () { puts c"Hello, world!" }
+
+fn add |a: i32, b: i32| -> i32 = a + b
+add 1 2 + add 3 4
+
+type addTy = |i32,| -> i32
+let add: addTy = |a, b| = a + b
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+fn tr_nCr |num: i32, denom: i32, n: i32, k: i32| -> i32
+	| n == 0 : 0,
+	| k == 0 : num / denom,
+	| el : tr_nCr (num * n) (denom * k) (n - 1) (k - 1)
+
+impl i32 {
+	fn choose |k: Num| -> Num = tr_nCr 1 1 this k
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 /# This is the first data type I want to support
 data Answer = yes | no
 

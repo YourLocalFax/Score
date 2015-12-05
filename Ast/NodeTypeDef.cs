@@ -1,20 +1,22 @@
-﻿namespace Score.Front.Parse.SyntaxTree
+﻿using Lex;
+using Source;
+using Ty;
+
+namespace Ast
 {
     using Data;
-    using Lex;
-    using Ty;
 
-    internal sealed class NodeTypeDef : Node
+    public sealed class NodeTypeDef : Node
     {
         public Modifiers mods;
-        public TokenKw type;
-        public Name name;
+        public Token type;
+        public Spanned<string> name;
         public Token eq;
         public Spanned<TyRef> spTy;
 
         public TyRef Ty => spTy.value;
 
-        public override Span Span => type.span.Start + spTy.span.End;
+        public override Span Span => new Span(name.span.fileName, name.span.start, spTy.span.end);
 
         public override void Accept(IAstVisitor visitor) => visitor.Visit(this);
     }

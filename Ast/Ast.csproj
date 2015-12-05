@@ -41,6 +41,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ast.cs" />
+    <Compile Include="Data\FnBody.cs" />
+    <Compile Include="Data\MemberHeader.cs" />
+    <Compile Include="Data\Modifiers.cs" />
+    <Compile Include="Data\NameOrOp.cs" />
+    <Compile Include="Data\Parameter.cs" />
+    <Compile Include="Data\ParameterList.cs" />
     <Compile Include="IAstVisitor.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="NodeBool.cs" />
@@ -68,6 +74,10 @@
     <ProjectReference Include="..\Lex\Lex.csproj">
       <Project>{702ee42a-acd8-4b50-9e06-4af9b2c70007}</Project>
       <Name>Lex</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ty\Ty.csproj">
+      <Project>{5e71b503-5c23-433c-948e-3ac15ba64941}</Project>
+      <Name>Ty</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

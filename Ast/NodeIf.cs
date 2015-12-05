@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Score.Front.Parse.SyntaxTree
+using Source;
+
+namespace Ast
 {
-    internal sealed class NodeIf : NodeExpr
+    public sealed class NodeIf : NodeExpr
     {
         public sealed class IfBlock
         {

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Score.Front.Parse.SyntaxTree
+using Source;
+
+namespace Ast
 {
-    internal sealed class NodeInvoke : NodeExpr
+    public sealed class NodeInvoke : NodeExpr
     {
         public NodeExpr target;
         public List<NodeExpr> args;
 
-        public override Span Span => target.Span.Start + args[args.Count - 1].Span.End;
+        public override Span Span => new Span(target.Span.fileName, target.Span.start, args[args.Count - 1].Span.end);
 
         public NodeInvoke(NodeExpr target, List<NodeExpr> args)
         {

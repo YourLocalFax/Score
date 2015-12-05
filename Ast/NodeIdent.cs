@@ -8,7 +8,7 @@ namespace Ast
     /// </summary>
     public sealed class NodeId : NodeExpr
     {
-        private readonly Spanned<Token> spToken;
+        public readonly Spanned<Token> spToken;
 
         /// <summary>
         /// The string representation of this identifier.
@@ -22,7 +22,7 @@ namespace Ast
         /// <summary>
         /// Location information for the token that this node was created from.
         /// </summary>
-        public Span Span => spToken.span;
+        public override Span Span => spToken.span;
 
         public NodeId(Spanned<Token> token)
         {

@@ -1,19 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-namespace Score.Front.Parse.SyntaxTree
+﻿using Lex;
+using Source;
+
+namespace Ast
 {
-    using Lex;
-
-    internal sealed class NodeStr : NodeExpr
+    public sealed class NodeStr : NodeExpr
     {
-        public TokenStr str;
+        public readonly Spanned<Token> spToken;
 
-        public override Span Span => str.span;
+        /// <summary>
+        /// The value of this literal.
+        /// </summary>
+        public string Value { get; private set; }
 
-        public NodeStr(TokenStr str)
+        /// <summary>
+        /// Whether or not this string is verbatim.
+        /// </summary>
+        public bool Verbatim { get; private set; }
+        /// <summary>
+        /// Whether or not this string is a c-string.
+        /// </summary>
+        public bool CStr { get; private set; }
+
+        /// <summary>
+        /// The token that this node was created from.
+        /// </summary>
+        public Token Token => spToken.value;
+        /// <summary>
+        /// Location information for the token that this node was created from.
+        /// </summary>
+        public override Span Span => spToken.span;
+
+        public NodeStr(Spanned<Token> spToken)
         {
-            this.str = str;
+            this.spToken = spToken;
+            Value = spToken.value.Image;
+            Verbatim = spToken.value.StrVerbatim;
+            CStr = spToken.value.StrC;
         }
 
         public override void Accept(IAstVisitor visitor) => visitor.Visit(this);

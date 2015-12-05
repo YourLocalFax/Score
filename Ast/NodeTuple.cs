@@ -1,19 +1,25 @@
 ﻿using System.Collections.Generic;
 
-namespace Score.Front.Parse.SyntaxTree
+using Lex;
+using Source;
+
+namespace Ast
 {
-    internal sealed class NodeTuple : NodeExpr
+    public sealed class NodeTuple : NodeExpr
     {
-        public Location start, end;
-        public List<NodeExpr> values;
+        public readonly Spanned<Token> spLParen, spRParen;
+        public List<Spanned<NodeExpr>> values;
 
-        public override Span Span => start + end;
+        /// <summary>
+        /// Location information for the tokens that this node was created from.
+        /// </summary>
+        public override Span Span => new Span(spLParen.span.fileName, spLParen.span.start, spRParen.span.end);
 
-        public NodeTuple(List<NodeExpr> values, Location start, Location end)
+        public NodeTuple(Spanned<Token> spLParen, Spanned<Token> spRParen, List<Spanned<NodeExpr>> values)
         {
+            this.spLParen = spLParen;
+            this.spRParen = spRParen;
             this.values = values;
-            this.start = start;
-            this.end = end;
         }
 
         public override void Accept(IAstVisitor visitor) => visitor.Visit(this);

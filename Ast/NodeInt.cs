@@ -1,21 +1,32 @@
-﻿namespace Score.Front.Parse.SyntaxTree
+﻿using Lex;
+using Source;
+
+namespace Ast
 {
-    using Lex;
-
-    internal sealed class NodeInt : NodeExpr
+    public sealed class NodeInt : NodeExpr
     {
-        public TokenInt token;
+        public readonly Spanned<Token> spToken;
 
-        public override Span Span => token.span;
+        /// <summary>
+        /// The value of this literal.
+        /// </summary>
+        public ulong Value { get; private set; }
 
-        public NodeInt(TokenInt token)
+        /// <summary>
+        /// The token that this node was created from.
+        /// </summary>
+        public Token Token => spToken.value;
+        /// <summary>
+        /// Location information for the token that this node was created from.
+        /// </summary>
+        public override Span Span => spToken.span;
+
+        public NodeInt(Spanned<Token> spToken)
         {
-            this.token = token;
+            this.spToken = spToken;
+            Value = spToken.value.IntegerValue;
         }
 
-        public override void Accept(IAstVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
+        public override void Accept(IAstVisitor visitor) => visitor.Visit(this);
     }
 }

@@ -1,15 +1,19 @@
-﻿namespace Score.Front.Parse.SyntaxTree
+﻿using Lex;
+using Source;
+
+namespace Ast
 {
-    using Lex;
-
-    internal sealed class NodeSuffix : NodeExpr
+    public sealed class NodeSuffix : NodeExpr
     {
-        public NodeExpr target;
-        public TokenOp op;
+        public Spanned<NodeExpr> target;
+        public Spanned<Token> op;
 
-        public override Span Span => target.Span.Start + op.span.End;
+        public NodeExpr Target => target.value;
+        public Token Op => op.value;
 
-        public NodeSuffix(NodeExpr target, TokenOp op)
+        public override Span Span => new Span(target.span.fileName, target.span.start, op.span.end);
+
+        public NodeSuffix(Spanned<NodeExpr> target, Spanned<Token> op)
         {
             this.target = target;
             this.op = op;

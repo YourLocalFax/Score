@@ -1,15 +1,20 @@
-﻿namespace Score.Front.Parse.SyntaxTree
+﻿using Lex;
+using Source;
+
+namespace Ast
 {
-    using Lex;
-
-    internal sealed class NodeInfix : NodeExpr
+    public sealed class NodeInfix : NodeExpr
     {
-        public NodeExpr left, right;
-        public TokenOp op;
+        public Spanned<NodeExpr> left, right;
+        public Spanned<Token> op;
 
-        public override Span Span => left.Span.Start + right.Span.End;
+        public NodeExpr Left => left.value;
+        public NodeExpr Right => right.value;
+        public Token Op => op.value;
 
-        public NodeInfix(NodeExpr left, NodeExpr right, TokenOp op)
+        public override Span Span => new Span(left.span.fileName, left.span.start, right.span.end);
+
+        public NodeInfix(Spanned<NodeExpr> left, Spanned<NodeExpr> right, Spanned<Token> op)
         {
             this.left = left;
             this.right = right;
