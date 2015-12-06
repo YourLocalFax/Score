@@ -5,16 +5,16 @@ namespace Ast
 {
     public sealed class NodeIndex : NodeExpr
     {
-        public Spanned<NodeExpr> target;
-        public Spanned<Token> spDot;
+        public NodeExpr target;
+        public Token spDot;
         public NodeId index;
 
-        public NodeExpr Target => target.value;
+        public NodeExpr Target => target;
         public string Index => index.Image;
 
-        public override Span Span => new Span(target.span.fileName, target.span.start, index.Span.end);
+        public override Span Span => new Span(target.Span.fileName, target.Span.start, index.Span.end);
 
-        public NodeIndex(Spanned<NodeExpr> target, Spanned<Token> spDot, NodeId index)
+        public NodeIndex(NodeExpr target, Token spDot, NodeId index)
         {
             this.target = target;
             this.spDot = spDot;

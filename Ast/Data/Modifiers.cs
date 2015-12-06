@@ -11,16 +11,16 @@ namespace Ast.Data
     // TODO(kai): Maybe even allow string parameters to all modifiers?
     // That'd simplify the problem a lot.
 
-    public sealed class Modifiers : IEnumerable<Spanned<Token>>
+    public sealed class Modifiers : IEnumerable<Token>
     {
-        public readonly List<Spanned<Token>> modifiers = new List<Spanned<Token>>();
+        public readonly List<Token> modifiers = new List<Token>();
 
         public Modifiers()
         {
         }
 
-        public void Add(Spanned<Token> modifier) => modifiers.Add(modifier);
-        public void ForEach(Action<Spanned<Token>> action) => modifiers.ForEach(action);
+        public void Add(Token modifier) => modifiers.Add(modifier);
+        public void ForEach(Action<Token> action) => modifiers.ForEach(action);
 
         // TODO(kai): implement these later
 
@@ -40,9 +40,9 @@ namespace Ast.Data
 
         public Span GetSpan(TokenType modifierType)
         {
-            Spanned<Token> token = null;
+            Token token = null;
             foreach (var modifier in modifiers)
-                if (modifier.value.type == modifierType)
+                if (modifier.type == modifierType)
                 {
                     token = modifier;
                     break;
@@ -56,12 +56,12 @@ namespace Ast.Data
         public bool Has(TokenType modifierType)
         {
             foreach (var mod in modifiers)
-                if (mod.value.type == modifierType)
+                if (mod.type == modifierType)
                     return true;
             return false;
         }
 
-        public IEnumerator<Spanned<Token>> GetEnumerator() => modifiers.GetEnumerator();
+        public IEnumerator<Token> GetEnumerator() => modifiers.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => modifiers.GetEnumerator();
     }
 }

@@ -5,16 +5,16 @@ namespace Ast
 {
     public sealed class NodeInfix : NodeExpr
     {
-        public Spanned<NodeExpr> left, right;
-        public Spanned<Token> op;
+        public NodeExpr left, right;
+        public Token op;
 
-        public NodeExpr Left => left.value;
-        public NodeExpr Right => right.value;
-        public Token Op => op.value;
+        public NodeExpr Left => left;
+        public NodeExpr Right => right;
+        public Token Op => op;
 
-        public override Span Span => new Span(left.span.fileName, left.span.start, right.span.end);
+        public override Span Span => new Span(left.Span.fileName, left.Span.start, right.Span.end);
 
-        public NodeInfix(Spanned<NodeExpr> left, Spanned<NodeExpr> right, Spanned<Token> op)
+        public NodeInfix(NodeExpr left, NodeExpr right, Token op)
         {
             this.left = left;
             this.right = right;

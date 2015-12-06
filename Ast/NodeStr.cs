@@ -5,7 +5,7 @@ namespace Ast
 {
     public sealed class NodeStr : NodeExpr
     {
-        public readonly Spanned<Token> spToken;
+        private readonly Token spToken;
 
         /// <summary>
         /// The value of this literal.
@@ -24,18 +24,18 @@ namespace Ast
         /// <summary>
         /// The token that this node was created from.
         /// </summary>
-        public Token Token => spToken.value;
+        public Token Token => spToken;
         /// <summary>
         /// Location information for the token that this node was created from.
         /// </summary>
         public override Span Span => spToken.span;
 
-        public NodeStr(Spanned<Token> spToken)
+        public NodeStr(Token spToken)
         {
             this.spToken = spToken;
-            Value = spToken.value.Image;
-            Verbatim = spToken.value.StrVerbatim;
-            CStr = spToken.value.StrC;
+            Value = spToken.Image;
+            Verbatim = spToken.StrVerbatim;
+            CStr = spToken.StrC;
         }
 
         public override void Accept(IAstVisitor visitor) => visitor.Visit(this);

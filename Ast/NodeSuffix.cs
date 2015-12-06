@@ -5,15 +5,15 @@ namespace Ast
 {
     public sealed class NodeSuffix : NodeExpr
     {
-        public Spanned<NodeExpr> target;
-        public Spanned<Token> op;
+        public NodeExpr target;
+        public Token op;
 
-        public NodeExpr Target => target.value;
-        public Token Op => op.value;
+        public NodeExpr Target => target;
+        public Token Op => op;
 
-        public override Span Span => new Span(target.span.fileName, target.span.start, op.span.end);
+        public override Span Span => new Span(target.Span.fileName, target.Span.start, op.span.end);
 
-        public NodeSuffix(Spanned<NodeExpr> target, Spanned<Token> op)
+        public NodeSuffix(NodeExpr target, Token op)
         {
             this.target = target;
             this.op = op;

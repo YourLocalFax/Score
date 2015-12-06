@@ -12,6 +12,7 @@
         void Visit(NodeBool b);
         void Visit(NodeInt i);
         void Visit(NodeStr s);
+        void Visit(NodeEnclosed enc);
         void Visit(NodeTuple tuple);
 
         void Visit(NodeIndex index);

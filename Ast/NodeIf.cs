@@ -4,6 +4,8 @@ using Source;
 
 namespace Ast
 {
+    // TODO(kai): I really don't think I like how this works.
+
     public sealed class NodeIf : NodeExpr
     {
         public sealed class IfBlock

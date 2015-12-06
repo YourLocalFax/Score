@@ -9,7 +9,7 @@ namespace Ast
     public sealed class NodeFnDecl : Node
     {
         public MemberHeader header;
-        public Spanned<Token> @fn;
+        public Token @fn;
         public NameOrOp name;
         public FnTyRef ty;
         public FnBody body;
