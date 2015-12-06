@@ -1,4 +1,6 @@
-﻿using Lex;
+﻿using System.Collections.Generic;
+
+using Lex;
 using Source;
 using Ty;
 
@@ -16,8 +18,8 @@ namespace Ast
 
         public string Name => name.Image;
 
-        public ParameterList Parameters => ty.parameters;
-        public Parameter ReturnParameter => ty.returnParameter;
+        public List<TyRef> Parameters => ty.parameters;
+        public TyRef ReturnParameter => ty.returnParameter;
 
         public override Span Span
         {
