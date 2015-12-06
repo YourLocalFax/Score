@@ -26,14 +26,19 @@ namespace Log
         /// </summary>
         public readonly Type type;
         /// <summary>
+        /// Where in the source file this detail explains.
+        /// </summary>
+        public readonly Span span;
+        /// <summary>
         /// This details (hopefully) descriptive message.
         /// TODO(kai): Figure out a way to easily provide formatted messages.
         /// </summary>
         public readonly string message;
 
-        public Detail(Type type, string message)
+        public Detail(Type type, Span span, string message)
         {
             this.type = type;
+            this.span = span;
             this.message = message;
         }
     }
@@ -44,7 +49,7 @@ namespace Log
     /// </summary>
     public sealed class DetailLogger
     {
-        private readonly List<Spanned<Detail>> details = new List<Spanned<Detail>>();
+        private readonly List<Detail> details = new List<Detail>();
 
         private uint errorCount;
         public bool HasErrors => errorCount != 0;
@@ -60,7 +65,7 @@ namespace Log
             {
                 writer.Write(detail.span);
                 writer.WriteLine(':');
-                writer.WriteLine(detail.value.message);
+                writer.WriteLine(detail.message);
                 writer.WriteLine();
             });
         }
@@ -72,7 +77,7 @@ namespace Log
         /// <param name="format">The detail message</param>
         /// <param name="args">The arguments used to format the message</param>
         public void Warn(Span span, string format, params object[] args) =>
-            details.Add(new Detail(Detail.Type.WARN, string.Format(format, args)).Spanned(span));
+            details.Add(new Detail(Detail.Type.WARN, span, string.Format(format, args)));
 
         /// <summary>
         /// Adds a warning message to this logger.
@@ -80,7 +85,7 @@ namespace Log
         /// <param name="span">Where in the source file this warning describes</param>
         /// <param name="message">The detail message</param>
         public void Warn(Span span, string message) =>
-            details.Add(new Detail(Detail.Type.WARN, message).Spanned(span));
+            details.Add(new Detail(Detail.Type.WARN, span, message));
 
         /// <summary>
         /// Adds an error message to this logger.
@@ -95,7 +100,7 @@ namespace Log
         public void Error(Span span, string format, params object[] args)
         {
             errorCount++;
-            details.Add(new Detail(Detail.Type.ERROR, string.Format(format, args)).Spanned(span));
+            details.Add(new Detail(Detail.Type.ERROR, span, string.Format(format, args)));
         }
 
         /// <summary>
@@ -110,7 +115,7 @@ namespace Log
         public void Error(Span span, string message)
         {
             errorCount++;
-            details.Add(new Detail(Detail.Type.ERROR, message).Spanned(span));
+            details.Add(new Detail(Detail.Type.ERROR, span, message));
         }
     }
 }
