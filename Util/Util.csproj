@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4878B910-48D2-49F2-A769-48C363409335}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{A115F0A7-C564-48C4-9A8C-6C812C2490F9}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ScoreC</RootNamespace>
-    <AssemblyName>ScoreC</AssemblyName>
+    <RootNamespace>Util</RootNamespace>
+    <AssemblyName>Util</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,53 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Ast\Ast.csproj">
-      <Project>{a7e739f0-6f84-4219-8e60-14555f38a5ee}</Project>
-      <Name>Ast</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CodeGen\CodeGen.csproj">
-      <Project>{ca3eae8d-2b89-4d65-a31e-0e359c8a99df}</Project>
-      <Name>CodeGen</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Dbg\Dbg.csproj">
-      <Project>{0261cd61-4b4b-4e34-afa2-9ad1d6c3075b}</Project>
-      <Name>Dbg</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Lex\Lex.csproj">
-      <Project>{702ee42a-acd8-4b50-9e06-4af9b2c70007}</Project>
-      <Name>Lex</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Log\Log.csproj">
-      <Project>{a4905a44-b815-4150-9f52-c59e4690b6da}</Project>
-      <Name>Log</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Parse\Parse.csproj">
-      <Project>{a1e2057e-ec2f-4ce9-9aaf-2bdb472af778}</Project>
-      <Name>Parse</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Source\Source.csproj">
-      <Project>{e916fc5f-741e-492a-8768-2689065cd05c}</Project>
-      <Name>Source</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Symbols\Symbols.csproj">
-      <Project>{6ed26223-7fdf-4685-a01f-214a592e5bf7}</Project>
-      <Name>Symbols</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ty\Ty.csproj">
-      <Project>{5e71b503-5c23-433c-948e-3ac15ba64941}</Project>
-      <Name>Ty</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Util\Util.csproj">
-      <Project>{a115f0a7-c564-48c4-9a8c-6c812c2490f9}</Project>
-      <Name>Util</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

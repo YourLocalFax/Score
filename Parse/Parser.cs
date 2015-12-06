@@ -542,10 +542,8 @@ namespace Parse
             fn.name = NameOrOp.FromName(ExpectIdent("Expected an identifier to name the function").Image);
 
             // Then, the parameter list!
-            var paramList = ParseParameterList();
-
-            fn.parameterNames = paramList.Select(param => param.name.value).ToList();
-            var paramTys = paramList.Select(param => param.Ty).ToList();
+            fn.parameters = ParseParameterList();
+            var paramTys = fn.parameters.Select(param => param.Ty).ToList();
 
             TyRef returnTy = InferTyRef.InferTy;
 
@@ -553,9 +551,8 @@ namespace Parse
             if (CheckOp(ARROW))
             {
                 AdvanceOp(ARROW);
-                var returnParam = ParseParameter();
-                fn.returnName = returnParam.name.value;
-                returnTy = returnParam.Ty;
+                fn.@return = ParseParameter();
+                returnTy = fn.@return.Ty;
             }
             else returnTy = null;
 

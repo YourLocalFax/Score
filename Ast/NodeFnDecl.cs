@@ -13,8 +13,8 @@ namespace SyntaxTree
         public MemberHeader header;
         public Token @fn;
         public NameOrOp name;
-        public List<string> parameterNames;
-        public string returnName;
+        public ParameterList parameters;
+        public Parameter @return;
         public FnTyRef ty;
         public FnBody body;
 
