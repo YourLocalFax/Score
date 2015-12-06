@@ -47,11 +47,11 @@
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Dbg\Log.csproj">
+    <ProjectReference Include="..\Log\Log.csproj">
       <Project>{a4905a44-b815-4150-9f52-c59e4690b6da}</Project>
       <Name>Log</Name>
     </ProjectReference>
-    <ProjectReference Include="..\File\Source.csproj">
+    <ProjectReference Include="..\Source\Source.csproj">
       <Project>{e916fc5f-741e-492a-8768-2689065cd05c}</Project>
       <Name>Source</Name>
     </ProjectReference>

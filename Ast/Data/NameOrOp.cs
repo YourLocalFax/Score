@@ -18,6 +18,7 @@
         private NameOrOp(string image, bool isName)
         {
             Image = image;
+            this.isName = isName;
         }
 
         public override string ToString() => Image;

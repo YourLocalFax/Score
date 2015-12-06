@@ -58,21 +58,21 @@
       <Project>{ca3eae8d-2b89-4d65-a31e-0e359c8a99df}</Project>
       <Name>CodeGen</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Dbg\Log.csproj">
-      <Project>{a4905a44-b815-4150-9f52-c59e4690b6da}</Project>
-      <Name>Log</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\File\Source.csproj">
-      <Project>{e916fc5f-741e-492a-8768-2689065cd05c}</Project>
-      <Name>Source</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Lex\Lex.csproj">
       <Project>{702ee42a-acd8-4b50-9e06-4af9b2c70007}</Project>
       <Name>Lex</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Log\Log.csproj">
+      <Project>{a4905a44-b815-4150-9f52-c59e4690b6da}</Project>
+      <Name>Log</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Parse\Parse.csproj">
       <Project>{a1e2057e-ec2f-4ce9-9aaf-2bdb472af778}</Project>
       <Name>Parse</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Source\Source.csproj">
+      <Project>{e916fc5f-741e-492a-8768-2689065cd05c}</Project>
+      <Name>Source</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ty\Ty.csproj">
       <Project>{5e71b503-5c23-433c-948e-3ac15ba64941}</Project>

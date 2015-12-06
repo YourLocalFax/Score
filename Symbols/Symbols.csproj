@@ -51,6 +51,18 @@
       <Project>{a7e739f0-6f84-4219-8e60-14555f38a5ee}</Project>
       <Name>Ast</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Lex\Lex.csproj">
+      <Project>{702ee42a-acd8-4b50-9e06-4af9b2c70007}</Project>
+      <Name>Lex</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Log\Log.csproj">
+      <Project>{a4905a44-b815-4150-9f52-c59e4690b6da}</Project>
+      <Name>Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Source\Source.csproj">
+      <Project>{e916fc5f-741e-492a-8768-2689065cd05c}</Project>
+      <Name>Source</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ty\Ty.csproj">
       <Project>{5e71b503-5c23-433c-948e-3ac15ba64941}</Project>
       <Name>Ty</Name>
