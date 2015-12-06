@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Source;
+
 namespace Lex
 {
     using static TokenType;
@@ -109,16 +111,16 @@ namespace Lex
         /// <param name="type"></param>
         /// <param name="image"></param>
         /// <returns></returns>
-        internal static Token New(TokenType type, string image) =>
-            new Token(type, image ?? "<no idea, friend>");
+        internal static Token New(TokenType type, Span span, string image) =>
+            new Token(type, span, image ?? "<no idea, friend>");
 
         /// <summary>
         /// Returns a new token for a builtin type name.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        internal static Token NewBuiltinTyName(string name) =>
-            new Token(BUILTIN_TY_NAME, name);
+        internal static Token NewBuiltinTyName(Span span, string name) =>
+            new Token(BUILTIN_TY_NAME, span, name);
 
         /// <summary>
         /// Returns a new token for a keyword.
@@ -126,24 +128,24 @@ namespace Lex
         /// <param name="keyword"></param>
         /// <param name="image"></param>
         /// <returns></returns>
-        internal static Token NewKeyword(TokenType keyword, string image) =>
-            new Token(keyword, image);
+        internal static Token NewKeyword(TokenType keyword, Span span, string image) =>
+            new Token(keyword, span, image);
 
         /// <summary>
         /// Returns a new token for an identifier.
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        internal static Token NewIdentifier(string image) =>
-            new Token(IDENT, image);
+        internal static Token NewIdentifier(Span span, string image) =>
+            new Token(IDENT, span, image);
 
         /// <summary>
         /// Returns a new token for a symbol.
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        internal static Token NewSymbol(string image) =>
-            new Token(IDENT, image, tok => "'" + tok.Image);
+        internal static Token NewSymbol(Span span, string image) =>
+            new Token(IDENT, span, image, tok => "'" + tok.Image);
 
         /// <summary>
         /// Returns a new token for a string literal.
@@ -152,9 +154,9 @@ namespace Lex
         /// <param name="verbatim"></param>
         /// <param name="cstr"></param>
         /// <returns></returns>
-        internal static Token NewString(string value, bool verbatim, bool cstr)
+        internal static Token NewString(Span span, string value, bool verbatim, bool cstr)
         {
-            var res = new Token(STR, value, tok =>
+            var res = new Token(STR, span, value, tok =>
                 string.Format("{0}{1}\"{2}\"", tok.StrVerbatim ? "v" : "", tok.StrC ? "c" : "", value));
             res.StrVerbatim = verbatim;
             res.StrC = cstr;
@@ -166,33 +168,33 @@ namespace Lex
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        internal static Token NewOperator(string image) =>
-            new Token(OP, image);
+        internal static Token NewOperator(Span span, string image) =>
+            new Token(OP, span, image);
 
         /// <summary>
         /// Returns a new token for a specific reserved operator.
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        internal static Token NewOperator(TokenType type, string image) =>
-            new Token(type, image);
+        internal static Token NewOperator(TokenType type, Span span, string image) =>
+            new Token(type, span, image);
 
         /// <summary>
         /// Returns a new token for an identifier operator.
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        internal static Token NewIdentifierOperator(string image) =>
-            new Token(OP, image, tok => "`" + tok.Image);
+        internal static Token NewIdentifierOperator(Span span, string image) =>
+            new Token(OP, span, image, tok => "`" + tok.Image);
 
         /// <summary>
         /// Returns a new token for a character literal.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        internal static Token NewChar(uint value)
+        internal static Token NewChar(Span span, uint value)
         {
-            var res = new Token(CHAR, char.ConvertFromUtf32((int)value), tok =>
+            var res = new Token(CHAR, span, char.ConvertFromUtf32((int)value), tok =>
                 string.Format("'{0}'", tok.Image));
             res.CharValue = value;
             return res;
@@ -205,9 +207,9 @@ namespace Lex
         /// <param name="image"></param>
         /// <param name="suffix"></param>
         /// <returns></returns>
-        internal static Token NewInteger(ulong value, string image, string suffix)
+        internal static Token NewInteger(Span span, ulong value, string image, string suffix)
         {
-            var res = new Token(INT, image, tok => tok.Image + tok.NumericSuffix);
+            var res = new Token(INT, span, image, tok => tok.Image + tok.NumericSuffix);
             res.IntegerValue = value;
             res.NumericSuffix = suffix;
             return res;
@@ -220,9 +222,9 @@ namespace Lex
         /// <param name="image"></param>
         /// <param name="suffix"></param>
         /// <returns></returns>
-        internal static Token NewFloat(double value, string image, string suffix)
+        internal static Token NewFloat(Span span, double value, string image, string suffix)
         {
-            var res = new Token(FLOAT, image, tok => tok.Image + tok.NumericSuffix);
+            var res = new Token(FLOAT, span, image, tok => tok.Image + tok.NumericSuffix);
             res.FloatValue = value;
             res.NumericSuffix = suffix;
             return res;
@@ -234,6 +236,11 @@ namespace Lex
         /// The type of this token.
         /// </summary>
         public readonly TokenType type;
+
+        /// <summary>
+        /// Where in the source file this token is.
+        /// </summary>
+        public readonly Span span;
 
         private readonly Func<Token, string> dbg;
         #endregion
@@ -288,9 +295,10 @@ namespace Lex
         #endregion
 
         #region Constructors
-        private Token(TokenType type, string image, Func<Token, string> dbg = null)
+        private Token(TokenType type, Span span, string image, Func<Token, string> dbg = null)
         {
             this.type = type;
+            this.span = span;
             Image = image;
             this.dbg = dbg ?? (tok => tok.Image);
         }

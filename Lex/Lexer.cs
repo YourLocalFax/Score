@@ -15,19 +15,19 @@ namespace Lex
 
     internal static class LexerUtil
     {
-        public static Token GetOpToken(string image)
+        public static Token GetOpToken(Span span, string image)
         {
             // TODO(kai): make sure we have all special operators
             switch (image)
             {
-                case "=":  return Token.NewOperator(EQ, image);
-                case ":":  return Token.NewOperator(COLON, image);
-                case ".":  return Token.NewOperator(DOT, image);
-                case "|":  return Token.NewOperator(PIPE, image);
-                case "&":  return Token.NewOperator(AMP, image);
-                case "^":  return Token.NewOperator(CARET, image);
-                case "->": return Token.NewOperator(ARROW, image);
-                default:   return Token.NewOperator(image);
+                case "=":  return Token.NewOperator(EQ, span, image);
+                case ":":  return Token.NewOperator(COLON, span, image);
+                case ".":  return Token.NewOperator(DOT, span, image);
+                case "|":  return Token.NewOperator(PIPE, span, image);
+                case "&":  return Token.NewOperator(AMP, span, image);
+                case "^":  return Token.NewOperator(CARET, span, image);
+                case "->": return Token.NewOperator(ARROW, span, image);
+                default:   return Token.NewOperator(span, image);
             }
         }
     }
@@ -45,7 +45,7 @@ namespace Lex
             // TODO(kai): check that a file exists.
             // also, just more error checking is a good idea.
 
-            var result = new List<Spanned<Token>>();
+            var result = new List<Token>();
             // Use a separate state so that this object itself can be used in multiple threads, hopefully.
             var state = new LexerState(log, fileName, encoding);
 
@@ -216,7 +216,7 @@ namespace Lex
         }
 
         // TODO(kai): this should really just return a token, Result is getting annoying in C#
-        public Spanned<Token> GetToken()
+        public Token GetToken()
         {
             if (EndOfSource)
                 // Returning error false means it was intended.
@@ -234,13 +234,13 @@ namespace Lex
                 var span = new Span(fileName, start, GetLocation());
                 // _ is a special token called Wildcard, much like how * works in other environments.
                 if (str == "_")
-                    return Token.New(WILDCARD, "_").Spanned(span);
+                    return Token.New(WILDCARD, span, "_");
                 // otherwise, it's an identifier
                 if (IsKw(str))
-                    return Token.NewKeyword(GetTypeFromKeyword(str), str).Spanned(span);
+                    return Token.NewKeyword(GetTypeFromKeyword(str), span, str);
                 else if (IsBuiltinTyName(str))
-                    return Token.NewBuiltinTyName(str).Spanned(span);
-                return Token.NewIdentifier(str).Spanned(span);
+                    return Token.NewBuiltinTyName(span, str);
+                return Token.NewIdentifier(span, str);
             }
 
             // Should be a number literal, so get that.
@@ -288,7 +288,7 @@ namespace Lex
                             Advance(); // 'v'
                         var str = LexStrLiteral(verbatim);
                         var span = new Span(fileName, start, GetLocation());
-                        return Token.NewString(str, verbatim, true).Spanned(span);
+                        return Token.NewString(span, str, verbatim, true);
                     }
                 case 'v':
                     {
@@ -298,38 +298,38 @@ namespace Lex
                             Advance(); // 'c'
                         var str = LexStrLiteral(true);
                         var span = new Span(fileName, start, GetLocation());
-                        return Token.NewString(str, true, cstr).Spanned(span);
+                        return Token.NewString(span, str, true, cstr);
                     }
                 // Just a normal string literal
                 case '"':
                     {
                         var str = LexStrLiteral(false);
                         var span = new Span(fileName, start, GetLocation());
-                        return Token.NewString(str, false, false).Spanned(span);
+                        return Token.NewString(span, str, false, false);
                     }
                 case '\'': // TODO(kai): Not sure what kind of modifiers we can have on chars.
                     return LexCharLiteralOrSymbol();
                 case ',':
                     Advance();
-                    return Token.New(COMMA, ",").Spanned(new Span(fileName, start, GetLocation()));
+                    return Token.New(COMMA, new Span(fileName, start, GetLocation()), ",");
                 case '(':
                     Advance();
-                    return Token.New(LPAREN, "(").Spanned(new Span(fileName, start, GetLocation()));
+                    return Token.New(LPAREN, new Span(fileName, start, GetLocation()), "(");
                 case ')':
                     Advance();
-                    return Token.New(RPAREN, ")").Spanned(new Span(fileName, start, GetLocation()));
+                    return Token.New(RPAREN, new Span(fileName, start, GetLocation()), ")");
                 case '[':
                     Advance();
-                    return Token.New(LBRACKET, "[").Spanned(new Span(fileName, start, GetLocation()));
+                    return Token.New(LBRACKET, new Span(fileName, start, GetLocation()), "[");
                 case ']':
                     Advance();
-                    return Token.New(RBRACKET, "]").Spanned(new Span(fileName, start, GetLocation()));
+                    return Token.New(RBRACKET, new Span(fileName, start, GetLocation()), "]");
                 case '{':
                     Advance();
-                    return Token.New(LBRACE, "{").Spanned(new Span(fileName, start, GetLocation()));
+                    return Token.New(LBRACE, new Span(fileName, start, GetLocation()), "{");
                 case '}':
                     Advance();
-                    return Token.New(RBRACE, "}").Spanned(new Span(fileName, start, GetLocation()));
+                    return Token.New(RBRACE, new Span(fileName, start, GetLocation()), "}");
                 default:
                     // TODO(kai): fatal error, we don't know how to continue.
                     return null;
@@ -381,7 +381,7 @@ namespace Lex
             return GetString();
         }
 
-        private Spanned<Token> LexNumLiteral()
+        private Token LexNumLiteral()
         {
             // TODO(kai): _ should be allowed as a separator in numbers, do that eventually.
             // ALSO UPDATE LexPrefixedInt WHEN YOU DO
@@ -484,7 +484,7 @@ namespace Lex
                 double value = Convert.ToDouble(image);
                 // NOTE end is saved for use elsewhere, mostly. Might be removed, use GetLocation()
                 var span = new Span(fileName, start, GetLocation());
-                return Token.NewFloat(value, image, suffix).Spanned(span);
+                return Token.NewFloat(span, value, image, suffix);
             }
             else
             {
@@ -498,7 +498,7 @@ namespace Lex
                 ulong value = Convert.ToUInt64(image, radix);
                 // NOTE end is saved for use elsewhere, mostly. Might be removed, use GetLocation()
                 var span = new Span(fileName, start, GetLocation());
-                return Token.NewInteger(value, image, suffix).Spanned(span);
+                return Token.NewInteger(span, value, image, suffix);
             }
         }
 
@@ -540,7 +540,7 @@ namespace Lex
             return LexIdentStr();
         }
 
-        private Spanned<Token> LexOperator()
+        private Token LexOperator()
         {
             var start = GetLocation();
 
@@ -550,16 +550,16 @@ namespace Lex
             // What the operator looks like now
             var image = GetString();
             var span = new Span(fileName, start, GetLocation());
-            return GetOpToken(image).Spanned(span);
+            return GetOpToken(span, image);
         }
 
-        private Spanned<Token> LexIdentOperator()
+        private Token LexIdentOperator()
         {
             var start = GetLocation();
             Advance(); // '`'
             var image = LexIdentStr();
             var span = new Span(fileName, start, GetLocation());
-            return Token.NewIdentifierOperator(image).Spanned(span);
+            return Token.NewIdentifierOperator(span, image);
         }
 
         private string LexStrLiteral(bool verbatim)
@@ -611,7 +611,7 @@ namespace Lex
             return GetString();
         }
 
-        private Spanned<Token> LexCharLiteralOrSymbol()
+        private Token LexCharLiteralOrSymbol()
         {
             var start = GetLocation();
             Advance(); // '''
@@ -621,13 +621,13 @@ namespace Lex
                 bool fail;
                 var c = LexCharLiteral(out fail);
                 var span = new Span(fileName, start, GetLocation());
-                return Token.NewChar(c).Spanned(span);
+                return Token.NewChar(span, c);
             }
             else
             {
                 var sym = LexIdentStr();
                 var span = new Span(fileName, start, GetLocation());
-                return Token.NewSymbol(sym).Spanned(span);
+                return Token.NewSymbol(span, sym);
             }
         }
 
