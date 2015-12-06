@@ -23,7 +23,7 @@ namespace ScoreC
 
             while (tokens.HasCurrent)
             {
-                Console.WriteLine(tokens.Current.value);
+                Console.WriteLine(tokens.Current);
                 tokens.Advance();
             }
 
