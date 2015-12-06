@@ -1,7 +1,7 @@
 ﻿using Source;
 using Ty;
 
-namespace Ast.Data
+namespace SyntaxTree.Data
 {
     public sealed class Parameter
     {

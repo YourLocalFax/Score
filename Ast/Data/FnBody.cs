@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Lex;
 using Source;
 
-namespace Ast.Data
+namespace SyntaxTree.Data
 {
     public sealed class FnBody : IEnumerable<Node>
     {

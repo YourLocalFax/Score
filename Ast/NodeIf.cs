@@ -2,7 +2,7 @@
 
 using Source;
 
-namespace Ast
+namespace SyntaxTree
 {
     // TODO(kai): I really don't think I like how this works.
 

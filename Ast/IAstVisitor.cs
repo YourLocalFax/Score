@@ -1,8 +1,8 @@
-﻿namespace Ast
+﻿namespace SyntaxTree
 {
     public interface IAstVisitor
     {
-        void Visit(SyntaxTree node);
+        void Visit(Ast node);
 
         void Visit(NodeFnDecl fn);
         void Visit(NodeTypeDef fn);

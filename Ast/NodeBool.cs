@@ -1,7 +1,7 @@
 ﻿using Lex;
 using Source;
 
-namespace Ast
+namespace SyntaxTree
 {
     /// <summary>
     /// Represents a bool literal.

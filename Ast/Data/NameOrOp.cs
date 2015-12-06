@@ -1,4 +1,4 @@
-﻿namespace Ast.Data
+﻿namespace SyntaxTree.Data
 {
     /// <summary>
     /// Represents an identifier or an operator used as a name.

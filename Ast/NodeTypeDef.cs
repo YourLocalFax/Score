@@ -2,7 +2,7 @@
 using Source;
 using Ty;
 
-namespace Ast
+namespace SyntaxTree
 {
     using Data;
 

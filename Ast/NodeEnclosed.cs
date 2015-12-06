@@ -1,26 +1,26 @@
 ﻿using Lex;
 using Source;
 
-namespace Ast
+namespace SyntaxTree
 {
     /// <summary>
     /// Represents an expression enclosed in parenthesis, but not a tuple.
     /// </summary>
     public sealed class NodeEnclosed : NodeExpr
     {
-        public readonly Token spLParen, spRParen;
-        public readonly NodeExpr spExpr;
+        public readonly Token lparen, rparen;
+        public readonly NodeExpr expr;
 
         /// <summary>
         /// Location information for the tokens that this node was created from.
         /// </summary>
-        public override Span Span => new Span(spLParen.span.fileName, spLParen.span.start, spRParen.span.end);
+        public override Span Span => new Span(lparen.span.fileName, lparen.span.start, rparen.span.end);
 
-        public NodeEnclosed(Token spLParen, Token spRParen, NodeExpr spExpr)
+        public NodeEnclosed(Token lparen, Token rparen, NodeExpr expr)
         {
-            this.spLParen = spLParen;
-            this.spRParen = spRParen;
-            this.spExpr = spExpr;
+            this.lparen = lparen;
+            this.rparen = rparen;
+            this.expr = expr;
         }
 
         public override void Accept(IAstVisitor visitor) => visitor.Visit(this);

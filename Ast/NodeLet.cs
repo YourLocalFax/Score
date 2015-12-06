@@ -1,6 +1,6 @@
 ﻿using Source;
 
-namespace Ast
+namespace SyntaxTree
 {
     using Data;
 

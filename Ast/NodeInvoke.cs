@@ -2,7 +2,7 @@
 
 using Source;
 
-namespace Ast
+namespace SyntaxTree
 {
     public sealed class NodeInvoke : NodeExpr
     {

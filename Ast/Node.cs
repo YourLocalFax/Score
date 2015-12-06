@@ -1,6 +1,6 @@
 ﻿using Source;
 
-namespace Ast
+namespace SyntaxTree
 {
     /// <summary>
     /// The base class for every node of the Abstract Syntax Tree.

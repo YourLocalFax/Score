@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-using Ast.Data;
+using SyntaxTree.Data;
 using Ty;
 
 namespace Symbols

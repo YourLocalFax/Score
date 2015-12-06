@@ -4,7 +4,7 @@ namespace Lex
 {
     using static TokenType;
 
-    internal static class Util
+    public static class Util
     {
         /// <summary>
         /// Returns true for unicode characters of classes Lu, Ll, Lt, Lm, Lo, or Nl.
@@ -313,6 +313,22 @@ namespace Lex
                 case "yield": return YIELD;
 
                 default: return UNKNOWN;
+            }
+        }
+
+        public static string TokenTypeToString(TokenType type, string @default = null)
+        {
+            switch (type)
+            {
+                case EQ: return "=";
+                case DOT: return ".";
+                case COMMA: return ",";
+                case COLON: return ":";
+                case PIPE: return "|";
+                case AMP: return "&";
+                case CARET: return "^";
+                case ARROW: return "->";
+                default: return @default;
             }
         }
     }

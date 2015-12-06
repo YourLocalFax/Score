@@ -168,24 +168,36 @@ namespace Lex
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        internal static Token NewOperator(Span span, string image) =>
-            new Token(OP, span, image);
+        internal static Token NewOperator(Span span, string image)
+        {
+            var result = new Token(OP, span, image);
+            result.IsOp = true;
+            return result;
+        }
 
         /// <summary>
         /// Returns a new token for a specific reserved operator.
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        internal static Token NewOperator(TokenType type, Span span, string image) =>
-            new Token(type, span, image);
+        internal static Token NewOperator(TokenType type, Span span, string image)
+        {
+            var result = new Token(type, span, image);
+            result.IsOp = true;
+            return result;
+        }
 
         /// <summary>
         /// Returns a new token for an identifier operator.
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        internal static Token NewIdentifierOperator(Span span, string image) =>
-            new Token(OP, span, image, tok => "`" + tok.Image);
+        internal static Token NewIdentifierOperator(Span span, string image)
+        {
+            var result = new Token(OP, span, image, tok => "`" + tok.Image);
+            result.IsOp = true;
+            return result;
+        }
 
         /// <summary>
         /// Returns a new token for a character literal.
@@ -292,6 +304,12 @@ namespace Lex
         /// this is the suffix, if any, attached to it.
         /// </summary>
         public string NumericSuffix { get; internal set; }
+
+        /// <summary>
+        /// If this token represents an operator,
+        /// this is set to true.
+        /// </summary>
+        public bool IsOp { get; internal set; }
         #endregion
 
         #region Constructors

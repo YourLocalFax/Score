@@ -1,4 +1,4 @@
-﻿namespace Ast.Data
+﻿namespace SyntaxTree.Data
 {
     public sealed class MemberHeader
     {

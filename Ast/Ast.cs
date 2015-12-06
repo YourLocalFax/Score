@@ -2,9 +2,9 @@
 
 using Source;
 
-namespace Ast
+namespace SyntaxTree
 {
-    public sealed class SyntaxTree : Node
+    public sealed class Ast : Node
     {
         public readonly List<Node> children = new List<Node>();
 

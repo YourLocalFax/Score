@@ -13,7 +13,7 @@ namespace Lex
     using static Util;
     using static LexerUtil;
 
-    internal static class LexerUtil
+    public static class LexerUtil
     {
         public static Token GetOpToken(Span span, string image)
         {

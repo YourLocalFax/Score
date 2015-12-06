@@ -17,13 +17,13 @@ namespace Ty
 
     public sealed class FnTyRef : TyRef
     {
-        public readonly List<TyRef> parameters;
-        public readonly TyRef returnParameter;
+        public readonly List<TyRef> parameterTys;
+        public readonly TyRef returnTy;
 
         public FnTyRef(List<TyRef> parameters, TyRef returnParameter)
         {
-            this.parameters = parameters;
-            this.returnParameter = returnParameter;
+            this.parameterTys = parameters;
+            this.returnTy = returnParameter;
         }
     }
 

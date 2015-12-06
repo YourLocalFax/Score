@@ -4,7 +4,7 @@ namespace Ty
 {
     public abstract class BuiltinTyRef : TyRef
     {
-        public static BuiltinTyRef GetForPrimitive(string name)
+        public static BuiltinTyRef GetByName(string name)
         {
             switch (name)
             {

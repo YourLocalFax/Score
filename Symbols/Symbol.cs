@@ -1,4 +1,4 @@
-﻿using Ast.Data;
+﻿using SyntaxTree.Data;
 using Ty;
 
 namespace Symbols

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Ast.Data
+namespace SyntaxTree.Data
 {
     public sealed class ParameterList : IEnumerable<Parameter>
     {

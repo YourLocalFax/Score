@@ -1,4 +1,4 @@
-﻿namespace Ast
+﻿namespace SyntaxTree
 {
     /// <summary>
     /// This is an empty class used as the base for expression nodes.

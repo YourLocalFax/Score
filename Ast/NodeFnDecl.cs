@@ -4,7 +4,7 @@ using Lex;
 using Source;
 using Ty;
 
-namespace Ast
+namespace SyntaxTree
 {
     using Data;
 
@@ -13,13 +13,15 @@ namespace Ast
         public MemberHeader header;
         public Token @fn;
         public NameOrOp name;
+        public List<string> parameterNames;
+        public string returnName;
         public FnTyRef ty;
         public FnBody body;
 
         public string Name => name.Image;
 
-        public List<TyRef> Parameters => ty.parameters;
-        public TyRef ReturnParameter => ty.returnParameter;
+        public List<TyRef> ParameterTys => ty.parameterTys;
+        public TyRef ReturnTy => ty.returnTy;
 
         public override Span Span
         {
