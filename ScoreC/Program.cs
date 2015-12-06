@@ -2,6 +2,7 @@
 
 using Lex;
 using Log;
+using Parse;
 using Source;
 
 namespace ScoreC
@@ -22,6 +23,15 @@ namespace ScoreC
                 Console.WriteLine(tokens.Current);
                 tokens.Advance();
             }
+
+            if (log.HasErrors)
+            {
+                Fail(log);
+                return;
+            }
+
+            var parser = new Parser();
+            var ast = parser.Parse(log, tokens, fileName);
 
             if (log.HasErrors)
             {
