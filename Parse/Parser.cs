@@ -12,7 +12,7 @@ using static Lex.TokenType;
 
 namespace Parse
 {
-    internal sealed class Parser
+    public sealed class Parser
     {
         public Ast Parse(DetailLogger log, TokenList tokens, string fileName)
         {
