@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
+using Ext;
 using SyntaxTree;
 using SyntaxTree.Data;
-using Util;
 
 namespace Dbg
 {
@@ -107,6 +107,7 @@ namespace Dbg
                 Untab();
                 WriteTabs();
                 Write("'}'");
+                WriteLine();
             }
         }
 
@@ -115,7 +116,7 @@ namespace Dbg
             Write("'type' ");
             Write(type.name.value);
             Write(" '=' ");
-            Write(type.Ty.ToString());
+            WriteLine(type.Ty.ToString());
         }
 
         public void Visit(NodeLet let)

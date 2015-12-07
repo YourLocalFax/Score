@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A4905A44-B815-4150-9F52-C59E4690B6DA}</ProjectGuid>
+    <ProjectGuid>{9E528310-6591-445D-B466-9FCEFE1132E4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Dbg</RootNamespace>
-    <AssemblyName>Dbg</AssemblyName>
+    <RootNamespace>Log</RootNamespace>
+    <AssemblyName>Log</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Source.csproj">
-      <Project>{e916fc5f-741e-492a-8768-2689065cd05c}</Project>
+      <Project>{d32902fc-be20-48f4-810b-2c3cbdf4e810}</Project>
       <Name>Source</Name>
     </ProjectReference>
   </ItemGroup>

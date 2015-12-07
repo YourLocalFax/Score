@@ -1,9 +1,9 @@
 ﻿using System;
 
+using Dbg;
 using Lex;
 using Log;
 using Parse;
-using Source;
 
 namespace ScoreC
 {
@@ -11,18 +11,21 @@ namespace ScoreC
     {
         static void Main(string[] args)
         {
-            var fileName = @"D:\projects\c#\Score\TEST_FILES\lex_test.score";
+            // TODO(kai): parse out the args and do things
+
+            if (args.Length == 0)
+            {
+                Console.WriteLine("No file passed to compile.");
+                Wait();
+                return;
+            }
+
+            var fileName = args[0];
 
             var log = new DetailLogger();
 
             var lexer = new Lexer();
             var tokens = lexer.GetTokens(log, fileName);
-
-            while (tokens.HasCurrent)
-            {
-                Console.WriteLine(tokens.Current);
-                tokens.Advance();
-            }
 
             if (log.HasErrors)
             {
@@ -38,6 +41,9 @@ namespace ScoreC
                 Fail(log);
                 return;
             }
+
+            var writer = new AstWriter(Console.Out);
+            writer.Visit(ast);
 
             Wait();
         }

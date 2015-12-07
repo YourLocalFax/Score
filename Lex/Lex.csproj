@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{702EE42A-ACD8-4B50-9E06-4AF9B2C70007}</ProjectGuid>
+    <ProjectGuid>{85C4FA98-265A-4C32-918D-72D040104DF1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lex</RootNamespace>
@@ -48,11 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Log\Log.csproj">
-      <Project>{a4905a44-b815-4150-9f52-c59e4690b6da}</Project>
+      <Project>{9e528310-6591-445d-b466-9fcefe1132e4}</Project>
       <Name>Log</Name>
     </ProjectReference>
     <ProjectReference Include="..\Source\Source.csproj">
-      <Project>{e916fc5f-741e-492a-8768-2689065cd05c}</Project>
+      <Project>{d32902fc-be20-48f4-810b-2c3cbdf4e810}</Project>
       <Name>Source</Name>
     </ProjectReference>
   </ItemGroup>

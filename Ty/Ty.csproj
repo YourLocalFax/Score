@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5E71B503-5C23-433C-948E-3AC15BA64941}</ProjectGuid>
+    <ProjectGuid>{E9A46D14-2CB7-4910-8CA2-8EF18A839B7D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ty</RootNamespace>
@@ -43,6 +43,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TyBuiltin.cs" />
     <Compile Include="TyRef.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lex\Lex.csproj">
+      <Project>{85c4fa98-265a-4c32-918d-72d040104df1}</Project>
+      <Name>Lex</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Source\Source.csproj">
+      <Project>{d32902fc-be20-48f4-810b-2c3cbdf4e810}</Project>
+      <Name>Source</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

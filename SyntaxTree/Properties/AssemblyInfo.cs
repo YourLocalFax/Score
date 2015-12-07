@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Dbg")]
+[assembly: AssemblyTitle("SyntaxTree")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Dbg")]
+[assembly: AssemblyProduct("SyntaxTree")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("3a26bb55-7838-422e-8fa6-dff0c36983b8")]
+[assembly: Guid("980e56fa-6a8d-4fbb-bb39-b5e1c31c669f")]
 
 // Version information for an assembly consists of the following four values:
 //

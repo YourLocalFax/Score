@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0261CD61-4B4B-4E34-AFA2-9AD1D6C3075B}</ProjectGuid>
+    <ProjectGuid>{3A26BB55-7838-422E-8FA6-DFF0C36983B8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dbg</RootNamespace>
@@ -44,25 +44,33 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ast\Ast.csproj">
-      <Project>{a7e739f0-6f84-4219-8e60-14555f38a5ee}</Project>
-      <Name>Ast</Name>
+    <ProjectReference Include="..\Ext\Ext.csproj">
+      <Project>{f1c993f3-d0fc-4a1c-a12d-9cf8432c317a}</Project>
+      <Name>Ext</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lex\Lex.csproj">
-      <Project>{702ee42a-acd8-4b50-9e06-4af9b2c70007}</Project>
+      <Project>{85c4fa98-265a-4c32-918d-72d040104df1}</Project>
       <Name>Lex</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Parse\Parse.csproj">
+      <Project>{f7a3f6fe-4efd-44b6-b2cd-45c180e8ee89}</Project>
+      <Name>Parse</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Source\Source.csproj">
-      <Project>{e916fc5f-741e-492a-8768-2689065cd05c}</Project>
+      <Project>{d32902fc-be20-48f4-810b-2c3cbdf4e810}</Project>
       <Name>Source</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Ty\Ty.csproj">
-      <Project>{5e71b503-5c23-433c-948e-3ac15ba64941}</Project>
-      <Name>Ty</Name>
+    <ProjectReference Include="..\Symbols\Symbols.csproj">
+      <Project>{276cdba1-e0ad-4970-9201-d0a2435e0f34}</Project>
+      <Name>Symbols</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Util\Util.csproj">
-      <Project>{a115f0a7-c564-48c4-9a8c-6c812c2490f9}</Project>
-      <Name>Util</Name>
+    <ProjectReference Include="..\SyntaxTree\SyntaxTree.csproj">
+      <Project>{980e56fa-6a8d-4fbb-bb39-b5e1c31c669f}</Project>
+      <Name>SyntaxTree</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ty\Ty.csproj">
+      <Project>{e9a46d14-2cb7-4910-8ca2-8ef18a839b7d}</Project>
+      <Name>Ty</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
