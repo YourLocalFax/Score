@@ -147,10 +147,10 @@ namespace Dbg
             Write("{0}{1}\"{2}\"", s.Token.StrC ? "c" : "", s.Token.StrVerbatim ? "v" : "", s.Value);
         }
 
-        public void Visit(NodeEnclosed enclosed)
+        public void Visit(NodeEnclosed enc)
         {
             Write("'(' ");
-            enclosed.expr.Accept(this);
+            enc.expr.Accept(this);
             Write(" ')'");
         }
 

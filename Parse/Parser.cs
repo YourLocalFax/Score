@@ -204,14 +204,15 @@ namespace Parse
                 switch (Current.type)
                 {
                     case PUB: case PRIV: case EXTERN: case INTERN:
+                        var mod = Current;
+                        Advance();
                         Spanned<string> optArg = null;
                         if (Check(STR))
                         {
                             optArg = Current.Image.Spanned(Current.span);
                             Advance();
                         }
-                        mods.Add(Current, optArg);
-                        Advance();
+                        mods.Add(mod, optArg);
                         break;
                     default: return mods;
                 }
