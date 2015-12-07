@@ -425,9 +425,10 @@ namespace Parse
                     AdvanceOp(COLON);
             }
 
-            Spanned<TyRef> ty = null;
+            Spanned<TyRef> ty;
             if (hasTy)
-                ty = ParseTy(); // TODO(kai): make this actually take a spanned plz
+                ty = ParseTy();
+            else ty = (InferTyRef.InferTy as TyRef).Spanned(default(Span));
 
             return new Parameter(name, ty);
         }
@@ -629,7 +630,7 @@ namespace Parse
         private NodeTypeDef ParseTypeDef(Modifiers mods)
         {
             var type = new NodeTypeDef();
-            type.mods = mods;
+            type.modifiers = mods;
             type.type = Current;
             Advance();
 
@@ -651,12 +652,13 @@ namespace Parse
 
             // TODO(kai): this is temp, but be careful
             var name = ExpectIdent("Expected ident for let binding name.");
-            Spanned<TyRef> ty = null;
+            Spanned<TyRef> ty;
             if (CheckOp(COLON))
             {
                 Advance();
                 ty = ParseTy();
             }
+            else ty = (InferTyRef.InferTy as TyRef).Spanned(default(Span));
 
             var binding = new Parameter(name.Image.Spanned(name.span), ty);
 
