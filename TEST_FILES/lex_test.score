@@ -1,9 +1,9 @@
 
 type c_str = ^i8
 
-/# "C" is an argument to 'extern':
+/# "C" is an argument to 'extern',
 extern "C" fn puts |c_str| -> i32
-/# But it's optional, and "C" is the default.
+/# but it's optional, and "C" is the default.
 extern fn putchar |i32| -> i32
 
 /*
