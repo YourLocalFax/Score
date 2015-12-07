@@ -8,6 +8,7 @@ namespace SyntaxTree.Data
         public readonly Spanned<string> name;
         public Spanned<TyRef> spTy;
 
+        public string Name => name.value;
         public Span TySpan => spTy.span;
         public TyRef Ty => spTy.value;
 

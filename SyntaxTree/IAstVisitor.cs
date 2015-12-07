@@ -5,7 +5,7 @@
         void Visit(Ast node);
 
         void Visit(NodeFnDecl fn);
-        void Visit(NodeTypeDef fn);
+        void Visit(NodeTypeDef typeDef);
         void Visit(NodeLet let);
 
         void Visit(NodeId id);

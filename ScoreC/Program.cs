@@ -4,6 +4,7 @@ using Dbg;
 using Lex;
 using Log;
 using Parse;
+using Semantics;
 
 namespace ScoreC
 {
@@ -44,6 +45,11 @@ namespace ScoreC
 
             var writer = new AstWriter(Console.Out);
             writer.Visit(ast);
+
+            var semantics = new SemanticAnalyzer(log);
+            var symbols = semantics.Analyze(ast);
+
+            Console.WriteLine(symbols);
 
             Wait();
         }

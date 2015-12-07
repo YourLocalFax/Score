@@ -1,7 +1,9 @@
 
 type c_str = ^i8
 
-extern fn puts |c_str| -> i32
+/# "C" is an argument to 'extern':
+extern "C" fn puts |c_str| -> i32
+/# But it's optional, and "C" is the default.
 extern fn putchar |i32| -> i32
 
 /*
@@ -31,10 +33,6 @@ fn puti |i: i32| -> () {
 */
 
 fn main || -> () {
-	let hello: c_str = c"Hello, world! I'm Score!"
-	let task: c_str = c"Today, I think we can test things :)"
+	let hello = c"Hello, world!"
 	puts hello
-	puts task
-	puti 24601
-	putb true
 }
