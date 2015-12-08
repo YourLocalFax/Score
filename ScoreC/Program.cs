@@ -1,11 +1,17 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 
+using CodeGen;
 using Dbg;
 using Lex;
 using Log;
 using Parse;
 using TyChecker;
 using Semantics;
+
+using LLVMSharp;
+using static LLVMSharp.LLVM;
 
 namespace ScoreC
 {
@@ -22,12 +28,14 @@ namespace ScoreC
                 return;
             }
 
-            var fileName = args[0];
+            var filePath = args[0];
+            var dir = Path.GetDirectoryName(filePath);
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
 
             var log = new DetailLogger();
 
             var lexer = new Lexer();
-            var tokens = lexer.GetTokens(log, fileName);
+            var tokens = lexer.GetTokens(log, filePath);
 
             if (log.HasErrors)
             {
@@ -36,7 +44,7 @@ namespace ScoreC
             }
 
             var parser = new Parser();
-            var ast = parser.Parse(log, tokens, fileName);
+            var ast = parser.Parse(log, tokens, filePath);
 
             if (log.HasErrors)
             {
@@ -66,6 +74,39 @@ namespace ScoreC
                 Fail(log);
                 return;
             }
+
+            var compiler = new ScoreCompiler(log);
+            var module = compiler.Compile(fileName, ast, symbols);
+
+            if (log.HasErrors)
+            {
+                Fail(log);
+                return;
+            }
+
+            DumpModule(module);
+            var bcFilePath = Path.Combine(dir, fileName + ".bc");
+            WriteBitcodeToFile(module, bcFilePath);
+
+            // Run the interpreter!
+            Console.WriteLine();
+            Console.WriteLine("Interpreting:");
+            var cmd = @"/c ..\..\..\..\TEST_FILES\lli.exe " + bcFilePath;
+            //Console.WriteLine(cmd);
+            var processInfo = new ProcessStartInfo("cmd.exe", cmd);
+            processInfo.CreateNoWindow = false;
+            processInfo.UseShellExecute = false;
+            processInfo.RedirectStandardOutput = true;
+            processInfo.RedirectStandardError = true;
+
+            var process = Process.Start(processInfo);
+            process.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
+            {
+                Console.WriteLine(e.Data);
+            };
+            process.BeginOutputReadLine();
+
+            process.WaitForExit();
 
             Wait();
         }

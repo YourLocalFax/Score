@@ -1,5 +1,5 @@
 
-type c_str = ^i8
+type c_str = ^mut i8
 
 /# "C" is an argument to 'extern',
 extern "C" fn puts |c_str| -> i32
@@ -34,6 +34,6 @@ fn puti |i: i32| -> () {
 
 /# _S4main0_Rv
 fn main || -> () {
-	let hello = c"Hello, world!"
+	let hello: c_str = c"Hello, world!"
 	puts hello
 }

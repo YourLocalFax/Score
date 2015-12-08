@@ -7,6 +7,14 @@ namespace Ext
 {
     public static class Extensions
     {
+        public static TResult[] Select<T, TResult>(this T[] arr, Func<T, TResult> func)
+        {
+            var result = new TResult[arr.Length];
+            for (int i = 0; i < result.Length; i++)
+                result[i] = func(arr[i]);
+            return result;
+        }
+
         public static string Repeat(this string s, int count)
         {
             if (count == 0)

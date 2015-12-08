@@ -23,7 +23,7 @@ namespace TyChecker
             this.walker = walker;
         }
 
-        private void Push(TyRef ty) => stack.Push(ty);
+        private void Push(TyRef ty) => stack.Push(ty.Raw);
 
         private TyRef Pop() => stack.Pop();
 
@@ -43,8 +43,6 @@ namespace TyChecker
 
         public void Visit(NodeFnDecl fn)
         {
-            Console.WriteLine(Mangle.Mangler.GetMangledName(fn.Name, fn.ty));
-
             if (fn.body != null)
             {
                 walker.StepIn();
@@ -61,6 +59,22 @@ namespace TyChecker
         {
         }
 
+        private void ErrNoSuchFunction(Spanned<string> spName, TyRef[] args)
+        {
+            var builder = new StringBuilder().Append('|');
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (i > 0)
+                    builder.Append(", ");
+                builder.Append(args[i]);
+            }
+
+            builder.Append('|');
+
+            log.Error(spName.span, "No method \"{0}\" with parameter types {1} exists.", spName.value, builder.ToString());
+        }
+
         public void Visit(NodeInvoke invoke)
         {
             invoke.args.ForEach(arg => arg.Accept(this));
@@ -68,22 +82,26 @@ namespace TyChecker
 
             var name = invoke.TargetName;
 
-            var sym = walker.Current.Lookup(name);
-            if (sym == null)
+            var symTy = walker.Current.Lookup(name)?.Ty as FnTyRef;
+            if (symTy == null)
             {
-                var builder = new StringBuilder().Append('|');
+                log.Error(invoke.spName.span, "No function \"{0}\" was found.", name);
+                return;
+            }
 
-                for (int i = 0; i < invokeArgs.Length; i++)
+            if (invokeArgs.Length != symTy.parameterTys.Count)
+            {
+                ErrNoSuchFunction(invoke.spName, invokeArgs);
+                return;
+            }
+
+            for (int i = 0, len = invokeArgs.Length; i < len; i++)
+            {
+                if (symTy.parameterTys[i].Raw != invokeArgs[i])
                 {
-                    if (i > 0)
-                        builder.Append(", ");
-                    builder.Append(invokeArgs[i]);
+                    ErrNoSuchFunction(invoke.spName, invokeArgs);
+                    break;
                 }
-
-                builder.Append('|');
-
-                // TODO(kai): rephrase this?
-                log.Error(invoke.spName.span, "No method \"{0}\" with parameter types {1} exists.", name, builder.ToString());
             }
         }
 
@@ -94,7 +112,7 @@ namespace TyChecker
 
             if (let.binding.InferTy)
                 let.binding.spTy = valueTy.Spanned();
-            else if (let.binding.Ty != valueTy)
+            else if (let.binding.Ty.Raw != valueTy)
                 log.Error(let.binding.spTy.span, "Type mismatch: Cannot assign {0} to {1}.", valueTy, let.binding.Ty);
         }
 
