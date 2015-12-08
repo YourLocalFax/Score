@@ -13,7 +13,8 @@ namespace SyntaxTree.Data
         public TyRef Ty => spTy.value;
 
         public bool HasName => name != null;
-        public bool HasTy => spTy != null && !(Ty is InferTyRef);
+        public bool InferTy => Ty is InferTyRef;
+        public bool HasTy => !InferTy;
 
         // TODO(kai): default values
 

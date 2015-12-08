@@ -25,6 +25,9 @@ namespace Ty
                     return null;
             }
         }
+
+        public abstract override int GetHashCode();
+        public override bool Equals(object obj) => this == obj;
     }
 
     public sealed class TyVoid : BuiltinTyRef
@@ -33,6 +36,7 @@ namespace Ty
 
         private TyVoid() { }
 
+        public override int GetHashCode() => 31;
         public override string ToString() => "()";
     }
 
@@ -42,6 +46,7 @@ namespace Ty
 
         private TyBool() { }
 
+        public override int GetHashCode() => 37;
         public override string ToString() => "bool";
     }
 
@@ -56,6 +61,7 @@ namespace Ty
 
         public uint BitWidth { get; private set; }
 
+        public override int GetHashCode() => 31 * (int)BitWidth;
         public override string ToString() => "i" + BitWidth;
     }
 
@@ -66,10 +72,11 @@ namespace Ty
         public static readonly TyUint Uint32Ty = new TyUint(32);
         public static readonly TyUint Uint64Ty = new TyUint(64);
 
-        private TyUint(uint bitWidth) { BitWidth = bitWidth; }
-
         public uint BitWidth { get; private set; }
 
+        private TyUint(uint bitWidth) { BitWidth = bitWidth; }
+
+        public override int GetHashCode() => 37 * (int)BitWidth;
         public override string ToString() => "i" + BitWidth;
     }
 
@@ -79,10 +86,11 @@ namespace Ty
         public static readonly TyFloat Float32Ty = new TyFloat(32);
         public static readonly TyFloat Float64Ty = new TyFloat(64);
 
-        private TyFloat(uint bitWidth) { BitWidth = bitWidth; }
-
         public uint BitWidth { get; private set; }
 
+        private TyFloat(uint bitWidth) { BitWidth = bitWidth; }
+
+        public override int GetHashCode() => 23 * (int)BitWidth;
         public override string ToString() => "f" + BitWidth;
     }
 }

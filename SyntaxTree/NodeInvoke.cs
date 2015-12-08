@@ -6,14 +6,16 @@ namespace SyntaxTree
 {
     public sealed class NodeInvoke : NodeExpr
     {
-        public NodeExpr target;
+        public Spanned<string> spName;
         public List<NodeExpr> args;
 
-        public override Span Span => new Span(target.Span.fileName, target.Span.start, args[args.Count - 1].Span.end);
+        public string TargetName => spName.value;
 
-        public NodeInvoke(NodeExpr target, List<NodeExpr> args)
+        public override Span Span => new Span(spName.span.fileName, spName.span.start, args[args.Count - 1].Span.end);
+
+        public NodeInvoke(Spanned<string> spName, List<NodeExpr> args)
         {
-            this.target = target;
+            this.spName = spName;
             this.args = args;
         }
 

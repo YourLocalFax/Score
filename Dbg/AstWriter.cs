@@ -175,7 +175,6 @@ namespace Dbg
 
         public void Visit(NodeInvoke invoke)
         {
-            invoke.target.Accept(this);
             foreach (var arg in invoke.args)
             {
                 Write(" ");

@@ -4,7 +4,7 @@ namespace Symbols
 {
     using static SymbolTable;
 
-    internal sealed class SymbolTableWalker
+    public sealed class SymbolTableWalker
     {
         private sealed class Node
         {
@@ -44,13 +44,18 @@ namespace Symbols
         }
 
         public readonly SymbolTable symbols;
-        private readonly Node root;
+        private Node root;
 
         public Scope Current => root.Get().anchor;
 
         public SymbolTableWalker(SymbolTable symbols)
         {
             this.symbols = symbols;
+            Reset();
+        }
+
+        public void Reset()
+        {
             root = new Node(symbols.global);
         }
 

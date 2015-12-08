@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{60B111A5-C691-491A-A2ED-841CF3D9A496}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{1861A21D-FAE0-43BB-B282-FA4D6F77A3A7}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ScoreC</RootNamespace>
-    <AssemblyName>ScoreC</AssemblyName>
+    <RootNamespace>TyChecker</RootNamespace>
+    <AssemblyName>TyChecker</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,21 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="TyChecker.cs" />
+    <Compile Include="TypeChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TyResolver.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CodeGen\CodeGen.csproj">
-      <Project>{cb3aa435-e4a5-4c0b-99de-e8bbaf517e11}</Project>
-      <Name>CodeGen</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Dbg\Dbg.csproj">
-      <Project>{3a26bb55-7838-422e-8fa6-dff0c36983b8}</Project>
-      <Name>Dbg</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Ext\Ext.csproj">
       <Project>{f1c993f3-d0fc-4a1c-a12d-9cf8432c317a}</Project>
       <Name>Ext</Name>
@@ -70,14 +58,6 @@
       <Project>{9e528310-6591-445d-b466-9fcefe1132e4}</Project>
       <Name>Log</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Parse\Parse.csproj">
-      <Project>{f7a3f6fe-4efd-44b6-b2cd-45c180e8ee89}</Project>
-      <Name>Parse</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Semantics\Semantics.csproj">
-      <Project>{9e8aec20-74d5-43aa-bdd6-cbd04a4fb3fa}</Project>
-      <Name>Semantics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Source\Source.csproj">
       <Project>{d32902fc-be20-48f4-810b-2c3cbdf4e810}</Project>
       <Name>Source</Name>
@@ -89,10 +69,6 @@
     <ProjectReference Include="..\SyntaxTree\SyntaxTree.csproj">
       <Project>{980e56fa-6a8d-4fbb-bb39-b5e1c31c669f}</Project>
       <Name>SyntaxTree</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TyChecker\TyChecker.csproj">
-      <Project>{1861a21d-fae0-43bb-b282-fa4d6f77a3a7}</Project>
-      <Name>TyChecker</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ty\Ty.csproj">
       <Project>{e9a46d14-2cb7-4910-8ca2-8ef18a839b7d}</Project>

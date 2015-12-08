@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ext", "Ext\Ext.csproj", "{F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Semantics", "Semantics\Semantics.csproj", "{9E8AEC20-74D5-43AA-BDD6-CBD04A4FB3FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TyChecker", "TyChecker\TyChecker.csproj", "{1861A21D-FAE0-43BB-B282-FA4D6F77A3A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{9E8AEC20-74D5-43AA-BDD6-CBD04A4FB3FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E8AEC20-74D5-43AA-BDD6-CBD04A4FB3FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E8AEC20-74D5-43AA-BDD6-CBD04A4FB3FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1861A21D-FAE0-43BB-B282-FA4D6F77A3A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1861A21D-FAE0-43BB-B282-FA4D6F77A3A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1861A21D-FAE0-43BB-B282-FA4D6F77A3A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1861A21D-FAE0-43BB-B282-FA4D6F77A3A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -371,6 +371,12 @@ namespace Parse
             if ((Current.span.start.line == node.Span.start.line || isEnclosed) &&
                 (expr = ParsePrimaryExpr(isEnclosed, false)) != null)
             {
+                if (!(node is NodeId))
+                {
+                    log.Error(node.Span, "Can only invoke functions.");
+                    return null; // TODO(kai): Should I return null?
+                }
+                var name = (node as NodeId).Image.Spanned(node.Span);
                 List<NodeExpr> args = new List<NodeExpr>();
                 args.Add(expr);
                 while ((Current.span.start.line == node.Span.start.line || isEnclosed) &&
@@ -378,7 +384,7 @@ namespace Parse
                 {
                     args.Add(expr);
                 }
-                return new NodeInvoke(node, args);
+                return new NodeInvoke(name, args);
             }
             return node;
         }
@@ -429,7 +435,7 @@ namespace Parse
             Spanned<TyRef> ty;
             if (hasTy)
                 ty = ParseTy();
-            else ty = (InferTyRef.InferTy as TyRef).Spanned(default(Span));
+            else ty = (InferTyRef.InferTy as TyRef).Spanned();
 
             return new Parameter(name, ty);
         }

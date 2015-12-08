@@ -4,6 +4,7 @@ using Dbg;
 using Lex;
 using Log;
 using Parse;
+using TyChecker;
 using Semantics;
 
 namespace ScoreC
@@ -49,7 +50,22 @@ namespace ScoreC
             var semantics = new SemanticAnalyzer(log);
             var symbols = semantics.Analyze(ast);
 
+            if (log.HasErrors)
+            {
+                Fail(log);
+                return;
+            }
+
             Console.WriteLine(symbols);
+
+            var tyChecker = new TypeChecker(log);
+            tyChecker.Check(ast, symbols);
+
+            if (log.HasErrors)
+            {
+                Fail(log);
+                return;
+            }
 
             Wait();
         }
