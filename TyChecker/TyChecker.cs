@@ -13,13 +13,14 @@ namespace TyChecker
     internal sealed class TyChecker : IAstVisitor
     {
         private readonly DetailLogger log;
-        private SymbolTableWalker walker;
+        private readonly SymbolTableWalker walker;
 
         private readonly Stack<TyRef> stack = new Stack<TyRef>();
 
-        public TyChecker(DetailLogger log)
+        public TyChecker(DetailLogger log, SymbolTableWalker walker)
         {
             this.log = log;
+            this.walker = walker;
         }
 
         private void Push(TyRef ty) => stack.Push(ty);
@@ -42,6 +43,8 @@ namespace TyChecker
 
         public void Visit(NodeFnDecl fn)
         {
+            Console.WriteLine(Mangle.Mangler.GetMangledName(fn.Name, fn.ty));
+
             if (fn.body != null)
             {
                 walker.StepIn();
@@ -97,10 +100,35 @@ namespace TyChecker
 
         public void Visit(NodeId id)
         {
+            var sym = walker.Current.Lookup(id.Image);
+            Push(sym.Ty);
         }
 
         public void Visit(NodeInt i)
         {
+            var token = i.Token;
+            var suffix = token.NumericSuffix;
+
+            TyRef ty;
+            switch (suffix)
+            {
+                case "i8":  ty = TyInt.Int8Ty; break;
+                case "i16": ty = TyInt.Int16Ty; break;
+                case "":
+                case "i32": ty = TyInt.Int32Ty; break;
+                case "i64": ty = TyInt.Int64Ty; break;
+                case "u8":  ty = TyUint.Uint8Ty; break;
+                case "u16": ty = TyUint.Uint16Ty; break;
+                case "u32": ty = TyUint.Uint32Ty; break;
+                case "u64": ty = TyUint.Uint64Ty; break;
+
+                default:
+                    ty = TyInt.Int32Ty;
+                    log.Error(i.Span, "Invalid integer suffix \"{0}\"!", suffix);
+                    break;
+            }
+
+            Push(ty);
         }
 
         public void Visit(NodeEnclosed enc)
@@ -135,10 +163,12 @@ namespace TyChecker
 
         public void Visit(NodeStr s)
         {
+            Push(new PointerTyRef(TyInt.Int8Ty, true));
         }
 
         public void Visit(NodeBool b)
         {
+            Push(TyBool.BoolTy);
         }
     }
 }

@@ -32,6 +32,7 @@ fn puti |i: i32| -> () {
 }
 */
 
+/# _S4main0_Rv
 fn main || -> () {
 	let hello = c"Hello, world!"
 	puts hello

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1861A21D-FAE0-43BB-B282-FA4D6F77A3A7}</ProjectGuid>
+    <ProjectGuid>{23AEDDB7-09D9-458C-8F36-6927040EF0D8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TyChecker</RootNamespace>
-    <AssemblyName>TyChecker</AssemblyName>
+    <RootNamespace>Mangle</RootNamespace>
+    <AssemblyName>Mangle</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,40 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TyChecker.cs" />
-    <Compile Include="TypeChecker.cs" />
+    <Compile Include="Mangler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TyResolver.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ext\Ext.csproj">
-      <Project>{f1c993f3-d0fc-4a1c-a12d-9cf8432c317a}</Project>
-      <Name>Ext</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Lex\Lex.csproj">
-      <Project>{85c4fa98-265a-4c32-918d-72d040104df1}</Project>
-      <Name>Lex</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Log\Log.csproj">
-      <Project>{9e528310-6591-445d-b466-9fcefe1132e4}</Project>
-      <Name>Log</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Mangle\Mangle.csproj">
-      <Project>{23aeddb7-09d9-458c-8f36-6927040ef0d8}</Project>
-      <Name>Mangle</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Source\Source.csproj">
-      <Project>{d32902fc-be20-48f4-810b-2c3cbdf4e810}</Project>
-      <Name>Source</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Symbols\Symbols.csproj">
-      <Project>{276cdba1-e0ad-4970-9201-d0a2435e0f34}</Project>
-      <Name>Symbols</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SyntaxTree\SyntaxTree.csproj">
-      <Project>{980e56fa-6a8d-4fbb-bb39-b5e1c31c669f}</Project>
-      <Name>SyntaxTree</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Ty\Ty.csproj">
       <Project>{e9a46d14-2cb7-4910-8ca2-8ef18a839b7d}</Project>
       <Name>Ty</Name>

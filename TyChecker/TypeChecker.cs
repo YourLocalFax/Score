@@ -21,7 +21,8 @@ namespace TyChecker
             if (log.HasErrors)
                 return;
 
-
+            var checker = new TyChecker(log, new SymbolTableWalker(symbols));
+            ast.Accept(checker);
         }
     }
 }

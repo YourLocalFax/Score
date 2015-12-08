@@ -20,6 +20,7 @@ namespace Semantics
         {
             var symbols = new SymbolTable();
             ast.Accept(new ModAnalyzer(log, symbols));
+            // TODO(kai): Check that variABLES ACTUALLY EXIST
             return symbols;
         }
     }

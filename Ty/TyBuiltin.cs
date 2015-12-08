@@ -27,7 +27,7 @@ namespace Ty
         }
 
         public abstract override int GetHashCode();
-        public override bool Equals(object obj) => this == obj;
+        public override bool Equals(object obj) => this as object == obj;
     }
 
     public sealed class TyVoid : BuiltinTyRef
