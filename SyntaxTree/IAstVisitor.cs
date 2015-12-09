@@ -20,6 +20,7 @@
         void Visit(NodeInfix infix);
         void Visit(NodeSuffix suffix);
 
+        void Visit(NodeRet ret);
         void Visit(NodeIf @if);
     }
 }

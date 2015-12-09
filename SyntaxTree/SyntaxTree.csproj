@@ -78,6 +78,7 @@
     <Compile Include="NodeInt.cs" />
     <Compile Include="NodeInvoke.cs" />
     <Compile Include="NodeLet.cs" />
+    <Compile Include="NodeRet.cs" />
     <Compile Include="NodeStr.cs" />
     <Compile Include="NodeSuffix.cs" />
     <Compile Include="NodeTuple.cs" />
