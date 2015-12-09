@@ -111,7 +111,10 @@ namespace TyChecker
             var valueTy = Pop();
 
             if (let.Ty is InferTyRef)
+            {
                 let.spTy = valueTy.Spanned();
+                (walker.Current.Lookup(let.Name) as VarSymbol).ty = valueTy;
+            }
 
             if (let.Ty.Raw != valueTy)
                 log.Error(let.spTy.span, "Type mismatch: Cannot assign {0} to {1}.", valueTy, let.Ty);

@@ -38,7 +38,7 @@ namespace CodeGen
             {
                 var param = fn.parameters[(int)i];
                 if (param.HasName)
-                    SetValueName(GetParam(self, i), param.Name + "-param");
+                    SetValueName(GetParam(self, i), param.Name + ".p");
             }
             if (fn.header.modifiers.Has(ModifierType.EXTERN))
                 SetLinkage(self, LLVMLinkage.LLVMExternalLinkage);

@@ -24,6 +24,6 @@ fn putstr  |s: c_str| -> () {
 }
 
 fn main || -> () {
-	let hello: c_str = c"Hello, world! I'm Score!"
+	let hello = c"Hello, world! I'm Score!"
 	putstr hello
 }
