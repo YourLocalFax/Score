@@ -181,6 +181,7 @@ namespace Dbg
 
         public void Visit(NodeInvoke invoke)
         {
+            Write(invoke.TargetName);
             foreach (var arg in invoke.args)
             {
                 Write(" ");
