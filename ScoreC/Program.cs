@@ -88,6 +88,7 @@ namespace ScoreC
             var bcFilePath = Path.Combine(dir, fileName + ".bc");
             WriteBitcodeToFile(module, bcFilePath);
 
+            /*
             // Run the interpreter!
             Console.WriteLine();
             Console.WriteLine("Interpreting:");
@@ -107,6 +108,7 @@ namespace ScoreC
             process.BeginOutputReadLine();
 
             process.WaitForExit();
+            //*/
 
             Wait();
         }

@@ -34,12 +34,27 @@ namespace CodeGen
         public void Visit(NodeFnDecl fn)
         {
             var self = AddFunction(module, fn.Name, TypeConverter.ToLLVMTy(fn.ty.Raw, context));
+            for (var i = 0u; i < fn.parameters.Count; i++)
+            {
+                var param = fn.parameters[(int)i];
+                if (param.HasName)
+                    SetValueName(GetParam(self, i), param.Name + "-param");
+            }
             if (fn.header.modifiers.Has(ModifierType.EXTERN))
                 SetLinkage(self, LLVMLinkage.LLVMExternalLinkage);
             if (fn.body != null)
             {
                 walker.StepIn();
                 PositionBuilderAtEnd(builder, AppendBasicBlock(self, ".entry"));
+                for (var i = 0u; i < fn.parameters.Count; i++)
+                {
+                    var param = fn.parameters[(int)i];
+
+                    var sym = walker.Current.Lookup(param.Name);
+                    sym.userdata = BuildAlloca(builder, TypeConverter.ToLLVMTy(param.Ty.Raw, context), param.Name);
+
+                    BuildStore(builder, GetParam(self, i), (LLVMValueRef)sym.userdata);
+                }
                 var compiler = new FnCompiler(log, walker, context, module, builder, self);
                 fn.body.ForEach(node => node.Accept(compiler));
                 walker.StepOut();

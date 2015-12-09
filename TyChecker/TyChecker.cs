@@ -110,10 +110,11 @@ namespace TyChecker
             let.value.Accept(this);
             var valueTy = Pop();
 
-            if (let.binding.InferTy)
-                let.binding.spTy = valueTy.Spanned();
-            else if (let.binding.Ty.Raw != valueTy)
-                log.Error(let.binding.spTy.span, "Type mismatch: Cannot assign {0} to {1}.", valueTy, let.binding.Ty);
+            if (let.Ty is InferTyRef)
+                let.spTy = valueTy.Spanned();
+
+            if (let.Ty.Raw != valueTy)
+                log.Error(let.spTy.span, "Type mismatch: Cannot assign {0} to {1}.", valueTy, let.Ty);
         }
 
         public void Visit(NodeId id)
@@ -181,7 +182,7 @@ namespace TyChecker
 
         public void Visit(NodeStr s)
         {
-            Push(new PointerTyRef(TyInt.Int8Ty, true));
+            Push(new PointerTyRef(TyInt.Int8Ty, false));
         }
 
         public void Visit(NodeBool b)

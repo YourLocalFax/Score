@@ -413,30 +413,24 @@ namespace Parse
         private Parameter ParseParameter()
         {
             bool hasName = false;
-            bool hasTy = true;
-
             if (Check(IDENT))
             {
                 Advance();
-                hasName = CheckOp(COLON) || Check(COMMA);
-                hasTy = CheckOp(COLON) || !Check(COMMA);
+                if (CheckOp(COLON))
+                    hasName = true;
                 Backup();
             }
 
-            Spanned<string> name = null;
+            Spanned<string> name;
             if (hasName)
             {
-                name = Current.Image.Spanned(Current.span);
-                Advance();
-                if (hasTy)
-                    AdvanceOp(COLON);
+                var nameToken = ExpectIdent("Identifier expected for parameter name.");
+                name = nameToken.Image.Spanned(nameToken.span);
+                AdvanceOp(COLON);
             }
+            else name = null;
 
-            Spanned<TyRef> ty;
-            if (hasTy)
-                ty = ParseTy();
-            else ty = (InferTyRef.InferTy as TyRef).Spanned();
-
+            Spanned<TyRef> ty = ParseTy();
             return new Parameter(name, ty);
         }
 
@@ -665,15 +659,13 @@ namespace Parse
                 Advance();
                 ty = ParseTy();
             }
-            else ty = (InferTyRef.InferTy as TyRef).Spanned(default(Span));
-
-            var binding = new Parameter(name.Image.Spanned(name.span), ty);
+            else ty = (InferTyRef.InferTy as TyRef).Spanned();
 
             Expect(EQ, "Expected '=' in let binding.");
 
             var value = ParseExpr();
 
-            return new NodeLet(binding, value);
+            return new NodeLet(name.Image.Spanned(name.span), ty, value);
         }
         #endregion
     }

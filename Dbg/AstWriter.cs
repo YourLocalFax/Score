@@ -3,6 +3,7 @@
 using Ext;
 using SyntaxTree;
 using SyntaxTree.Data;
+using Ty;
 
 namespace Dbg
 {
@@ -55,12 +56,12 @@ namespace Dbg
 
         private void WriteParameter(Parameter param)
         {
-            if (param.name != null)
+            if (param.HasName)
+            {
                 Write(param.name.value);
-            if (param.name != null && param.HasTy)
                 Write(" ':' ");
-            if (param.HasTy)
-                Write(param.Ty.ToString());
+            }
+            Write(param.Ty.ToString());
         }
 
         public void Visit(NodeFnDecl fn)
@@ -122,7 +123,12 @@ namespace Dbg
         public void Visit(NodeLet let)
         {
             Write("'let' ");
-            WriteParameter(let.binding);
+            Write(let.Name);
+            if (!(let.Ty is InferTyRef))
+            {
+                Write(" ':' ");
+                Write(let.Ty.ToString());
+            }
             Write(" '=' ");
             let.value.Accept(this);
         }

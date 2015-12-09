@@ -24,6 +24,7 @@ namespace Semantics
             if (fn.body != null)
             {
                 symbols.NewScope(fn.Name);
+                fn.parameters.ForEach(param => symbols.InsertVar(param.Name, param.Ty));
                 var fnAnalyzer = new FnAnalyzer(log, symbols);
                 fn.body.ForEach(node => node.Accept(fnAnalyzer));
                 symbols.ExitScope();

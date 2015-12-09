@@ -29,7 +29,7 @@ namespace Symbols
         public override string ToString() => name;
     }
 
-    internal sealed class FnSymbol : Symbol
+    public sealed class FnSymbol : Symbol
     {
         public readonly Modifiers mods;
         public readonly FnTyRef ty;
@@ -44,7 +44,7 @@ namespace Symbols
         }
     }
 
-    internal sealed class TypeSymbol : Symbol
+    public sealed class TypeSymbol : Symbol
     {
         public readonly Modifiers mods;
         public readonly TyRef ty;
@@ -59,9 +59,9 @@ namespace Symbols
         }
     }
 
-    internal class VarSymbol : Symbol
+    public class VarSymbol : Symbol
     {
-        public readonly TyRef ty;
+        public TyRef ty;
         public readonly bool isMut;
 
         public override TyRef Ty => ty;

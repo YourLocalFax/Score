@@ -42,7 +42,7 @@ namespace Semantics
 
         public void Visit(NodeLet let)
         {
-            symbols.InsertVar(let.binding.Name, let.binding.Ty);
+            symbols.InsertVar(let.Name, let.Ty);
             let.value.Accept(this);
         }
 

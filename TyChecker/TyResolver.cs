@@ -64,7 +64,7 @@ namespace TyChecker
 
         public void Visit(NodeFnDecl fn)
         {
-            fn.parameters.ForEach(param => { if (param.HasTy) ResolveTy(param.spTy); });
+            fn.parameters.ForEach(param => ResolveTy(param.spTy));
             ResolveTy(fn.@return.spTy);
             if (fn.body != null)
             {
@@ -86,8 +86,7 @@ namespace TyChecker
 
         public void Visit(NodeLet let)
         {
-            if (let.binding.HasTy)
-                ResolveTy(let.binding.spTy);
+            ResolveTy(let.spTy);
             let.value.Accept(this);
         }
 

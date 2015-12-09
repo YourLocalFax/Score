@@ -78,8 +78,8 @@ namespace CodeGen
 
         public void Visit(NodeLet let)
         {
-            var sym = walker.Current.Lookup(let.binding.Name);
-            sym.userdata = BuildAlloca(builder, TypeConverter.ToLLVMTy(let.binding.Ty.Raw, context), let.binding.Name ?? "");
+            var sym = walker.Current.Lookup(let.Name);
+            sym.userdata = BuildAlloca(builder, TypeConverter.ToLLVMTy(let.Ty.Raw, context), let.Name);
 
             let.value.Accept(this);
             var value = Pop().value;

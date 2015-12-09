@@ -1,21 +1,26 @@
 ﻿using Source;
 
+using Ty;
+
 namespace SyntaxTree
 {
-    using Data;
-
     public sealed class NodeLet : Node
     {
         // TODO(kai): Just for temps
 
-        public readonly Parameter binding;
+        public readonly Spanned<string> spName;
+        public Spanned<TyRef> spTy;
         public readonly NodeExpr value;
 
-        public override Span Span => binding.name.span;
+        public override Span Span => spName.span;
 
-        public NodeLet(Parameter binding, NodeExpr value)
+        public string Name => spName.value;
+        public TyRef Ty => spTy.value;
+
+        public NodeLet(Spanned<string> spName, Spanned<TyRef> spTy, NodeExpr value)
         {
-            this.binding = binding;
+            this.spName = spName;
+            this.spTy = spTy;
             this.value = value;
         }
 
