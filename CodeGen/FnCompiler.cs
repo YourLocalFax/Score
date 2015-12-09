@@ -138,11 +138,6 @@ namespace CodeGen
             throw new NotImplementedException();
         }
 
-        public void Visit(NodeIf @if)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Visit(NodeSuffix suffix)
         {
             throw new NotImplementedException();
@@ -163,6 +158,16 @@ namespace CodeGen
         public void Visit(NodeBool b)
         {
             Push(b.Span, TyBool.BoolTy, ConstInt(Int1TypeInContext(context), b.Value ? 1ul : 0ul, false));
+        }
+
+        public void Visit(NodeRet ret)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(NodeIf @if)
+        {
+            throw new NotImplementedException();
         }
     }
 }

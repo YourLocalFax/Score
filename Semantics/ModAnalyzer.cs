@@ -91,6 +91,11 @@ namespace Semantics
             log.Error(suffix.Span, "Expressions are not valid in this placement. Perhaps you meant to put it in a function?");
         }
 
+        public void Visit(NodeRet ret)
+        {
+            log.Error(ret.Span, "Return statement is not valid in this placement. Perhaps you meant to put it in a function?");
+        }
+
         public void Visit(NodeIf @if)
         {
             log.Error(@if.Span, "Expressions are not valid in this placement. Perhaps you meant to put it in a function?");

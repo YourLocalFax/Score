@@ -66,10 +66,6 @@ namespace Semantics
         {
         }
 
-        public void Visit(NodeIf @if)
-        {
-        }
-
         public void Visit(NodeSuffix suffix)
         {
         }
@@ -83,6 +79,14 @@ namespace Semantics
         }
 
         public void Visit(NodeBool b)
+        {
+        }
+
+        public void Visit(NodeRet ret)
+        {
+        }
+
+        public void Visit(NodeIf @if)
         {
         }
     }

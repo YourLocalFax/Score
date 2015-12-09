@@ -114,10 +114,6 @@ namespace TyChecker
             infix.right.Accept(this);
         }
 
-        public void Visit(NodeIf @if)
-        {
-        }
-
         public void Visit(NodeSuffix suffix)
         {
             suffix.target.Accept(this);
@@ -133,6 +129,14 @@ namespace TyChecker
         }
 
         public void Visit(NodeBool b)
+        {
+        }
+
+        public void Visit(NodeRet ret)
+        {
+        }
+
+        public void Visit(NodeIf @if)
         {
         }
     }

@@ -216,6 +216,16 @@ namespace Dbg
             else Write(" " + image + " ");
         }
 
+        public void Visit(NodeRet ret)
+        {
+            Write("'ret'");
+            if (!ret.IsVoidRet)
+            {
+                Write(" ");
+                ret.value.Accept(this);
+            }
+        }
+
         public void Visit(NodeIf @if)
         {
             @if.conditions.ForEach(cond =>
