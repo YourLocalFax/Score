@@ -73,7 +73,8 @@ namespace CodeGen
             var name = invoke.TargetName;
             invoke.args.ForEach(arg => arg.Accept(this));
             var args = PopCount(invoke.args.Count);
-            BuildCall(builder, GetNamedFunction(module, name), args.Select(arg => arg.value), "");
+            var result = BuildCall(builder, GetNamedFunction(module, name), args.Select(arg => arg.value), "");
+            Push(invoke.Span, (walker.Current.Lookup(invoke.TargetName).Ty as FnTyRef).returnTy, result);
         }
 
         public void Visit(NodeLet let)

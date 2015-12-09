@@ -86,8 +86,11 @@ namespace TyChecker
             if (symTy == null)
             {
                 log.Error(invoke.spName.span, "No function \"{0}\" was found.", name);
+                Push(TyVoid.VoidTy);
                 return;
             }
+
+            Push(symTy.returnTy);
 
             if (invokeArgs.Length != symTy.parameterTys.Count)
             {
