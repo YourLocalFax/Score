@@ -4,6 +4,9 @@ using SyntaxTree;
 
 namespace Semantics
 {
+    // TODO(kai): Make sure that all code paths return a value (if not void)
+    // TODO(kai): The type checking portion can be done later.
+
     internal sealed class FnAnalyzer : IAstVisitor
     {
         private readonly DetailLogger log;
@@ -20,19 +23,12 @@ namespace Semantics
 
         public void Visit(NodeFnDecl fn)
         {
-            symbols.InsertFn(fn.Name, fn.header.modifiers, fn.ty);
-            if (fn.body != null)
-            {
-                symbols.NewScope(fn.Name);
-                var fnAnalyzer = new FnAnalyzer(log, symbols);
-                fn.body.ForEach(node => node.Accept(fnAnalyzer));
-                symbols.ExitScope();
-            }
+            log.Error(fn.Span, "A function is not valid in another function.");
         }
 
         public void Visit(NodeTypeDef typeDef)
         {
-            symbols.InsertType(typeDef.Name, typeDef.modifiers, typeDef.Ty);
+            log.Error(typeDef.Span, "A type def is not valid in a function.");
         }
 
         public void Visit(NodeInvoke invoke)
@@ -56,22 +52,29 @@ namespace Semantics
 
         public void Visit(NodeEnclosed enc)
         {
+            enc.expr.Accept(this);
         }
 
         public void Visit(NodeIndex index)
         {
+            index.target.Accept(this);
+            index.index.Accept(this);
         }
 
         public void Visit(NodeInfix infix)
         {
+            infix.left.Accept(this);
+            infix.right.Accept(this);
         }
 
         public void Visit(NodeSuffix suffix)
         {
+            suffix.target.Accept(this);
         }
 
         public void Visit(NodeTuple tuple)
         {
+            tuple.values.ForEach(value => value.Accept(this));
         }
 
         public void Visit(NodeStr s)
@@ -84,6 +87,7 @@ namespace Semantics
 
         public void Visit(NodeRet ret)
         {
+            ret.value.Accept(this);
         }
 
         public void Visit(NodeIf @if)

@@ -191,6 +191,8 @@ namespace Parse
                 case LET:
                     // TODO(kai): make sure there are NO mods.
                     return ParseLet();
+                case RET:
+                    return ParseRet();
                 default:
                     return ParseExpr();
             }
@@ -666,6 +668,13 @@ namespace Parse
             var value = ParseExpr();
 
             return new NodeLet(name.Image.Spanned(name.span), ty, value);
+        }
+
+        private NodeRet ParseRet()
+        {
+            var ret = Current;
+            Advance();
+            return new NodeRet(ret, ParseExpr());
         }
         #endregion
     }

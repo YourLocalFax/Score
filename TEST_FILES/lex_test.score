@@ -4,51 +4,11 @@ type c_str = ^i8
 extern fn puts |c_str| -> i32
 extern fn putchar |i32| -> i32
 
-fn puti8  |i: i8 | -> bool {
-	ret true
-}
-
-fn puti16 |i: i16| -> bool {
-	ret true
-}
-
 fn puti32 |i: i32| -> bool {
 	ret true
 }
 
-fn puti64 |i: i64| -> bool {
-	ret true
-}
-
-fn putu8  |u: i8 | -> bool {
-	ret true
-}
-
-fn putu16 |u: i16| -> bool {
-	ret true
-}
-
-fn putu32 |u: i32| -> bool {
-	ret true
-}
-
-fn putu64 |u: i64| -> bool {
-	ret true
-}
-
-fn putf16 |f: f16| -> bool {
-	ret true
-}
-
-fn putf32 |f: f32| -> bool {
-	ret true
-}
-
-fn putf64 |f: f64| -> bool {
-	ret true
-}
-
-fn putbool |b: bool | -> bool {
+fn putbool |b: bool| -> bool {
 	ret true
 }
 

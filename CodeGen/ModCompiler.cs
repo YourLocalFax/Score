@@ -57,8 +57,9 @@ namespace CodeGen
                 }
                 var compiler = new FnCompiler(log, walker, context, module, builder, self);
                 fn.body.ForEach(node => node.Accept(compiler));
+                if (fn.ty.returnTy.IsVoid)
+                    BuildRetVoid(builder);
                 walker.StepOut();
-                BuildRetVoid(builder);
             }
         }
 

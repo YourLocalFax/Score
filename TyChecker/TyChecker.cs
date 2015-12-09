@@ -17,6 +17,8 @@ namespace TyChecker
 
         private readonly Stack<TyRef> stack = new Stack<TyRef>();
 
+        private FnSymbol currentFn;
+
         public TyChecker(DetailLogger log, SymbolTableWalker walker)
         {
             this.log = log;
@@ -45,12 +47,10 @@ namespace TyChecker
         {
             if (fn.body != null)
             {
+                currentFn = walker.Current.Lookup(fn.Name) as FnSymbol;
+
                 walker.StepIn();
                 fn.body.ForEach(node => node.Accept(this));
-
-                // TODO(kai): check that returns are valid, too. Some can be done in the FnTypeChecker,
-                // but the rest should be done here? I dunno yet.
-
                 walker.StepOut();
             }
         }
@@ -194,6 +194,23 @@ namespace TyChecker
 
         public void Visit(NodeRet ret)
         {
+            if (ret.IsVoidRet)
+            {
+                if (!currentFn.ty.IsVoid)
+                    log.Error(ret.Span, "Cannot return void from a function that returns {0}.", currentFn.ty.returnTy);
+                return;
+            }
+            else if (currentFn.ty.IsVoid)
+            {
+                log.Error(ret.Span, "Cannot return a value from a function that returns void.");
+                return;
+            }
+
+            ret.value.Accept(this);
+            var ty = Pop();
+
+            if (ty != currentFn.ty.returnTy.Raw)
+                log.Error(ret.Span, "Type mismatch: Cannot convert from {0} to {1}.", ty, currentFn.ty.returnTy);
         }
 
         public void Visit(NodeIf @if)

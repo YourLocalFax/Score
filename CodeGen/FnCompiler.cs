@@ -162,7 +162,9 @@ namespace CodeGen
 
         public void Visit(NodeRet ret)
         {
-            throw new NotImplementedException();
+            ret.value.Accept(this);
+            var result = Pop().value;
+            BuildRet(builder, result);
         }
 
         public void Visit(NodeIf @if)
